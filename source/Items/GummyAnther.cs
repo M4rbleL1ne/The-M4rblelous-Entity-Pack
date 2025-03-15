@@ -204,6 +204,15 @@ public class GummyAnther : PlayerCarryableItem, IDrawable, IPlayerEdible, IHaveA
                 while (placeRoom.GetTile(firstChunk.pos).Solid && i < 3)
                     firstChunk.HardSetPosition(firstChunk.pos with { y = firstChunk.pos.y - 20f });
             }
+            else if (StationPlant.TryGetValue(cons, out var flowerData) && flowerData.DevSpawn)
+            {
+                // Extra shenanigans since dev console integration throws things for a loop
+                PObjPos = room.MiddleOfTile(cons.pos);
+                firstChunk.HardSetPosition(new(PObjPos.x + (Random.value - Random.value) * 15f, PObjPos.y + 70f + Random.value * 40f - Random.value * 20f));
+                var i = 0;
+                while (placeRoom.GetTile(firstChunk.pos).Solid && i < 3)
+                    firstChunk.HardSetPosition(firstChunk.pos with { y = firstChunk.pos.y - 20f });
+            }
             else
                 firstChunk.HardSetPosition(placeRoom.MiddleOfTile(abstractPhysicalObject.pos));
             placeRoom.AddObject(MyStalk = new(this, placeRoom));

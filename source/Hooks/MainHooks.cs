@@ -1,5 +1,6 @@
 ﻿global using static LBMergedMods.Hooks.MainHooks;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using UnityEngine;
@@ -210,6 +211,8 @@ public static class MainHooks
                 On.MoreSlugcats.SlugNPCAI.LethalWeaponScore += On_SlugNPCAI_LethalWeaponScore;
             }
             s_init = true;
+
+            if (ModManager.ActiveMods.Any(x => x.id == "slime-cubed.devconsole")) DevConsoleCommands.RegisterDevConsole();
         }
         _ = PlacedObjectType.ThornyStrawberry;
         _ = MultiplayerItemType.ThornyStrawberry;
