@@ -2,45 +2,61 @@
   <PropertyGroup>
     <TargetFramework>net481</TargetFramework>
     <LangVersion>preview</LangVersion>
-	<Nullable>enable</Nullable>
+    <Nullable>enable</Nullable>
     <Company>M4rbleL1ne, Wrayk, Thrithralas, snoodle, the one who screams I guess</Company>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
       <HintPath>Refs\PUBLIC-Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="BepInEx">
       <HintPath>Refs\BepInEx.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="Fisobs">
       <HintPath>Refs\Fisobs.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="HOOKS-Assembly-CSharp">
       <HintPath>Refs\HOOKS-Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>Refs\Mono.Cecil.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="MonoMod.RuntimeDetour">
       <HintPath>Refs\MonoMod.RuntimeDetour.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="MonoMod.Utils">
       <HintPath>Refs\MonoMod.Utils.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="Unity.Mathematics">
       <HintPath>Refs\Unity.Mathematics.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>Refs\UnityEngine.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.AssetBundleModule">
       <HintPath>Refs\UnityEngine.AssetBundleModule.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>Refs\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="UnityEngine.InputLegacyModule">
       <HintPath>Refs\UnityEngine.InputLegacyModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="DevConsole">
+      <HintPath>Refs\DevConsole.dll</HintPath>
+      <Private>false</Private>
     </Reference>
   </ItemGroup>
 </Project>

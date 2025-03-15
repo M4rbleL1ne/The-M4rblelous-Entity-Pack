@@ -100,10 +100,36 @@ public class RubberBlossom : PhysicalObject, IDrawable
                 MaxUpwardVel = 20f;
             }
         }
+        else if (props != null && props.DevSpawn)
+        {
+            // Have to do some extra shenanigans since we're not placing in as a placed object
+            firstChunk.HardSetPosition(placeRoom.MiddleOfTile(abstractPhysicalObject.pos));
+            Color = props.forceColor;
+            MaxUpwardVel = props.forceMaxVel;
+            Open = props.Open;
+
+            // That includes manually spawning our anthers
+            if (Open)
+            {
+                for (int i = 0; i < props.NumberOfFruits; i++)
+                {
+                    var anther = new AbstractConsumable(room.world, AbstractObjectType.GummyAnther, null, abstractPhysicalObject.pos, room.game.GetNewID(), -1, -1, null)
+                    {
+                        isConsumed = false
+                    };
+                    if (StationFruit.TryGetValue(anther, out var antherProps))
+                    {
+                        antherProps.Plant = AbstrCons;
+                    }
+                    room.abstractRoom.AddEntity(anther);
+                    anther.RealizeInRoom();
+                }
+            }
+        }
         else
         {
             if (ftrl)
-                props.Open = !AbstrCons.isConsumed;
+                props!.Open = !AbstrCons.isConsumed;
             firstChunk.HardSetPosition(placeRoom.MiddleOfTile(abstractPhysicalObject.pos));
             Color = StationPlantCol;
             MaxUpwardVel = 20f;
@@ -112,7 +138,7 @@ public class RubberBlossom : PhysicalObject, IDrawable
         RootPos = firstChunk.pos;
         if (ftrl)
         {
-            props.FirstTimeRealized = false;
+            props!.FirstTimeRealized = false;
             AbstrCons.Consume();
         }
         if (props is not null)
