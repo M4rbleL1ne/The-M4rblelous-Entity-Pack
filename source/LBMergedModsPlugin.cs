@@ -30,6 +30,8 @@ public sealed class LBMergedModsPlugin : BaseUnityPlugin
     [AllowNull] internal static ManualLogSource s_logger;
     public static bool NoXyloHoles = File.Exists("noXyloHoles.txt");
 
+    internal static ILHook? Lizard_get_Swimmer;
+
     public void OnEnable()
     {
         s_logger = Logger;
@@ -60,6 +62,25 @@ public sealed class LBMergedModsPlugin : BaseUnityPlugin
         IL.BigEelAbstractAI.AddRandomCheckRoom += IL_BigEelAbstractAI_AddRandomCheckRoom;
         IL.BigEelAI.IUseARelationshipTracker_UpdateDynamicRelationship += IL_BigEelAI_IUseARelationshipTracker_UpdateDynamicRelationship;
         IL.BigEelAI.Update += IL_BigEelAI_Update;
+        Lizard_get_Swimmer = new(typeof(Lizard).GetProperty("Swimmer").GetGetMethod(), (MonoMod.Cil.ILContext context) =>
+        {
+            var c = new MonoMod.Cil.ILCursor(context);
+            if (c.TryGotoNext(
+            s_MatchLdarg_0,
+            s_MatchCallOrCallvirt_Creature_get_Template,
+            s_MatchLdfld_CreatureTemplate_type,
+            s_MatchLdsfld_CreatureTemplate_Type_Salamander,
+            s_MatchCall_Any,
+            s_MatchBrtrue_OutLabel))
+            {
+                ++c.Index;
+                c.EmitDelegate((Creature self) => self is WaterSpitter or Polliwog or MoleSalamander or CommonEel);
+                c.Emit(Mono.Cecil.Cil.OpCodes.Brtrue, s_label)
+                 .Emit(Mono.Cecil.Cil.OpCodes.Ldarg_0);
+            }
+            else
+                LBMergedModsPlugin.s_logger.LogError("Couldn't ILHook LizardAI.LurkTracker.LurkPosScore! (part 2)");
+        });
         IL.GarbageWormAI.Update += IL_GarbageWormAI_Update;
         On.PathFinder.CoordinateReachableAndGetbackable += On_PathFinder_CoordinateReachableAndGetbackable;
         On.LizardCosmetics.BumpHawk.DrawSprites += On_BumpHawk_DrawSprites;
@@ -142,9 +163,8 @@ public sealed class LBMergedModsPlugin : BaseUnityPlugin
         IL.Lizard.SwimBehavior += IL_Lizard_SwimBehavior;
         On.LizardPather.HeuristicForCell += On_LizardPather_HeuristicForCell;
         IL.Lizard.EnterAnimation += IL_Lizard_EnterAnimation;
-        IL.LizardGraphics.UpdateTailSegment += IL_LizardGraphics_UpdateTailSegment;
         IL.LizardGraphics.Update += IL_LizardGraphics_Update;
-        IL.Menu.MultiplayerMenu.ctor += IL_MultiplayerMenu_ctor;
+        IL.Menu.MultiplayerMenu.FindAllLevels += IL_MultiplayerMenu_FindAllLevels;
         IL.DaddyLongLegs.ctor += IL_DaddyLongLegs_ctor;
         On.DaddyLongLegs.InitiateGraphicsModule += On_DaddyLongLegs_InitiateGraphicsModule;
         On.DaddyGraphics.Eye.RenderSlits += On_Eye_RenderSlits;

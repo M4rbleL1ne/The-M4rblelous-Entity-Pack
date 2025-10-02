@@ -189,6 +189,8 @@ static class InternalMatch
         s_MatchLdsfld_CreatureTemplate_Type_Vulture = MatchLdsfld_CreatureTemplate_Type_Vulture,
         s_MatchLdsfld_CreatureTemplate_Type_WhiteLizard = MatchLdsfld_CreatureTemplate_Type_WhiteLizard,
         s_MatchLdsfld_CreatureTemplate_Type_YellowLizard = MatchLdsfld_CreatureTemplate_Type_YellowLizard,
+        s_MatchLdsfld_CreatureTemplate_Relationship_Type_Pack = MatchLdsfld_CreatureTemplate_Relationship_Type_Pack,
+        s_MatchLdfld_CreatureTemplate_Relationship_type = MatchLdfld_CreatureTemplate_Relationship_type,
         s_MatchLdsfld_Lizard_Animation_Spit = MatchLdsfld_Lizard_Animation_Spit,
         s_MatchLdsfld_ModManager_MMF = MatchLdsfld_ModManager_MMF,
         s_MatchLdsfld_ModManager_MSC = MatchLdsfld_ModManager_MSC,
@@ -399,6 +401,7 @@ static class InternalMatch
         s_MatchLdsfld_CreatureTemplate_Type_Vulture = null!;
         s_MatchLdsfld_CreatureTemplate_Type_WhiteLizard = null!;
         s_MatchLdsfld_CreatureTemplate_Type_YellowLizard = null!;
+        s_MatchLdsfld_CreatureTemplate_Relationship_Type_Pack = null!;
         s_MatchLdsfld_Lizard_Animation_Spit = null!;
         s_MatchLdsfld_ModManager_MMF = null!;
         s_MatchLdsfld_ModManager_MSC = null!;
@@ -758,6 +761,10 @@ static class InternalMatch
     internal static bool MatchLdsfld_CreatureTemplate_Type_WhiteLizard(Instruction x) => x.MatchLdsfld<CreatureTemplate.Type>("WhiteLizard");
 
     internal static bool MatchLdsfld_CreatureTemplate_Type_YellowLizard(Instruction x) => x.MatchLdsfld<CreatureTemplate.Type>("YellowLizard");
+    
+    internal static bool MatchLdsfld_CreatureTemplate_Relationship_Type_Pack(Instruction x) => x.MatchLdsfld<CreatureTemplate.Relationship.Type>("Pack");
+
+    internal static bool MatchLdfld_CreatureTemplate_Relationship_type(Instruction x) => x.MatchLdfld<CreatureTemplate.Relationship>("type");
 
     internal static bool MatchLdsfld_Lizard_Animation_Spit(Instruction x) => x.MatchLdsfld<Lizard.Animation>("Spit");
 

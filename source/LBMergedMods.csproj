@@ -13,9 +13,9 @@
 	<Reference Include="DevConsole">
       <HintPath>Refs\DevConsole.dll</HintPath>
     </Reference>
-    <Reference Include="Fisobs">
-      <HintPath>Refs\Fisobs.dll</HintPath>
-    </Reference>
+	<Reference Include="Fisobs">
+	  <HintPath>Refs\Fisobs.dll</HintPath>
+	</Reference>
     <Reference Include="HOOKS-Assembly-CSharp">
       <HintPath>Refs\HOOKS-Assembly-CSharp.dll</HintPath>
     </Reference>

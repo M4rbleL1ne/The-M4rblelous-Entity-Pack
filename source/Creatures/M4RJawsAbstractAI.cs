@@ -65,7 +65,7 @@ public class M4RJawsAbstractAI : AbstractCreatureAI
 	{
 		var rm = parent.Room;
 		var game = world.game;
-		if (ModManager.MSC && game.session is ArenaGameSession sess && sess.arenaSitting.gameTypeSetup.gameType == MoreSlugcatsEnums.GameTypeID.Challenge)
+		if (ModManager.MSC && game.session is ArenaGameSession sess && sess.arenaSitting.gameTypeSetup.gameType == DLCSharedEnums.GameTypeID.Challenge)
 		{
 			var totRooms = world.NumberOfRooms;
 			var offScreenDen = world.offScreenDen;

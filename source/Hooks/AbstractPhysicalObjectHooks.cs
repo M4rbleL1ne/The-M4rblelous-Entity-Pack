@@ -267,7 +267,7 @@ public static class AbstractPhysicalObjectHooks
         orig(self);
         if (self.Room is not AbstractRoom rm)
             return;
-        if (!ModManager.MSC || rm.world.game.session is not ArenaGameSession sess || sess.arenaSitting.gameTypeSetup.gameType != MoreSlugcatsEnums.GameTypeID.Challenge)
+        if (!ModManager.MSC || rm.world.game.session is not ArenaGameSession sess || sess.arenaSitting.gameTypeSetup.gameType != DLCSharedEnums.GameTypeID.Challenge)
         {
             var list = new List<string>();
             if (rm.world.region is Region reg)

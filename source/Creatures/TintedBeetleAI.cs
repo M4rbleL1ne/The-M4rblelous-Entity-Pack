@@ -433,7 +433,7 @@ public class TintedBeetleAI : ArtificialIntelligence, IUseARelationshipTracker, 
             var flag = plt.fuseCounter <= 0;
             if (orInitiateRelationship.like > -.9f)
             {
-                if (ModManager.MSC && rm.game.session is ArenaGameSession sess && sess.arenaSitting.gameTypeSetup.gameType == MoreSlugcatsEnums.GameTypeID.Challenge && sess.arenaSitting.gameTypeSetup.challengeMeta.tamingDifficultyMultiplier > 0)
+                if (ModManager.MSC && rm.game.session is ArenaGameSession sess && sess.arenaSitting.gameTypeSetup.gameType == DLCSharedEnums.GameTypeID.Challenge && sess.arenaSitting.gameTypeSetup.challengeMeta.tamingDifficultyMultiplier > 0)
                 {
                     var num = sess.arenaSitting.gameTypeSetup.challengeMeta.tamingDifficultyMultiplier / 10f;
                     orInitiateRelationship.InfluenceLike((flag ? 1.1f : .1f) / num);

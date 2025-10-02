@@ -124,12 +124,12 @@ public static class BodyPartHooks
 
     public static void PushBugLimbOutOfTerrain(this BodyPart self, Room room)
     {
-        if (room.terrain is not null && self.owner.owner.Buried)
+        if (room.terrain is not null && room.terrain.roomTerrain is not null && self.owner.owner.Buried)
             return;
         self.terrainContact = false;
-        if (room.terrain is TerrainCurve terrain)
+        if (room.terrain?.roomTerrain is TerrainCurve terrain)
         {
-            var vect = terrain.SnapToTerrain(self.pos, self.rad);
+            var vect = terrain.SnapToTerrain(self.pos, self.rad, out _);
             if (vect.y > self.pos.y)
             {
                 self.terrainContact = true;

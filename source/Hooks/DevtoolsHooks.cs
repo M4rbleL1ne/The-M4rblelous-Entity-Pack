@@ -43,7 +43,6 @@ public static class DevtoolsHooks
         var c = new ILCursor(il);
         if (c.TryGotoNext(
             s_MatchLdarg_0,
-            s_MatchLdcI4_1,
             s_MatchLdarg_0))
         {
             label = c.MarkLabel();
