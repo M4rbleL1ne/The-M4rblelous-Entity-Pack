@@ -124,21 +124,21 @@ public static class BodyPartHooks
 
     public static void PushBugLimbOutOfTerrain(this BodyPart self, Room room)
     {
+        // please forgive me m4rble, not only did the variables change but the code as well
         if (room.terrain is not null && self.owner.owner.Buried)
             return;
         self.terrainContact = false;
-        if (room.terrain is TerrainCurve terrain)
+        Vector2 vector;
+        if (room.terrain != null && room.terrain.TrySnapToTerrain(self.pos, self.rad, out vector, false))
         {
-            var vect = terrain.SnapToTerrain(self.pos, self.rad);
-            if (vect.y > self.pos.y)
-            {
+            
                 self.terrainContact = true;
-                self.pos = vect;
+                self.pos = vector;
                 self.vel.y = 0f;
                 self.vel.x *= self.surfaceFric;
-            }
+            
         }
-        Vector2 vector;
+        
         for (var i = 0; i < 9; i++)
         {
             var eightDir = Custom.eightDirectionsAndZero[i];
