@@ -1,11 +1,25 @@
 ﻿using UnityEngine;
 using Watcher;
+using RWCustom;
 
 namespace LBMergedMods.Creatures;
 
 public class HunterSeeker : Lizard
 {
-    public override float VisibilityBonus => graphicsModule is HunterSeekerGraphics g ? -g.Camouflaged : base.VisibilityBonus;
+    public override float VisibilityBonus
+    {
+        get
+        {
+            var vis = base.VisibilityBonus;
+            if (graphicsModule is HunterSeekerGraphics g)
+            {
+                if (vis == 0f)
+                    return -g.Camouflaged;
+                return Mathf.Lerp(-g.Camouflaged, vis, Mathf.Pow(Mathf.Clamp01(Vector3.Distance(Custom.RGB2Vec3(g.whiteCamoColor), Custom.RGB2Vec3(mudColor))), .25f));
+            }
+            return vis;
+        }
+    }
 
     public HunterSeeker(AbstractCreature abstractCreature, World world) : base(abstractCreature, world)
     {

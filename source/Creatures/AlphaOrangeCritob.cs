@@ -3,6 +3,7 @@ using DevInterface;
 using Fisobs.Core;
 using Fisobs.Creatures;
 using Fisobs.Sandbox;
+using Watcher;
 using UnityEngine;
 
 namespace LBMergedMods.Creatures;
@@ -45,6 +46,11 @@ sealed class AlphaOrangeCritob : Critob
 		self.IsInPack(CreatureTemplate.Type.YellowLizard, .2f);
         self.Attacks(CreatureTemplateType.Polliwog, .5f);
 		self.FearedBy(CreatureTemplateType.Polliwog, .2f);
+		if (ModManager.Watcher)
+		{
+            self.Attacks(WatcherEnums.CreatureTemplateType.PeachLizard, .5f);
+            self.FearedBy(WatcherEnums.CreatureTemplateType.PeachLizard, .2f);
+        }
     }
 
 	public override void LoadResources(RainWorld rainWorld) { }

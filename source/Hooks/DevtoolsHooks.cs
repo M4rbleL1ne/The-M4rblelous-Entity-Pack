@@ -41,10 +41,12 @@ public static class DevtoolsHooks
     {
         ILLabel? label = null;
         var c = new ILCursor(il);
-        if (c.TryGotoNext(
-            s_MatchLdarg_0,
+        if (c.TryGotoNext(MoveType.After,
             s_MatchLdcI4_1,
-            s_MatchLdarg_0))
+            s_MatchAdd,
+            s_MatchStloc_OutLoc1)
+         && c.TryGotoNext(
+            s_MatchLdloca_Any))
         {
             label = c.MarkLabel();
             c.Index = 0;

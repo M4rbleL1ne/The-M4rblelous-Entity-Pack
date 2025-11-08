@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 namespace LBMergedMods.Creatures;
 
-public class SporantulaGraphics : BigSpiderGraphics
+public class SporantulaGraphics : BigSpiderGraphics, IMuddableGraphics
 {
     public SporantulaScale[] Scales;
     public SporantulaDots[] Dots;
@@ -180,6 +180,8 @@ public class SporantulaGraphics : BigSpiderGraphics
                 dot.ApplyPalette(OrigNumOfSprites + 1 + scls.Length + j * dot.Dots.Length * 2, sLeaser, palette);
         }
     }
+
+    public virtual new bool MuddableSprite(RoomCamera.SpriteLeaser sLeaser, int sprite) => false;
 
     [StructLayout(LayoutKind.Sequential)]
     public class SporantulaScale

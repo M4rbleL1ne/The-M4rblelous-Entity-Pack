@@ -91,7 +91,7 @@ public static class PlayerHooks
         {
             var loc1 = il.Body.Variables[s_loc1];
             c.Emit(OpCodes.Ldloc, loc1)
-             .EmitDelegate((Player self, int num6) => self.grasps[num6].grabbed is MarineEye or LimeMushroom);
+             .EmitDelegate((Player self, int num6) => self.grasps[num6]?.grabbed is MarineEye or LimeMushroom);
             c.Emit(OpCodes.Brtrue, s_label)
              .Emit(OpCodes.Ldarg_0);
             if (c.TryGotoNext(MoveType.After,
@@ -112,7 +112,7 @@ public static class PlayerHooks
                 s_MatchBrtrue_OutLabel))
             {
                 c.Emit(OpCodes.Ldloc, loc1)
-                 .EmitDelegate((Player self, int num6) => self.grasps[num6].grabbed is MarineEye or LimeMushroom);
+                 .EmitDelegate((Player self, int num6) => self.grasps[num6]?.grabbed is MarineEye or LimeMushroom);
                 c.Emit(OpCodes.Brtrue, s_label)
                  .Emit(OpCodes.Ldarg_0);
                 if (c.TryGotoNext(MoveType.After,

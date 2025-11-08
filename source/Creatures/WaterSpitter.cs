@@ -19,7 +19,7 @@ public class WaterSpitter : Lizard
     public override void Update(bool eu)
     {
         base.Update(eu);
-        lungs = 1f;
+        buoyancy = .915f;
     }
 
     public virtual void SpitWater()

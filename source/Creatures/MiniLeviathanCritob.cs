@@ -8,6 +8,7 @@ using DevInterface;
 using RWCustom;
 using Random = UnityEngine.Random;
 using System;
+using Watcher;
 
 namespace LBMergedMods.Creatures;
 
@@ -104,6 +105,8 @@ sealed class MiniLeviathanCritob : Critob, ISandboxHandler
         l.IgnoredBy(CreatureTemplate.Type.GreenLizard);
         l.IgnoredBy(CreatureTemplate.Type.RedLizard);
         l.IgnoredBy(CreatureTemplate.Type.Leech);
+        if (ModManager.Watcher)
+            l.Ignores(WatcherEnums.CreatureTemplateType.Angler);
     }
 
     public override ArtificialIntelligence CreateRealizedAI(AbstractCreature acrit) => new MiniLeviathanAI(acrit, acrit.world);

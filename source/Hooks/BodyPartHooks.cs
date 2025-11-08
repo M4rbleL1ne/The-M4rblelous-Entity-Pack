@@ -127,16 +127,12 @@ public static class BodyPartHooks
         if (room.terrain is not null && self.owner.owner.Buried)
             return;
         self.terrainContact = false;
-        if (room.terrain is TerrainCurve terrain)
+        if (room.terrain?.TrySnapToTerrain(self.pos, self.rad, out var snapPos) is true)
         {
-            var vect = terrain.SnapToTerrain(self.pos, self.rad);
-            if (vect.y > self.pos.y)
-            {
-                self.terrainContact = true;
-                self.pos = vect;
-                self.vel.y = 0f;
-                self.vel.x *= self.surfaceFric;
-            }
+            self.terrainContact = true;
+            self.pos = snapPos;
+            self.vel.y = 0f;
+            self.vel.x *= self.surfaceFric;
         }
         Vector2 vector;
         for (var i = 0; i < 9; i++)

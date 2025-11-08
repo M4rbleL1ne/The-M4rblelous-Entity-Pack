@@ -67,7 +67,7 @@ public static class ArenaHooks
             LBMergedModsPlugin.s_logger.LogError("Couldn't ILHook ExitManager.Update!");
     }
 
-    internal static void IL_MultiplayerMenu_ctor(ILContext il)
+    internal static void IL_MultiplayerMenu_FindAllLevels(ILContext il)
     {
         var c = new ILCursor(il);
         if (c.TryGotoNext(MoveType.After,
@@ -121,7 +121,7 @@ public static class ArenaHooks
              .Emit(OpCodes.Brfalse, s_label);
         }
         else
-            LBMergedModsPlugin.s_logger.LogError("Couldn't ILHook Menu.MultiplayerMenu.ctor!");
+            LBMergedModsPlugin.s_logger.LogError("Couldn't ILHook Menu.MultiplayerMenu.FindAllLevels!");
     }
 
     internal static MultiplayerUnlocks.SandboxUnlockID On_MultiplayerUnlocks_SandboxUnlockForSymbolData(On.MultiplayerUnlocks.orig_SandboxUnlockForSymbolData orig, IconSymbol.IconSymbolData data)

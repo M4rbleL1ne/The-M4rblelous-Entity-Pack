@@ -6,7 +6,7 @@ using Smoke;
 
 namespace LBMergedMods.Creatures;
 
-public class ChipChopGraphics : GraphicsModule
+public class ChipChopGraphics : GraphicsModule, IMuddableGraphics
 {
     public class SpeedSmoke(Room room, Vector2 pos, BodyChunk chunk, Color fireColor) : BombSmoke(room, pos, chunk, fireColor)
     {
@@ -317,4 +317,8 @@ public class ChipChopGraphics : GraphicsModule
             newContainer.AddChild(spr);
         }
     }
+
+    public virtual bool MuddableSprite(RoomCamera.SpriteLeaser sLeaser, int sprite) => sprite is not 1 and not 2;
+
+    public virtual void SetUpSpecialMudSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera.SpriteLeaser mudSleaser, MudOverlay mudOverlay) => mudOverlay.layeringMap[mudOverlay.GetMudSprite(0)] = sLeaser.sprites[1];
 }

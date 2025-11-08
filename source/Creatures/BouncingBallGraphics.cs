@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 
 namespace LBMergedMods.Creatures;
 
-public class BouncingBallGraphics : SnailGraphics
+public class BouncingBallGraphics : SnailGraphics, IMuddableGraphics
 {
     public int[] EffectColorRND;
 
@@ -102,4 +102,8 @@ public class BouncingBallGraphics : SnailGraphics
             AddToContainer(sLeaser, rCam, null);
         }
     }
+
+    public virtual new bool MuddableSprite(RoomCamera.SpriteLeaser sLeaser, int sprite) => sprite is 0 or 1 or 2 or 3 or 6;
+
+    public virtual new void SetUpSpecialMudSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera.SpriteLeaser mudSleaser, MudOverlay mudOverlay) => mudOverlay.layeringMap[mudOverlay.GetMudSprite(6)] = sLeaser.sprites[8];
 }

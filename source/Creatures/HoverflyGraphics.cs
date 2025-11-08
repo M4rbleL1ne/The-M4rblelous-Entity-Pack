@@ -5,7 +5,7 @@ using System;
 
 namespace LBMergedMods.Creatures;
 
-public class HoverflyGraphics : GraphicsModule, ILookingAtCreatures
+public class HoverflyGraphics : GraphicsModule, ILookingAtCreatures, IMuddableGraphics
 {
     public enum HeadState
     {
@@ -551,4 +551,8 @@ public class HoverflyGraphics : GraphicsModule, ILookingAtCreatures
     public virtual Tracker.CreatureRepresentation? ForcedLookCreature() => Fly?.AI?.FocusCreature;
 
     public virtual void LookAtNothing() { }
+
+    public virtual bool MuddableSprite(RoomCamera.SpriteLeaser sLeaser, int sprite) => sprite is 0 or 2 or 3 or 4 or 5;
+
+    public virtual void SetUpSpecialMudSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera.SpriteLeaser mudSleaser, MudOverlay mudOverlay) => mudOverlay.layeringMap[mudOverlay.GetMudSprite(0)] = sLeaser.sprites[1];
 }

@@ -3,7 +3,7 @@ using RWCustom;
 
 namespace LBMergedMods.Creatures;
 
-public class SurfaceSwimmerGraphics : EggBugGraphics
+public class SurfaceSwimmerGraphics : EggBugGraphics, IMuddableGraphics
 {
     public SurfaceSwimmerGraphics(SurfaceSwimmer ow) : base(ow) => legLength *= 2f;
 
@@ -107,4 +107,6 @@ public class SurfaceSwimmerGraphics : EggBugGraphics
             }
         }
     }
+
+    public virtual new void SetUpSpecialMudSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera.SpriteLeaser mudSleaser, MudOverlay mudOverlay) { }
 }

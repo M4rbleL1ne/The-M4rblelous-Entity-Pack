@@ -44,6 +44,7 @@ public class Denture : Creature
         collisionLayer = 1;
         waterFriction = .94f;
         buoyancy = .01f;
+        baseCurrentAffectiveness = 0f;
     }
 
     public override void InitiateGraphicsModule() => graphicsModule ??= new DentureGraphics(this);

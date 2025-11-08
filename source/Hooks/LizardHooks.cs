@@ -285,57 +285,22 @@ public static class LizardHooks
         orig(self, anim, forceAnimationChange);
     }
 
+    internal static bool On_Lizard_get_Swimmer(Func<Lizard, bool> orig, Lizard self) => self is Polliwog or MoleSalamander or CommonEel or WaterSpitter || orig(self);
+
     internal static bool On_LizardGraphics_get_HeadLightsUpFromNoise(Func<LizardGraphics, bool> orig, LizardGraphics self)
     {
         if (self is MoleSalamanderGraphics s)
             return s.blackSalamander;
         return self is not NoodleEaterGraphics and not CommonEelGraphics && orig(self);
     }
-        
+
     internal static bool On_Lizard_HitHeadShield(On.Lizard.orig_HitHeadShield orig, Lizard self, Vector2 direction) => self is not NoodleEater and not CommonEel && orig(self, direction);
 
-    internal static void IL_Lizard_SwimBehavior(ILContext il)
+    internal static void On_Lizard_SwimBehavior(On.Lizard.orig_SwimBehavior orig, Lizard self)
     {
-        var c = new ILCursor(il);
-        if (c.TryGotoNext(
-            s_MatchLdcI4_1,
-            s_MatchStloc_OutLoc1))
-        {
-            var l = il.Body.Variables[s_loc1];
-            c.Emit(OpCodes.Ldarg_0)
-             .Emit(OpCodes.Ldloc, l)
-             .EmitDelegate((Lizard self, bool flag) => self is not WaterSpitter and not Polliwog and not MoleSalamander and not CommonEel && flag);
-            c.Emit(OpCodes.Stloc, l);
-        }
-        else
-            LBMergedModsPlugin.s_logger.LogError("Couldn't ILHook Lizard.SwimBehavior! (part 1)");
-        if (c.TryGotoNext(
-            s_MatchLdarg_0,
-            s_MatchCallOrCallvirt_Creature_get_Template,
-            s_MatchLdfld_CreatureTemplate_type,
-            s_MatchLdsfld_CreatureTemplate_Type_Salamander,
-            s_MatchCall_Any,
-            s_MatchBrtrue_OutLabel))
-        {
-            c.Emit(OpCodes.Ldarg_0)
-             .EmitDelegate((Lizard self) => self is WaterSpitter or Polliwog or MoleSalamander or CommonEel);
-            c.Emit(OpCodes.Brtrue, s_label);
-        }
-        else
-            LBMergedModsPlugin.s_logger.LogError("Couldn't ILHook Lizard.SwimBehavior! (part 2)");
-        if (c.TryGotoNext(MoveType.After,
-            s_MatchRet))
-        {
-            c.Prev.OpCode = OpCodes.Ldarg_0;
-            c.EmitDelegate((Lizard self) =>
-            {
-                if (self is WaterSpitter)
-                    self.salamanderLurk = false;
-            });
-            c.Emit(OpCodes.Ret);
-        }
-        else
-            LBMergedModsPlugin.s_logger.LogError("Couldn't ILHook Lizard.SwimBehavior! (part 3)");
+        orig(self);
+        if (self is WaterSpitter)
+            self.salamanderLurk = false;
     }
 
     internal static void On_LizardAI_BitCreature(On.LizardAI.orig_BitCreature orig, LizardAI self, BodyChunk chunk)
@@ -348,8 +313,6 @@ public static class LizardHooks
             p.objectInStomach = null;
         }
     }
-
-    internal static bool On_LizardAI_ComfortableIdlePosition(On.LizardAI.orig_ComfortableIdlePosition orig, LizardAI self) => orig(self) || (self is PolliwogAI or WaterSpitterAI or MoleSalamanderAI or CommonEelAI && self.lizard is Lizard l && l.room.GetTile(l.firstChunk.pos).AnyWater);
 
     internal static bool On_LizardAI_FallRisk(On.LizardAI.orig_FallRisk orig, LizardAI self, IntVector2 tile) => (self is not CommonEelAI || !self.lizard.room.GetTile(self.lizard.room.aimap.getAItile(tile).fallRiskTile).AnyWater) && orig(self, tile);
 
@@ -364,21 +327,13 @@ public static class LizardHooks
         var res = orig(self, coord);
         if (coord.room != self.creature.pos.room || !coord.TileDefined)
             return res;
-        if (self.lizard?.room.aimap.WorldCoordinateAccessibleToCreature(coord, self.creature.creatureTemplate) is null or false || !self.pathFinder.CoordinateReachableAndGetbackable(coord) || coord.CompareDisregardingNode(self.forbiddenIdleSpot))
+        if (self.lizard is not Lizard l || !l.room.aimap.WorldCoordinateAccessibleToCreature(coord, self.creature.creatureTemplate) || !self.pathFinder.CoordinateReachableAndGetbackable(coord) || coord.CompareDisregardingNode(self.forbiddenIdleSpot))
             return res;
-        if (self is PolliwogAI or WaterSpitterAI or MoleSalamanderAI && self.lizard is Lizard l)
+        if (self is MoleSalamanderAI or CommonEelAI)
         {
-            if (!l.room.GetTile(coord).AnyWater)
-                res += 20f;
-            res += Mathf.Max(0f, coord.Tile.FloatDist(self.creature.pos.Tile) - 30f) * 1.5f;
-            res += Mathf.Abs(coord.y - l.room.DefaultWaterLevel(coord.Tile)) * 10f;
-            res += l.room.aimap.getTerrainProximity(coord) * 10f;
-            if (self is MoleSalamanderAI or CommonEelAI)
-            {
-                if (l.room.aimap.getAItile(coord).narrowSpace)
-                    res -= 10f;
-                res += l.room.aimap.getAItile(coord.Tile).visibility * .1f;
-            }
+            if (l.room.aimap.getAItile(coord).narrowSpace)
+                res -= 10f;
+            res += l.room.aimap.getAItile(coord.Tile).visibility * .1f;
         }
         return res;
     }
@@ -619,6 +574,8 @@ public static class LizardHooks
             breedParams.headSize = 1f;
             breedParams.limbSize = .7f;
             breedParams.tongue = true;
+            breedParams.stunToughness = .9f;
+            breedParams.tailSegments = 5;
             breedParams.toughness = .5f;
             temp.name = "Polliwog";
             temp.type = type;
@@ -724,6 +681,7 @@ public static class LizardHooks
             temp.name = "HunterSeeker";
             temp.throwAction = "Camouflage/Launch";
             temp.requireAImap = true;
+            breedParams.stunToughness = 1.1f;
             temp.doPreBakedPathing = false;
             temp.preBakedPathingAncestor = StaticWorld.GetCreatureTemplate(CreatureTemplate.Type.WhiteLizard);
             return temp;
@@ -1100,24 +1058,18 @@ public static class LizardHooks
         var c = new ILCursor(il);
         for (var i = 1; i <= 2; i++)
         {
-            if (c.TryGotoNext(
+            if (c.TryGotoNext(MoveType.After,
                 s_MatchLdarg_0,
                 s_MatchLdfld_LizardGraphics_lizard,
-                s_MatchCallOrCallvirt_Creature_get_Template,
-                s_MatchLdfld_CreatureTemplate_type,
-                s_MatchLdsfld_CreatureTemplate_Type_Salamander,
-                s_MatchCall_Any,
-                s_MatchBrtrue_OutLabel))
+                s_MatchCallOrCallvirt_Lizard_get_Swimmer))
             {
                 c.Emit(OpCodes.Ldarg_0)
-                 .EmitDelegate((LizardGraphics self) => self is PolliwogGraphics or MoleSalamanderGraphics or CommonEelGraphics);
-                c.Emit(OpCodes.Brtrue, s_label);
-                c.Index += 7; // arbitrary num
+                 .EmitDelegate((bool flag, LizardGraphics self) => flag && self is not WaterSpitterGraphics);
             }
             else
                 LBMergedModsPlugin.s_logger.LogError($"Couldn't ILHook LizardGraphics.Update! (part {i})");
         }
-        var label2 = il.DefineLabel();
+        var label = il.DefineLabel();
         if (c.TryGotoNext(MoveType.After,
             s_MatchLdarg_0,
             s_MatchLdfld_LizardGraphics_lizard,
@@ -1126,12 +1078,12 @@ public static class LizardHooks
             s_MatchLdsfld_CreatureTemplate_Type_Salamander,
             s_MatchCall_Any,
             s_MatchBrfalse_Any)
-        && label2 is not null)
+        && label is not null)
         {
-            label2.Target = c.Next;
+            label.Target = c.Next;
             c.Index -= 6;
             c.EmitDelegate((LizardGraphics self) => self is PolliwogGraphics or MoleSalamanderGraphics or CommonEelGraphics);
-            c.Emit(OpCodes.Brtrue, label2)
+            c.Emit(OpCodes.Brtrue, label)
              .Emit(OpCodes.Ldarg_0);
         }
         else
@@ -1140,7 +1092,7 @@ public static class LizardHooks
         var hsg = il.Import(typeof(HunterSeekerGraphics));
         for (var i = 0; i < 2; i++)
         {
-            var label = il.DefineLabel();
+            label = il.DefineLabel();
             if (c.TryGotoNext(MoveType.After,
                 s_MatchLdarg_0,
                 s_MatchLdfld_LizardGraphics_lizard,
@@ -1166,18 +1118,13 @@ public static class LizardHooks
     internal static void IL_LizardGraphics_UpdateTailSegment(ILContext il)
     {
         var c = new ILCursor(il);
-        if (c.TryGotoNext(
+        if (c.TryGotoNext(MoveType.After,
             s_MatchLdarg_0,
             s_MatchLdfld_LizardGraphics_lizard,
-            s_MatchCallOrCallvirt_Creature_get_Template,
-            s_MatchLdfld_CreatureTemplate_type,
-            s_MatchLdsfld_CreatureTemplate_Type_Salamander,
-            s_MatchCall_Any,
-            s_MatchBrtrue_OutLabel))
+            s_MatchCallOrCallvirt_Lizard_get_Swimmer))
         {
             c.Emit(OpCodes.Ldarg_0)
-             .EmitDelegate((LizardGraphics self) => self is PolliwogGraphics or MoleSalamanderGraphics or CommonEelGraphics);
-            c.Emit(OpCodes.Brtrue, s_label);
+             .EmitDelegate((bool flag, LizardGraphics self) => flag && self is not WaterSpitterGraphics);
         }
         else
             LBMergedModsPlugin.s_logger.LogError("Couldn't ILHook LizardGraphics.UpdateTailSegment!");
@@ -1519,19 +1466,13 @@ public static class LizardHooks
         }
         else
             LBMergedModsPlugin.s_logger.LogError("Couldn't ILHook LizardAI.LurkTracker.LurkPosScore! (part 1)");
-        if (c.TryGotoNext(
+        if (c.TryGotoNext(MoveType.After,
             s_MatchLdarg_0,
             s_MatchLdfld_LizardAI_LurkTracker_lizard,
-            s_MatchCallOrCallvirt_Creature_get_Template,
-            s_MatchLdfld_CreatureTemplate_type,
-            s_MatchLdsfld_CreatureTemplate_Type_Salamander,
-            s_MatchCall_Any,
-            s_MatchBrtrue_OutLabel))
+            s_MatchCallOrCallvirt_Lizard_get_Swimmer))
         {
-            ++c.Index;
-            c.EmitDelegate((LizardAI.LurkTracker self) => self.lizard is Polliwog or MoleSalamander or CommonEel);
-            c.Emit(OpCodes.Brtrue, s_label)
-             .Emit(OpCodes.Ldarg_0);
+            c.Emit(OpCodes.Ldarg_0)
+             .EmitDelegate((bool flag, LizardAI.LurkTracker self) => flag && self.lizard is not WaterSpitter);
         }
         else
             LBMergedModsPlugin.s_logger.LogError("Couldn't ILHook LizardAI.LurkTracker.LurkPosScore! (part 2)");
@@ -1541,12 +1482,9 @@ public static class LizardHooks
     {
         if (self.lizard is Lizard l)
         {
-            if (l is Polliwog or MoleSalamander or CommonEel)
-            {
-                if (self.LurkPosScore(self.lurkPosition) > 0f)
-                    return l.room?.GetTile(self.lurkPosition).AnyWater is true ? .5f : .2f;
-            }
-            else if (l is HunterSeeker)
+            if (l is WaterSpitter)
+                return 0f;
+            if (l is HunterSeeker)
                 return .5f;
         }
         return orig(self);
@@ -1785,30 +1723,6 @@ public static class LizardHooks
         }
         else
             LBMergedModsPlugin.s_logger.LogError("Couldn't ILHook YellowAI.Update! (part 2)");
-        if (c.TryGotoNext(MoveType.After,
-            s_MatchLdsfld_CreatureTemplate_Type_YellowLizard))
-        {
-            c.Emit(OpCodes.Ldarg_0)
-             .EmitDelegate((CreatureTemplate.Type type, YellowAI self) => self is PolliwogCommunication ? CreatureTemplateType.Polliwog : type);
-        }
-        else
-            LBMergedModsPlugin.s_logger.LogError("Couldn't ILHook YellowAI.Update! (part 3)");
-        c.Index = 0;
-        if (c.TryGotoNext(MoveType.After,
-            s_MatchLdloc_OutLoc1,
-            s_MatchCallOrCallvirt_Any,
-            s_MatchLdfld_AbstractCreature_creatureTemplate,
-            s_MatchLdfld_CreatureTemplate_type,
-            s_MatchLdsfld_CreatureTemplate_Type_YellowLizard)
-         && c.TryGotoNext(
-            s_MatchBrfalse_Any))
-        {
-            c.Emit(OpCodes.Ldarg_0)
-             .Emit(OpCodes.Ldloc, s_loc1)
-             .EmitDelegate((bool flag, YellowAI self, int i) => flag || (self is not PolliwogCommunication && self.lizard.room.abstractRoom.creatures[i].creatureTemplate.type == CreatureTemplateType.AlphaOrange));
-        }
-        else
-            LBMergedModsPlugin.s_logger.LogError("Couldn't ILHook YellowAI.Update! (part 4)");
     }
 
     internal static void On_YellowPack_FindLeader(On.YellowAI.YellowPack.orig_FindLeader orig, YellowAI.YellowPack self)
@@ -1841,5 +1755,5 @@ public static class LizardHooks
         orig(self, index);
     }
 
-    public static bool Camouflaged(this Lizard self) => (!ModManager.DLCShared || self.Template.type != DLCSharedEnums.CreatureTemplateType.ZoopLizard) && self.graphicsModule is LizardGraphics gr && gr.Camouflaged >= .8f;
+    public static bool Camouflaged(this Lizard self) => (!ModManager.DLCShared || self.Template.type != DLCSharedEnums.CreatureTemplateType.ZoopLizard) && self.graphicsModule is LizardGraphics gr && gr.whiteCamoColorAmount != -1 && gr.Camouflaged >= .8f;
 }

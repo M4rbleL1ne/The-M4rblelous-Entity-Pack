@@ -6,6 +6,7 @@ using static PathCost.Legality;
 using UnityEngine;
 using DevInterface;
 using MoreSlugcats;
+using Watcher;
 
 namespace LBMergedMods.Creatures;
 
@@ -160,6 +161,11 @@ sealed class DivingBeetleCritob : Critob
         }
         if (ModManager.MSC)
             dvb.FearedBy(MoreSlugcatsEnums.CreatureTemplateType.SlugNPC, .5f);
+        if (ModManager.Watcher)
+        {
+            dvb.Fears(WatcherEnums.CreatureTemplateType.Angler, 1f);
+            dvb.EatenBy(WatcherEnums.CreatureTemplateType.Angler, 1f);
+        }
     }
 
     public override ArtificialIntelligence CreateRealizedAI(AbstractCreature acrit) => new DivingBeetleAI(acrit, acrit.world);

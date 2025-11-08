@@ -265,48 +265,36 @@ public static class AbstractPhysicalObjectHooks
     internal static void On_AbstractCreature_setCustomFlags(On.AbstractCreature.orig_setCustomFlags orig, AbstractCreature self)
     {
         orig(self);
-        if (self.Room is not AbstractRoom rm)
+        if (self.Room is null)
             return;
-        if (!ModManager.MSC || rm.world.game.session is not ArenaGameSession sess || sess.arenaSitting.gameTypeSetup.gameType != MoreSlugcatsEnums.GameTypeID.Challenge)
+        var list = self.unrecognizedFlags;
+        for (var i = 0; i < list.Count; i++)
         {
-            var list = new List<string>();
-            if (rm.world.region is Region reg)
+            var ari = list[i];
+            if (ari.Length > 0)
             {
-                var prms = reg.regionParams;
-                list.AddRange(prms.globalCreatureFlags_All);
-                if (prms.globalCreatureFlags_Specific.TryGetValue(self.creatureTemplate.type, out var value))
-                    list.AddRange(value);
-            }
-            if (self.spawnData is string s && s.Length > 1 && s[0] == '{')
-                list.AddRange(s.Substring(1, s.Length - 2).Split(',', '|'));
-            for (var i = 0; i < list.Count; i++)
-            {
-                var ari = list[i];
-                if (ari.Length > 0)
+                var nm = ari.Split(':')[0];
+                if (string.Equals(nm, "seedbat", StringComparison.OrdinalIgnoreCase) && Seed.TryGetValue(self, out var props))
+                    props.IsSeed = true;
+                else if (Big.TryGetValue(self, out var props2))
                 {
-                    var nm = ari.Split(':')[0];
-                    if (string.Equals(nm, "seedbat", StringComparison.OrdinalIgnoreCase) && Seed.TryGetValue(self, out var props))
-                        props.IsSeed = true;
-                    else if (Big.TryGetValue(self, out var props2))
+                    if (string.Equals(nm, "bigrub", StringComparison.OrdinalIgnoreCase))
+                        props2.IsBig = true;
+                    else if (string.Equals(nm, "altbigrub", StringComparison.OrdinalIgnoreCase))
                     {
-                        if (string.Equals(nm, "bigrub", StringComparison.OrdinalIgnoreCase))
-                            props2.IsBig = true;
-                        else if (string.Equals(nm, "altbigrub", StringComparison.OrdinalIgnoreCase))
-                        {
-                            props2.IsBig = true;
-                            self.superSizeMe = true;
-                        }
-                        else if (string.Equals(nm, "bigworm", StringComparison.OrdinalIgnoreCase))
-                        {
-                            props2.IsBig = true;
-                            props2.NormalLook = true;
-                        }
+                        props2.IsBig = true;
+                        self.superSizeMe = true;
                     }
-                    else if (string.Equals(nm, "albinoform", StringComparison.OrdinalIgnoreCase) && AbsProps.TryGetValue(self, out var props4))
-                        props4.Albino = true;
-                    else if (string.Equals(nm, "rottenmode", StringComparison.OrdinalIgnoreCase) && AbsProps.TryGetValue(self, out var props5))
-                        props5.RottenMode = true;
+                    else if (string.Equals(nm, "bigworm", StringComparison.OrdinalIgnoreCase))
+                    {
+                        props2.IsBig = true;
+                        props2.NormalLook = true;
+                    }
                 }
+                else if (string.Equals(nm, "albinoform", StringComparison.OrdinalIgnoreCase) && AbsProps.TryGetValue(self, out var props4))
+                    props4.Albino = true;
+                else if (string.Equals(nm, "rottenmode", StringComparison.OrdinalIgnoreCase) && AbsProps.TryGetValue(self, out var props5))
+                    props5.RottenMode = true;
             }
         }
     }
@@ -407,6 +395,23 @@ public static class AbstractPhysicalObjectHooks
         }
     }
 
+    internal static void IL_GraffitiCloud_Update(ILContext il)
+    {
+        var c = new ILCursor(il);
+        if (c.TryGotoNext(MoveType.After,
+            s_MatchLdloc_OutLoc1,
+            s_MatchCallOrCallvirt_Creature_get_Template,
+            s_MatchLdfld_CreatureTemplate_type,
+            s_MatchLdsfld_CreatureTemplate_Type_WhiteLizard,
+            s_MatchCall_Any))
+        {
+            c.Emit(OpCodes.Ldloc, il.Body.Variables[s_loc1])
+             .EmitDelegate((bool flag, Creature c) => flag || c is HunterSeeker);
+        }
+        else
+            LBMergedModsPlugin.s_logger.LogError("Couldn't ILHook GraffitiCloud.Update!");
+    }
+
     internal static void On_PlayerCarryableItem_NewRoom(On.PlayerCarryableItem.orig_NewRoom orig, PlayerCarryableItem self, Room newRoom)
     {
         orig(self, newRoom);
@@ -477,7 +482,7 @@ public static class AbstractPhysicalObjectHooks
 
     public static bool NoCamo(this AbstractPhysicalObject self) => self.realizedObject is not PhysicalObject robj || robj.NoCamo();
 
-    public static bool NoCamo(this PhysicalObject self) => (self is not Player p || !p.isCamo) &&
+    public static bool NoCamo(this PhysicalObject self) => (self is not Player p || !p.IsHidden) &&
         (self is not Lizard l || !l.Camouflaged()) &&
         (self is not Hazer h || !h.Camouflaged()) &&
         (self is not PoleMimic po || !po.Camouflaged()) &&

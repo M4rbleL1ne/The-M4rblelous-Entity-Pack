@@ -1,11 +1,12 @@
-﻿using Fisobs.Creatures;
+﻿using DevInterface;
 using Fisobs.Core;
+using Fisobs.Creatures;
 using Fisobs.Sandbox;
-using static PathCost.Legality;
-using UnityEngine;
-using System.Collections.Generic;
-using DevInterface;
 using RWCustom;
+using System.Collections.Generic;
+using UnityEngine;
+using static PathCost.Legality;
+using Watcher;
 
 namespace LBMergedMods.Creatures;
 
@@ -119,6 +120,8 @@ sealed class MiniFlyingBigEelCritob : Critob
         l.Ignores(CreatureTemplateType.FlyingBigEel);
         l.Ignores(CreatureTemplateType.MiniLeviathan);
         l.Ignores(Type);
+        if (ModManager.Watcher)
+            l.Ignores(WatcherEnums.CreatureTemplateType.Angler);
     }
 
     public override ArtificialIntelligence CreateRealizedAI(AbstractCreature acrit) => new MiniFlyingBigEelAI(acrit, acrit.world);

@@ -17,7 +17,7 @@ public class FoodItemRepresentation(Tracker parent, AbstractPhysicalObject repre
     {
         get
         {
-            if (RepresentedItem.realizedObject is not PhysicalObject o || o.room != Parent.AI.creature.Room.realizedRoom || o is Player { isCamo: true, VisibilityBonus: <= -1f })
+            if (RepresentedItem.realizedObject is not PhysicalObject o || o.room != Parent.AI.creature.Room.realizedRoom || o is Player { IsHidden: true, VisibilityBonus: <= -1f })
                 VisualContact = false;
             return VisualContact;
         }

@@ -8,7 +8,7 @@ using TubeSegment = (UnityEngine.Vector2 Pos, UnityEngine.Vector2 LastPos, Unity
 
 namespace LBMergedMods.Creatures;
 
-public class M4RJawsGraphics : GraphicsModule
+public class M4RJawsGraphics : GraphicsModule, IMuddableGraphics
 {
 	[StructLayout(LayoutKind.Sequential)]
 	public class LegGraphic(M4RJawsGraphics owner, M4RJaws.Leg leg, int firstSprite)
@@ -517,5 +517,17 @@ public class M4RJawsGraphics : GraphicsModule
         var legs = Legs;
         for (var k = 0; k < legs.Length; k++)
             legs[k].ApplyPalette(sLeaser, rCam, in palette);
+    }
+
+    public virtual bool MuddableSprite(RoomCamera.SpriteLeaser sLeaser, int sprite) => sprite is not EYE and not TRAIL and not (FIRST_LEG_PART + 2) and not (FIRST_LEG_PART + LegGraphic.SPRITES + 2) and not (FIRST_LEG_PART + 2 * LegGraphic.SPRITES + 2) and not LAST_LEG_PART;
+
+    public virtual void SetUpSpecialMudSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera.SpriteLeaser mudSleaser, MudOverlay mudOverlay)
+    {
+        var sprites = sLeaser.sprites;
+        var lMap = mudOverlay.layeringMap;
+        lMap[mudOverlay.GetMudSprite(FIRST_LEG_PART + 1)] = sprites[FIRST_LEG_PART + 2];
+        lMap[mudOverlay.GetMudSprite(FIRST_LEG_PART + LegGraphic.SPRITES + 1)] = sprites[FIRST_LEG_PART + LegGraphic.SPRITES + 2];
+        lMap[mudOverlay.GetMudSprite(FIRST_LEG_PART + 2 * LegGraphic.SPRITES + 1)] = sprites[FIRST_LEG_PART + 2 * LegGraphic.SPRITES + 2];
+        lMap[mudOverlay.GetMudSprite(FIRST_LEG_PART + 3 * LegGraphic.SPRITES + 1)] = sprites[LAST_LEG_PART];
     }
 }

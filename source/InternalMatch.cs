@@ -64,6 +64,7 @@ static class InternalMatch
         s_MatchCallOrCallvirt_GraphicsModule_AddToContainer = MatchCallOrCallvirt_GraphicsModule_AddToContainer,
         s_MatchCallOrCallvirt_HealthState_get_ClampedHealth = MatchCallOrCallvirt_HealthState_get_ClampedHealth,
         s_MatchCallOrCallvirt_IconSymbol_Draw = MatchCallOrCallvirt_IconSymbol_Draw,
+        s_MatchCallOrCallvirt_Lizard_get_Swimmer = MatchCallOrCallvirt_Lizard_get_Swimmer,
         s_MatchCallOrCallvirt_LizardAI_get_lizard = MatchCallOrCallvirt_LizardAI_get_lizard,
         s_MatchCallOrCallvirt_LizardAI_LizardSpitTracker_get_lizardAI = MatchCallOrCallvirt_LizardAI_LizardSpitTracker_get_lizardAI,
         s_MatchCallOrCallvirt_OutRef = MatchCallOrCallvirt_OutRef,
@@ -169,6 +170,7 @@ static class InternalMatch
         s_MatchLdloc_InLoc2 = MatchLdloc_InLoc2,
         s_MatchLdloc_OutLoc1 = MatchLdloc_OutLoc1,
         s_MatchLdloc_OutLoc2 = MatchLdloc_OutLoc2,
+        s_MatchLdloca_Any = MatchLdloca_Any,
         s_MatchLdnull = MatchLdnull,
         s_MatchLdsfld_AbstractPhysicalObject_AbstractObjectType_JellyFish = MatchLdsfld_AbstractPhysicalObject_AbstractObjectType_JellyFish,
         s_MatchLdsfld_AbstractRoom_CreatureRoomAttraction_Forbidden = MatchLdsfld_AbstractRoom_CreatureRoomAttraction_Forbidden,
@@ -274,6 +276,7 @@ static class InternalMatch
         s_MatchCallOrCallvirt_GraphicsModule_AddToContainer = null!;
         s_MatchCallOrCallvirt_HealthState_get_ClampedHealth = null!;
         s_MatchCallOrCallvirt_IconSymbol_Draw = null!;
+        s_MatchCallOrCallvirt_Lizard_get_Swimmer = null!;
         s_MatchCallOrCallvirt_LizardAI_get_lizard = null!;
         s_MatchCallOrCallvirt_LizardAI_LizardSpitTracker_get_lizardAI = null!;
         s_MatchCallOrCallvirt_OutRef = null!;
@@ -379,6 +382,7 @@ static class InternalMatch
         s_MatchLdloc_InLoc2 = null!;
         s_MatchLdloc_OutLoc1 = null!;
         s_MatchLdloc_OutLoc2 = null!;
+        s_MatchLdloca_Any = null!;
         s_MatchLdnull = null!;
         s_MatchLdsfld_AbstractPhysicalObject_AbstractObjectType_JellyFish = null!;
         s_MatchLdsfld_AbstractRoom_CreatureRoomAttraction_Forbidden = null!;
@@ -506,6 +510,8 @@ static class InternalMatch
     internal static bool MatchCallOrCallvirt_HealthState_get_ClampedHealth(Instruction x) => x.MatchCallOrCallvirt<HealthState>("get_ClampedHealth");
 
     internal static bool MatchCallOrCallvirt_IconSymbol_Draw(Instruction x) => x.MatchCallOrCallvirt<IconSymbol>("Draw");
+
+    internal static bool MatchCallOrCallvirt_Lizard_get_Swimmer(Instruction x) => x.MatchCallOrCallvirt<Lizard>("get_Swimmer");
 
     internal static bool MatchCallOrCallvirt_LizardAI_get_lizard(Instruction x) => x.MatchCallOrCallvirt<LizardAI>("get_lizard");
 
@@ -718,6 +724,8 @@ static class InternalMatch
     internal static bool MatchLdloc_OutLoc1(Instruction x) => x.MatchLdloc(out s_loc1);
 
     internal static bool MatchLdloc_OutLoc2(Instruction x) => x.MatchLdloc(out s_loc2);
+
+    internal static bool MatchLdloca_Any(Instruction x) => x.MatchLdloca(out _);
 
     internal static bool MatchLdnull(Instruction x) => x.MatchLdnull();
 

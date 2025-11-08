@@ -14,14 +14,14 @@ public class Polliwog : Lizard
         effectColor = Custom.HSL2RGB(Custom.WrappedRandomVariation(.708f, .1f, .6f), .482f, Custom.ClampedRandomVariation(.5f, .15f, .1f));
         if (rotModule is LizardRotModule mod && LizardState.rotType != LizardState.RotType.Slight)
             effectColor = Color.Lerp(effectColor, mod.RotEyeColor, LizardState.rotType == LizardState.RotType.Opossum ? .2f : .8f);
-        buoyancy = .92f;
         Random.state = state;
     }
 
     public override void Update(bool eu)
     {
         base.Update(eu);
-        lungs = 1f;
+        if (!ModManager.MMF)
+            buoyancy = .92f;
         if (LizardState?.limbHealth is float[] ar)
         {
             ar[2] = 0f;

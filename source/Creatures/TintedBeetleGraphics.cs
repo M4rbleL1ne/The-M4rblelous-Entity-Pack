@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 
 namespace LBMergedMods.Creatures;
 
-public class TintedBeetleGraphics : GraphicsModule
+public class TintedBeetleGraphics : GraphicsModule, IMuddableGraphics
 {
     public const float LEG_LENGTH = 30f;
     public const int TOTAL_SPRITES = 15, HEAD_SPRITE = 3, MESH_SPRITE = 1, MESH_2 = 2;
@@ -382,5 +382,14 @@ public class TintedBeetleGraphics : GraphicsModule
         var col = Bug.Consious ? Color.Lerp(Color.Lerp(palette.fogColor, AltForm ? Custom.HSL2RGB(348f / 360f, .77f, .81f) : Custom.HSL2RGB(Bug.Hue, 1f, .5f), .75f), BlackColor, Mathf.InverseLerp(.75f, 1f, Darkness) * .4f) : BlackColor;
         for (var n = 0; n < 2; n++)
             sprs[EyeSprite(n)].color = col;
+    }
+
+    public virtual bool MuddableSprite(RoomCamera.SpriteLeaser sLeaser, int sprite) => sprite != EyeSprite(0) && sprite != EyeSprite(1);
+
+    public virtual void SetUpSpecialMudSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera.SpriteLeaser mudSleaser, MudOverlay mudOverlay)
+    {
+        /*MudUtils.SetUpTube(mudOverlay.GetMudSprite(MESH_SPRITE), 30f, 6f);
+        for (var i = 0; i < 2; i++)
+            MudUtils.SetUpTube(mudOverlay.GetMudSprite(AntennaSprite(i)), 60f, 2f);*/
     }
 }

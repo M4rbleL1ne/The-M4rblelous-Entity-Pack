@@ -4,6 +4,7 @@ using Fisobs.Creatures;
 using System.Collections.Generic;
 using UnityEngine;
 using Fisobs.Sandbox;
+using Watcher;
 
 namespace LBMergedMods.Creatures;
 
@@ -56,6 +57,11 @@ sealed class PolliwogCritob : Critob
         p.EatenBy(CreatureTemplate.Type.Vulture, .6f);
         p.EatenBy(CreatureTemplate.Type.KingVulture, .5f);
         p.IgnoredBy(CreatureTemplate.Type.Leech);
+        if (ModManager.Watcher)
+        {
+            p.Attacks(WatcherEnums.CreatureTemplateType.PeachLizard, .3f);
+            p.AttackedBy(WatcherEnums.CreatureTemplateType.PeachLizard, .3f);
+        }
     }
 
     public override IEnumerable<string> WorldFileAliases() => ["polliwog"];

@@ -59,6 +59,7 @@ public class DivingBeetle : InsectoidCreature
         waterFriction = .98f;
         buoyancy = .5f;
         waterRetardationImmunity = .1f;
+        baseCurrentAffectiveness = .25f;
     }
 
     public override void InitiateGraphicsModule()

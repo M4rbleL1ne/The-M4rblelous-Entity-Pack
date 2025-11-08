@@ -22,12 +22,8 @@ public class PolliwogAI : LizardAI
     public override PathCost TravelPreference(MovementConnection connection, PathCost cost)
     {
         var res = base.TravelPreference(connection, cost);
-        if (lizard is Polliwog l && yellowAI is PolliwogCommunication c)
-        {
+        if (yellowAI is PolliwogCommunication c)
             res = c.TravelPreference(connection, res);
-            if (!l.room.GetTile(connection.destinationCoord).AnyWater)
-                res.resistance += 5f;
-        }
         return res;
     }
 }

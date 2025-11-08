@@ -4,6 +4,7 @@ using Fisobs.Sandbox;
 using UnityEngine;
 using System.Collections.Generic;
 using DevInterface;
+using Watcher;
 
 namespace LBMergedMods.Creatures;
 
@@ -72,6 +73,11 @@ sealed class MoleSalamanderCritob : Critob
         m.EatenBy(CreatureTemplate.Type.BigSpider, .3f);
         m.IgnoredBy(CreatureTemplate.Type.Leech);
         m.Ignores(CreatureTemplate.Type.Leech);
+        if (ModManager.Watcher)
+        {
+            m.Ignores(WatcherEnums.CreatureTemplateType.Angler);
+            m.IgnoredBy(WatcherEnums.CreatureTemplateType.Angler);
+        }
     }
 
     public override ArtificialIntelligence CreateRealizedAI(AbstractCreature acrit) => new MoleSalamanderAI(acrit, acrit.world);

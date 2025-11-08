@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 
 namespace LBMergedMods.Creatures;
 
-public class CaterpillarGraphics : GraphicsModule
+public class CaterpillarGraphics : GraphicsModule, IMuddableGraphics
 {
     public const int TUBE_SPRITE = 0;
     public Caterpillar Crit;
@@ -525,5 +525,16 @@ public class CaterpillarGraphics : GraphicsModule
                     (sprites[WhiskerSprite(1, n, num11)] as TriangleMesh)!.color = col;
             }
         }
+    }
+
+    public virtual bool MuddableSprite(RoomCamera.SpriteLeaser sLeaser, int sprite) => sprite < DotsSprite(0);
+
+    public virtual void SetUpSpecialMudSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera.SpriteLeaser mudSleaser, MudOverlay mudOverlay)
+    {
+        if (Crit.bodyChunks is not BodyChunk[] chs)
+            return;
+        var sprites = sLeaser.sprites;
+        for (var i = 1; i < chs.Length; i++)
+            mudOverlay.layeringMap[mudOverlay.GetMudSprite(SegmentSprite(i))] = sprites[DotsSprite(i)];
     }
 }

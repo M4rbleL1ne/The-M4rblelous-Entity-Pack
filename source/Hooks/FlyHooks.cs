@@ -84,6 +84,8 @@ public static class FlyHooks
             AddSeedSprites(sLeaser, rCam, prop);
     }
 
+    internal static bool On_FlyGraphics_MuddableSprite(On.FlyGraphics.orig_MuddableSprite orig, FlyGraphics self, RoomCamera.SpriteLeaser sLeaser, int sprite) => self.fly?.IsSeed() is true || orig(self, sLeaser, sprite);
+
     public static bool IsSeed(this AbstractCreature self) => Seed.TryGetValue(self, out var prop) && prop.IsSeed;
 
     public static bool IsSeed(this Fly self) => Seed.TryGetValue(self.abstractCreature, out var prop) && prop.IsSeed;

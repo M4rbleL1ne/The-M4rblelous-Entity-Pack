@@ -228,11 +228,14 @@ sealed class DentureCritob : Critob, ISandboxHandler
             dt.Eats(WatcherEnums.CreatureTemplateType.Frog, 1f);
             dt.Eats(WatcherEnums.CreatureTemplateType.Rat, 1f);
             dt.Eats(WatcherEnums.CreatureTemplateType.Tardigrade, 1f);
+            dt.Eats(WatcherEnums.CreatureTemplateType.MothGrub, 1f);
+            dt.Eats(WatcherEnums.CreatureTemplateType.PeachLizard, 1f);
             dt.Attacks(WatcherEnums.CreatureTemplateType.Barnacle, 1f);
             dt.Attacks(WatcherEnums.CreatureTemplateType.SmallMoth, 1f);
             dt.FearedBy(WatcherEnums.CreatureTemplateType.FireSprite, 1f);
             dt.FearedBy(WatcherEnums.CreatureTemplateType.Frog, 1f);
             dt.FearedBy(WatcherEnums.CreatureTemplateType.Rat, 1f);
+            dt.FearedBy(WatcherEnums.CreatureTemplateType.PeachLizard, 1f);
             dt.FearedBy(WatcherEnums.CreatureTemplateType.Tardigrade, 1f);
             dt.FearedBy(WatcherEnums.CreatureTemplateType.Barnacle, .5f);
             dt.FearedBy(WatcherEnums.CreatureTemplateType.SmallMoth, .5f);

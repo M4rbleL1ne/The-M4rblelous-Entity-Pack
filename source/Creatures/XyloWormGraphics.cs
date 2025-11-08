@@ -4,7 +4,7 @@ using System;
 
 namespace LBMergedMods.Creatures;
 
-public class XyloWormGraphics : GraphicsModule
+public class XyloWormGraphics : GraphicsModule, IMuddableGraphics
 {
     public float DeadColor, LastDeadColor;
 
@@ -124,4 +124,8 @@ public class XyloWormGraphics : GraphicsModule
         sLeaser.sprites[0].color = Worm?.Rotten is true ? palette.blackColor : Color.Lerp(Color.Lerp(palette.fogColor, new(1f, 1f, .65f), Mathf.Lerp(.4f, .3f, DeadColor)), palette.blackColor, Mathf.Lerp(Mathf.Pow(palette.darkness, 2f), 1f, .5f * DeadColor));
         sLeaser.sprites[1].color = palette.blackColor;
     }
+
+    public virtual bool MuddableSprite(RoomCamera.SpriteLeaser sLeaser, int sprite) => true;
+
+    public virtual void SetUpSpecialMudSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera.SpriteLeaser mudSleaser, MudOverlay mudOverlay) { }
 }

@@ -5,6 +5,7 @@ using Fisobs.Sandbox;
 using static PathCost.Legality;
 using UnityEngine;
 using DevInterface;
+using Watcher;
 
 namespace LBMergedMods.Creatures;
 
@@ -160,6 +161,11 @@ sealed class ChipChopCritob : Critob
         ctp.EatenBy(CreatureTemplateType.CommonEel, 1f);
         ctp.FearedBy(CreatureTemplateType.WaterBlob, 1f);
         ctp.EatenBy(CreatureTemplateType.Killerpillar, 1f);
+        if (ModManager.Watcher)
+        {
+            ctp.Fears(WatcherEnums.CreatureTemplateType.Angler, 1f);
+            ctp.AntagonizedBy(WatcherEnums.CreatureTemplateType.Angler, .8f);
+        }
     }
 
     public override ArtificialIntelligence? CreateRealizedAI(AbstractCreature acrit) => null;

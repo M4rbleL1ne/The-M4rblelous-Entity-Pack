@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 
 namespace LBMergedMods.Creatures;
 
-public class ThornBugGraphics : GraphicsModule
+public class ThornBugGraphics : GraphicsModule, IMuddableGraphics
 {
     public const float HUE_OFF = .05f;
     public const int TOTAL_SPRITES = 20, HEAD_SPRITE = 5, MESH_SPRITE = 4, BACK_SPIKE = 1, FRONT_SPIKE = 9;
@@ -412,4 +412,8 @@ public class ThornBugGraphics : GraphicsModule
             sprs[EyeSprite(n)].color = col;
         }
     }
+
+    public virtual bool MuddableSprite(RoomCamera.SpriteLeaser sLeaser, int sprite) => sprite != EyeSprite(0) && sprite != EyeSprite(1) && sprite is not (BACK_SPIKE + 1) and not (BACK_SPIKE + 2);
+
+    public virtual void SetUpSpecialMudSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera.SpriteLeaser mudSleaser, MudOverlay mudOverlay) => mudOverlay.layeringMap[mudOverlay.GetMudSprite(BACK_SPIKE)] = sLeaser.sprites[BACK_SPIKE + 2];
 }

@@ -6,7 +6,6 @@ using Fisobs.Core;
 using Fisobs.Sandbox;
 using MonoMod.RuntimeDetour;
 using MoreSlugcats;
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
@@ -22,7 +21,7 @@ using Watcher;
 
 namespace LBMergedMods;
 
-[BepInPlugin("lb-fgf-m4r-ik.modpack", "LB Merged Mods", "10.0.4"), BepInDependency("io.github.dual.fisobs"), BepInDependency("com.rainworldgame.lizardcustomizer.plugin", BepInDependency.DependencyFlags.SoftDependency), BepInDependency("slime-cubed.devconsole", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInPlugin("lb-fgf-m4r-ik.modpack", "LB Merged Mods", "10.0.5"), BepInDependency("io.github.dual.fisobs"), BepInDependency("com.rainworldgame.lizardcustomizer.plugin", BepInDependency.DependencyFlags.SoftDependency), BepInDependency("slime-cubed.devconsole", BepInDependency.DependencyFlags.SoftDependency)]
 public sealed class LBMergedModsPlugin : BaseUnityPlugin
 {
     public static AssetBundle? Bundle;
@@ -137,14 +136,13 @@ public sealed class LBMergedModsPlugin : BaseUnityPlugin
         On.LizardCosmetics.AxolotlGills.DrawSprites += On_AxolotlGills_DrawSprites;
         On.LizardAI.LurkTracker.Utility += On_LurkTracker_Utility;
         IL.LizardAI.LurkTracker.LurkPosScore += IL_LurkTracker_LurkPosScore;
-        On.LizardAI.ComfortableIdlePosition += On_LizardAI_ComfortableIdlePosition;
         On.LizardAI.IdleSpotScore += On_LizardAI_IdleSpotScore;
-        IL.Lizard.SwimBehavior += IL_Lizard_SwimBehavior;
+        On.Lizard.SwimBehavior += On_Lizard_SwimBehavior;
         On.LizardPather.HeuristicForCell += On_LizardPather_HeuristicForCell;
         IL.Lizard.EnterAnimation += IL_Lizard_EnterAnimation;
         IL.LizardGraphics.UpdateTailSegment += IL_LizardGraphics_UpdateTailSegment;
         IL.LizardGraphics.Update += IL_LizardGraphics_Update;
-        IL.Menu.MultiplayerMenu.ctor += IL_MultiplayerMenu_ctor;
+        IL.Menu.MultiplayerMenu.FindAllLevels += IL_MultiplayerMenu_FindAllLevels;
         IL.DaddyLongLegs.ctor += IL_DaddyLongLegs_ctor;
         On.DaddyLongLegs.InitiateGraphicsModule += On_DaddyLongLegs_InitiateGraphicsModule;
         On.DaddyGraphics.Eye.RenderSlits += On_Eye_RenderSlits;
@@ -411,6 +409,9 @@ public sealed class LBMergedModsPlugin : BaseUnityPlugin
         On.LizardCosmetics.WingScales.ApplyPalette += On_WingScales_ApplyPalette;
         On.Lizard.EnterAnimation += On_Lizard_EnterAnimation;
         IL.LizardCosmetics.Antennae.ctor += IL_Antennae_ctor;
+        new Hook(typeof(Lizard).GetMethod("get_Swimmer", ALL_FLAGS), On_Lizard_get_Swimmer);
+        IL.GraffitiCloud.Update += IL_GraffitiCloud_Update;
+        On.FlyGraphics.MuddableSprite += On_FlyGraphics_MuddableSprite;
         Content.Register(new WaterBlobCritob(),
                         new BouncingBallCritob(),
                         new HazerMomCritob(),

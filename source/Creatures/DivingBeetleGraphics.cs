@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 
 namespace LBMergedMods.Creatures;
 
-public class DivingBeetleGraphics : GraphicsModule
+public class DivingBeetleGraphics : GraphicsModule, IMuddableGraphics
 {
     public const int HEAD_SPRITE = 8, MESH_SPRITE = 9, SHINE_MESH_SPRITE = 10, TOTAL_SPRITES = 27;
     public const float LEG_LENGTH = 5f;
@@ -518,4 +518,8 @@ public class DivingBeetleGraphics : GraphicsModule
                 verts2[l] = Color.Lerp(CurrentSkinColor, ShineColor, Mathf.InverseLerp(verts2.Length / 2, verts2.Length - 1, l) * ColoredAntennae);
         }
     }
+
+    public virtual bool MuddableSprite(RoomCamera.SpriteLeaser sLeaser, int sprite) => sprite != SHINE_MESH_SPRITE;
+
+    public virtual void SetUpSpecialMudSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera.SpriteLeaser mudSleaser, MudOverlay mudOverlay) => mudOverlay.layeringMap[mudOverlay.GetMudSprite(MESH_SPRITE)] = sLeaser.sprites[SHINE_MESH_SPRITE];
 }

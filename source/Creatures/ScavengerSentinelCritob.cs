@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using DevInterface;
 using Random = UnityEngine.Random;
 using static PathCost.Legality;
+using Watcher;
 
 namespace LBMergedMods.Creatures;
 
@@ -149,6 +150,11 @@ sealed class ScavengerSentinelCritob : Critob
         me.FearedBy(CreatureTemplateType.HunterSeeker, .1f);
         me.Attacks(CreatureTemplateType.HunterSeeker, .5f);
         me.Attacks(CreatureTemplateType.MoleSalamander, .25f);
+        if (ModManager.Watcher)
+        {
+            me.Attacks(WatcherEnums.CreatureTemplateType.PeachLizard, .5f);
+            me.FearedBy(WatcherEnums.CreatureTemplateType.PeachLizard, .6f);
+        }
     }
 
     public override ArtificialIntelligence CreateRealizedAI(AbstractCreature acrit) => new ScavengerSentinelAI(acrit, acrit.world);

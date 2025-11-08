@@ -1,12 +1,13 @@
-﻿using Fisobs.Creatures;
+﻿using DevInterface;
 using Fisobs.Core;
+using Fisobs.Creatures;
 using Fisobs.Sandbox;
-using UnityEngine;
-using System.Collections.Generic;
-using DevInterface;
 using MoreSlugcats;
-using Random = UnityEngine.Random;
 using System;
+using System.Collections.Generic;
+using UnityEngine;
+using Watcher;
+using Random = UnityEngine.Random;
 
 namespace LBMergedMods.Creatures;
 
@@ -144,6 +145,8 @@ sealed class CommonEelCritob : Critob, ISandboxHandler
             me.Ignores(MoreSlugcatsEnums.CreatureTemplateType.TrainLizard);
             me.IgnoredBy(MoreSlugcatsEnums.CreatureTemplateType.TrainLizard);
         }
+        if (ModManager.Watcher)
+            me.Ignores(WatcherEnums.CreatureTemplateType.Angler);
     }
 
     public override ArtificialIntelligence CreateRealizedAI(AbstractCreature acrit) => new CommonEelAI(acrit, acrit.world);

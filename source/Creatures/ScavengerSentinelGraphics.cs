@@ -1,11 +1,12 @@
-﻿using RWCustom;
+﻿using MoreSlugcats;
+using RWCustom;
 using System;
 using Unity.Mathematics;
 using UnityEngine;
 
 namespace LBMergedMods.Creatures;
 
-public class ScavengerSentinelGraphics(ScavengerSentinel ow) : ScavengerGraphics(ow)
+public class ScavengerSentinelGraphics(ScavengerSentinel ow) : ScavengerGraphics(ow), IMuddableGraphics
 {
     public override void Update()
     {
@@ -59,5 +60,15 @@ public class ScavengerSentinelGraphics(ScavengerSentinel ow) : ScavengerGraphics
         if (!ModManager.DLCShared)
             maskGfx?.ApplyPalette(sLeaser, rCam, palette);
         base.ApplyPalette(sLeaser, rCam, palette);
+    }
+
+    public virtual new bool MuddableSprite(RoomCamera.SpriteLeaser sLeaser, int sprite)
+    {
+        if (!ModManager.DLCShared)
+        {
+            if (maskGfx is VultureMaskGraphics gfx && gfx.firstSprite <= sprite && sprite < gfx.firstSprite + gfx.TotalSprites)
+                return false;
+        }
+        return base.MuddableSprite(sLeaser, sprite);
     }
 }

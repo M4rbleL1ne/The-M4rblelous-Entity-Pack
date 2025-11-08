@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static PathCost.Legality;
 using Fisobs.Sandbox;
+using Watcher;
 
 namespace LBMergedMods.Creatures;
 
@@ -95,6 +96,11 @@ sealed class MiniLeechCritob : Critob
         l.IgnoredBy(CreatureTemplate.Type.BigEel);
         l.Fears(CreatureTemplate.Type.DaddyLongLegs, 1f);
         l.Ignores(Type);
+        if (ModManager.Watcher)
+        {
+            l.Ignores(WatcherEnums.CreatureTemplateType.Angler);
+            l.Ignores(WatcherEnums.CreatureTemplateType.PeachLizard);
+        }
     }
 
     public override IEnumerable<string> WorldFileAliases() => ["miniblackleech", "mini black leech", "mini blackleech", "miniblack leech"];

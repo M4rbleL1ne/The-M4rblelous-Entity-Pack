@@ -10,7 +10,6 @@ public class MoleSalamander : Lizard
 
     public MoleSalamander(AbstractCreature abstractCreature, World world) : base(abstractCreature, world)
     {
-        buoyancy = .92f;
         var state = Random.state;
         Random.InitState(abstractCreature.ID.RandomSeed);
         if (world.region is Region reg)
@@ -30,7 +29,8 @@ public class MoleSalamander : Lizard
     public override void Update(bool eu)
     {
         base.Update(eu);
-        lungs = 1f;
+        if (!ModManager.MMF)
+            buoyancy = .92f;
     }
 
     public override Color ShortCutColor() => Black ? Color.Lerp(Color.black, Color.gray, .5f) : base.ShortCutColor();

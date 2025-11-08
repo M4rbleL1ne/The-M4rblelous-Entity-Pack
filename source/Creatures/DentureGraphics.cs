@@ -3,7 +3,7 @@ using RWCustom;
 
 namespace LBMergedMods.Creatures;
 
-public class DentureGraphics : GraphicsModule
+public class DentureGraphics : GraphicsModule, IMuddableGraphics
 {
     public const int BODY_SPRITE = 0, BODY_SPRITE2 = 1, BODY_SPRITE3 = 2, JAW1_SPRITE = 3, JAW2_SPRITE = 4;
     public Color BlackColor;
@@ -118,4 +118,8 @@ public class DentureGraphics : GraphicsModule
     }
 
     public override void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette) => BlackColor = palette.blackColor;
+
+    public virtual bool MuddableSprite(RoomCamera.SpriteLeaser sLeaser, int sprite) => sprite is JAW1_SPRITE or JAW2_SPRITE;
+
+    public virtual void SetUpSpecialMudSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera.SpriteLeaser mudSleaser, MudOverlay mudOverlay) { }
 }

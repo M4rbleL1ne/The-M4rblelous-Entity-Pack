@@ -3,7 +3,7 @@ using RWCustom;
 
 namespace LBMergedMods.Creatures;
 
-public class BlizzorGraphics : MirosBirdGraphics
+public class BlizzorGraphics : MirosBirdGraphics, IMuddableGraphics
 {
     public BlizzorGraphics(Blizzor ow) : base(ow)
     {
@@ -49,4 +49,9 @@ public class BlizzorGraphics : MirosBirdGraphics
             sprites[lgs[i].firstSprite].color = clr;
         sprites[EyeSprite].color = EyeColor;
     }
+
+
+    public virtual bool MuddableSprite(RoomCamera.SpriteLeaser sLeaser, int sprite) => sprite != EyeSprite && sprite != EyeTrailSprite;
+
+    public virtual void SetUpSpecialMudSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera.SpriteLeaser mudSleaser, MudOverlay mudOverlay) { }
 }

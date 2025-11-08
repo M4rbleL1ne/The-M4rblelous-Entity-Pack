@@ -10,7 +10,6 @@ public class CommonEel : Lizard
 
     public CommonEel(AbstractCreature abstractCreature, World world) : base(abstractCreature, world)
     {
-        buoyancy = .92f;
         effectColor = Custom.HSL2RGB(abstractCreature.superSizeMe ? Custom.WrappedRandomVariation(225f / 360f, .02f, .6f) : Custom.WrappedRandomVariation(.0025f, .02f, .6f), 1f, Custom.ClampedRandomVariation(.5f, .15f, .1f));
         abstractCreature.HypothermiaImmune = true;
         var chs = bodyChunks;
@@ -33,7 +32,8 @@ public class CommonEel : Lizard
     public override void Update(bool eu)
     {
         base.Update(eu);
-        lungs = 1f;
+        if (!ModManager.MMF)
+            buoyancy = .92f;
         if (LizardState?.limbHealth is float[] ar)
         {
             for (var i = 0; i < ar.Length; i++)

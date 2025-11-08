@@ -19,14 +19,6 @@ public class MoleSalamanderAI : LizardAI
             n.hearingSkill = 2f;
     }
 
-    public override PathCost TravelPreference(MovementConnection connection, PathCost cost)
-    {
-        var res = base.TravelPreference(connection, cost);
-        if (lizard is MoleSalamander l && !l.room.GetTile(connection.destinationCoord).AnyWater)
-            res.resistance += 5f;
-        return res;
-    }
-
     public override float VisualScore(Vector2 lookAtPoint, float bonus)
     {
         if (creature?.realizedCreature is MoleSalamander l && l.room is Room rm && rm.GetTile(lookAtPoint).DeepWater && rm.GetTile(l.VisionPoint).DeepWater && Custom.DistLess(l.VisionPoint, lookAtPoint, 8000f * bonus))
