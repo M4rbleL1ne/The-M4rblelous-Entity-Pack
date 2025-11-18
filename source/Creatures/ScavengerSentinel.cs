@@ -10,7 +10,7 @@ public class ScavengerSentinel(AbstractCreature abstractCreature, World world) :
         if (!RippleViolenceCheck(source) || room is not Room rm)
             return;
         stunBonus *= .9f;
-        if (hitChunk.index == 2)
+        if (hitChunk?.index == 2)
             damage *= .09f;
         base.Violence(source, directionAndMomentum, hitChunk, hitAppendage, type, damage, stunBonus);
         if (dead && !readyToReleaseMask && rm.world is World w)
