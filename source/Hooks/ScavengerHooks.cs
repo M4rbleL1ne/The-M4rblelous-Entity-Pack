@@ -791,12 +791,9 @@ public static class ScavengerHooks
         var c = new ILCursor(il);
         var vars = il.Body.Variables;
         if (c.TryGotoNext(
-            s_MatchLdarg_0,
-            s_MatchLdfld_ScavengersWorldAI_WorldFloodFiller_world,
-            s_MatchLdloc_OutLoc1,
-            s_MatchCallOrCallvirt_World_GetAbstractRoom_WorldCoordinate,
+            s_MatchLdloc_OutLoc2,
             s_MatchLdfld_AbstractRoom_connections,
-            s_MatchLdloc_InLoc1,
+            s_MatchLdloc_OutLoc1,
             s_MatchLdfld_WorldCoordinate_abstractNode,
             s_MatchLdelemI4,
             s_MatchLdcI4_M1,
@@ -804,7 +801,8 @@ public static class ScavengerHooks
         {
             c.Emit(OpCodes.Ldarg_0)
              .Emit(OpCodes.Ldloc, vars[s_loc1])
-             .EmitDelegate((ScavengersWorldAI.WorldFloodFiller self, WorldCoordinate worldCoordinate) => worldCoordinate.abstractNode >= 0 && worldCoordinate.abstractNode < self.world.GetAbstractRoom(worldCoordinate).connections.Length);
+             .Emit(OpCodes.Ldloc, vars[s_loc2])
+             .EmitDelegate((ScavengersWorldAI.WorldFloodFiller self, WorldCoordinate worldCoordinate, AbstractRoom rm) => worldCoordinate.abstractNode < rm.connections.Length);
             c.Emit(OpCodes.Brfalse, s_label);
         }
         else
