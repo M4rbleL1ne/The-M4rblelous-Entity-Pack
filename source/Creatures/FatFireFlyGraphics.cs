@@ -9,7 +9,7 @@ public class FatFireFlyGraphics : VultureGraphics
 {
     public class FireSprite(Vector2 pos, bool altForm) : UpdatableAndDeletable, IDrawable
     {
-        public Vector2 Pos = pos, LastPos = pos, Vel = Custom.RNV() * 1.5f * Random.value;
+        public Vector2 Pos = pos, LastPos = pos, Vel = Custom.RNV() * (1.5f * Random.value);
         public float LifeTime = Mathf.Lerp(10f, 40f, Random.value), Life = 1f, LastLife;
         public bool AltForm = altForm;
 
@@ -18,7 +18,7 @@ public class FatFireFlyGraphics : VultureGraphics
             base.Update(eu);
             Vel *= .8f;
             Vel.y += .4f;
-            Vel += Custom.RNV() * Random.value * .5f;
+            Vel += Custom.RNV() * (Random.value * .5f);
             LastLife = Life;
             Life -= 1f / LifeTime;
             if (Life < 0f)

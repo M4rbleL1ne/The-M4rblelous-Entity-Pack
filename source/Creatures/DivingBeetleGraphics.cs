@@ -137,13 +137,13 @@ public class DivingBeetleGraphics : GraphicsModule, IMuddableGraphics
         }
         LastFlip = Flip;
         TailEnd.Update();
-        TailEnd.ConnectToPoint(chs[2].pos + Custom.DirVec(chs[1].pos, chs[2].pos) * 12f + Custom.PerpendicularVector(chs[1].pos, chs[2].pos) * Flip * 10f, 12f, false, .2f, chs[1].vel, .5f, .1f);
+        TailEnd.ConnectToPoint(chs[2].pos + Custom.DirVec(chs[1].pos, chs[2].pos) * 12f + Custom.PerpendicularVector(chs[1].pos, chs[2].pos) * (Flip * 10f), 12f, false, .2f, chs[1].vel, .5f, .1f);
         TailEnd.vel.y -= .4f;
         TailEnd.vel += Custom.DirVec(chs[1].pos, chs[2].pos) * .8f;
         if (!Bug.dead)
         {
             TailEnd.vel += BreathDir * .7f;
-            BreathDir = Vector2.ClampMagnitude(BreathDir + Custom.RNV() * Random.value * .01f, 1f);
+            BreathDir = Vector2.ClampMagnitude(BreathDir + Custom.RNV() * (Random.value * .01f), 1f);
         }
         var num = Custom.AimFromOneVectorToAnother(chs[1].pos, fch.pos);
         var vector2 = Custom.DirVec(chs[1].pos, fch.pos);
@@ -169,9 +169,9 @@ public class DivingBeetleGraphics : GraphicsModule, IMuddableGraphics
             }
             var ant = Antennae[m];
             ant.Update();
-            var vector4 = (Custom.DirVec(chs[1].pos, fch.pos) + Custom.PerpendicularVector(chs[1].pos, fch.pos) * Flip * .5f + Custom.PerpendicularVector(chs[1].pos, fch.pos) * (m == 0 ? -1f : 1f) * (1f - Math.Abs(Flip)) * .35f).normalized;
+            var vector4 = (Custom.DirVec(chs[1].pos, fch.pos) + Custom.PerpendicularVector(chs[1].pos, fch.pos) * (Flip * .5f) + Custom.PerpendicularVector(chs[1].pos, fch.pos) * ((m == 0 ? -1f : 1f) * (1f - Math.Abs(Flip)) * .35f)).normalized;
             ant.ConnectToPoint(fch.pos, 50f * AntennaeLength, false, 0f, fch.vel, .05f, 0f);
-            ant.vel += vector4 * Custom.LerpMap(Vector2.Distance(ant.pos, fch.pos + vector4 * 50f * AntennaeLength), 10f, 150f, 0f, 14f, .7f);
+            ant.vel += vector4 * Custom.LerpMap(Vector2.Distance(ant.pos, fch.pos + vector4 * (50f * AntennaeLength)), 10f, 150f, 0f, 14f, .7f);
             if (Bug.Consious)
                 ant.vel += Custom.RNV() * Random.value;
         }
@@ -215,27 +215,27 @@ public class DivingBeetleGraphics : GraphicsModule, IMuddableGraphics
                 if (legc.mode == Limb.Mode.HuntRelativePosition || LegsDangleCounter > 0)
                     legc.mode = Limb.Mode.Dangle;
                 Vector2 vector5 = Custom.DegToVec(num + Mathf.Lerp(40f, 160f, t) * (num6 != 0f ? 0f - num6 : num9 == 0 ? 1f : -1f)),
-                    vector6 = fch.pos + (Vector2)Vector3.Slerp(LegsTravelDirs[num9][num8], vector5, .1f) * LEG_LENGTH * .85f * Mathf.Pow(num10, .5f);
+                    vector6 = fch.pos + (Vector2)Vector3.Slerp(LegsTravelDirs[num9][num8], vector5, .1f) * (LEG_LENGTH * .85f * Mathf.Pow(num10, .5f));
                 legc.ConnectToPoint(vector6, LEG_LENGTH, false, 0f, fch.vel, .1f, 0f);
                 legc.ConnectToPoint(fch.pos, LEG_LENGTH, false, 0f, fch.vel, .1f, 0f);
                 knee.Update();
-                knee.vel += Custom.DirVec(vector6, knee.pos) * (LEG_LENGTH * .55f - Vector2.Distance(knee.pos, vector6)) * .6f * Bug.BurstSpeed * .25f;
-                knee.pos += Custom.DirVec(vector6, knee.pos) * (LEG_LENGTH * .55f - Vector2.Distance(knee.pos, vector6)) * .6f;
-                knee.vel += Custom.DirVec(legc.pos, knee.pos) * (LEG_LENGTH * .55f - Vector2.Distance(knee.pos, legc.pos)) * .6f * Bug.BurstSpeed * .25f;
-                knee.pos += Custom.DirVec(legc.pos, knee.pos) * (LEG_LENGTH * .55f - Vector2.Distance(knee.pos, legc.pos)) * .6f;
+                knee.vel += Custom.DirVec(vector6, knee.pos) * ((LEG_LENGTH * .55f - Vector2.Distance(knee.pos, vector6)) * .15f * Bug.BurstSpeed);
+                knee.pos += Custom.DirVec(vector6, knee.pos) * ((LEG_LENGTH * .55f - Vector2.Distance(knee.pos, vector6)) * .6f);
+                knee.vel += Custom.DirVec(legc.pos, knee.pos) * ((LEG_LENGTH * .55f - Vector2.Distance(knee.pos, legc.pos)) * .15f * Bug.BurstSpeed);
+                knee.pos += Custom.DirVec(legc.pos, knee.pos) * ((LEG_LENGTH * .55f - Vector2.Distance(knee.pos, legc.pos)) * .6f);
                 if (Custom.DistLess(knee.pos, fch.pos, 15f))
                 {
-                    knee.vel += Custom.DirVec(fch.pos, knee.pos) * (15f - Vector2.Distance(knee.pos, fch.pos)) * Bug.BurstSpeed * .25f;
+                    knee.vel += Custom.DirVec(fch.pos, knee.pos) * ((15f - Vector2.Distance(knee.pos, fch.pos)) * Bug.BurstSpeed * .25f);
                     knee.pos += Custom.DirVec(fch.pos, knee.pos) * (15f - Vector2.Distance(knee.pos, fch.pos));
                 }
-                knee.vel = Vector2.Lerp(knee.vel, fch.vel, .8f) * Bug.BurstSpeed * .25f;
-                knee.vel += Custom.PerpendicularVector(chs[1].pos, fch.pos) * Mathf.Lerp(num9 == 0 ? -1f : 1f, Mathf.Sign(Flip), Math.Abs(Flip)) * 9f * Bug.BurstSpeed * .25f;
+                knee.vel = Vector2.Lerp(knee.vel, fch.vel, .8f) * (Bug.BurstSpeed * .25f);
+                knee.vel += Custom.PerpendicularVector(chs[1].pos, fch.pos) * (Mathf.Lerp(num9 == 0 ? -1f : 1f, Mathf.Sign(Flip), Math.Abs(Flip)) * 2.25f * Bug.BurstSpeed);
                 if (!Custom.DistLess(knee.pos, vector6, 200f))
-                    knee.pos = vector6 + Custom.RNV() * Random.value * .1f;
+                    knee.pos = vector6 + Custom.RNV() * (Random.value * .1f);
                 if (LegsDangleCounter > 0 || num10 < .1f)
                 {
-                    var vector7 = vector6 + LegsTravelDirs[num9][num8] * LEG_LENGTH * .5f;
-                    legc.vel = Vector2.Lerp(legc.vel, vector7 - legc.pos, Bug.Swimming ? .25f : .05f) * Bug.BurstSpeed * .25f;
+                    var vector7 = vector6 + LegsTravelDirs[num9][num8] * (LEG_LENGTH * .5f);
+                    legc.vel = Vector2.Lerp(legc.vel, vector7 - legc.pos, Bug.Swimming ? .25f : .05f) * (Bug.BurstSpeed * .25f);
                     legc.vel.y -= .4f * Bug.BurstSpeed * .25f;
                 }
                 else
@@ -248,7 +248,7 @@ public class DivingBeetleGraphics : GraphicsModule, IMuddableGraphics
                         {
                             var leg = legsm[num12];
                             if (num11 != num9 && num12 != num8 && Custom.DistLess(vector8, leg.absoluteHuntPos, LEG_LENGTH * .1f))
-                                vector8 = leg.absoluteHuntPos + Custom.DirVec(leg.absoluteHuntPos, vector8) * LEG_LENGTH * .1f;
+                                vector8 = leg.absoluteHuntPos + Custom.DirVec(leg.absoluteHuntPos, vector8) * (LEG_LENGTH * .1f);
                         }
                     }
                     var num13 = 1.2f;
@@ -264,7 +264,7 @@ public class DivingBeetleGraphics : GraphicsModule, IMuddableGraphics
         {
             var ants = Antennae;
             for (var num14 = 0; num14 < ants.Length; num14++)
-                ants[num14].pos += Custom.RNV() * Random.value * 4f;
+                ants[num14].pos += Custom.RNV() * (Random.value * 4f);
         }
     }
 
@@ -346,14 +346,14 @@ public class DivingBeetleGraphics : GraphicsModule, IMuddableGraphics
                 a = Mathf.Lerp(.5f + Mathf.Pow(Mathf.Clamp01(Mathf.Sin(Mathf.InverseLerp(0f, 10f, i) * Mathf.PI)), .25f) * 2f, num6 * .5f, num5 * .5f);
             a = Mathf.Lerp(a, Mathf.Max(a, num6 * .5f), Math.Abs(Vector2.Dot((vector9 - vector7).normalized, normalized))) * 1.4f;
             Vector2 vector10 = vector9 - normalized * (num6 - a), vector11 = Custom.PerpendicularVector(vector9, vector7);
-            mesh.MoveVertice(i * 4, (vector7 + vector9) / 2f - vector11 * (num6 + num3) * .5f - camPos);
-            mesh.MoveVertice(i * 4 + 1, (vector7 + vector9) / 2f + vector11 * (num6 + num3) * .5f - camPos);
+            mesh.MoveVertice(i * 4, (vector7 + vector9) * .5f - vector11 * ((num6 + num3) * .5f) - camPos);
+            mesh.MoveVertice(i * 4 + 1, (vector7 + vector9) * .5f + vector11 * ((num6 + num3) * .5f) - camPos);
             mesh.MoveVertice(i * 4 + 2, vector9 - vector11 * num6 - camPos);
             mesh.MoveVertice(i * 4 + 3, vector9 + vector11 * num6 - camPos);
             if (i < 11)
             {
-                sMesh.MoveVertice(i * 4, (vector8 + vector10) / 2f - vector11 * (a + num4) * .25f - camPos);
-                sMesh.MoveVertice(i * 4 + 1, (vector8 + vector10) / 2f + vector11 * (a + num4) * .25f - camPos);
+                sMesh.MoveVertice(i * 4, (vector8 + vector10) * .5f - vector11 * ((a + num4) * .25f) - camPos);
+                sMesh.MoveVertice(i * 4 + 1, (vector8 + vector10) * .5f + vector11 * ((a + num4) * .25f) - camPos);
                 sMesh.MoveVertice(i * 4 + 2, vector10 - vector11 * a - camPos);
                 sMesh.MoveVertice(i * 4 + 3, vector10 + vector11 * a - camPos);
                 var verts = sMesh.verticeColors;
@@ -370,7 +370,8 @@ public class DivingBeetleGraphics : GraphicsModule, IMuddableGraphics
                 }
                 if (i > 1)
                 {
-                    Vector2 vector12 = vector9 - vector11 * num6, vector13 = vector9 + vector11 * num6;
+                    Vector2 vector12 = vector9 - vector11 * num6,
+                        vector13 = vector9 + vector11 * num6;
                     var spr = sprites[SegmentSprite(i - 1)];
                     spr.SetPosition(vector12 - camPos);
                     spr.rotation = Custom.AimFromOneVectorToAnother(vector12, vector13);
@@ -391,23 +392,23 @@ public class DivingBeetleGraphics : GraphicsModule, IMuddableGraphics
             {
                 float t2 = Mathf.InverseLerp(0f, legs[legs.Length - j - 1].Length - 1, k), num7 = 5f;
                 var vector14 = Vector2.Lerp(vector, vector2, .3f);
-                vector14 += vector5 * (j == 0 ? 1f : -1f) * 3f * (1f - Math.Abs(num));
+                vector14 += vector5 * ((j == 0 ? 1f : -1f) * 3f * (1f - Math.Abs(num)));
                 vector14 += vector4 * Mathf.Lerp(5f, -11f, t2);
                 Vector2 vector15 = Vector2.Lerp(legs[legs.Length - j - 1][k].lastPos, legs[legs.Length - j - 1][k].pos, timeStacker), vector16 = Vector2.Lerp(Knees[legs.Length - j - 1][k].lastPos, Knees[legs.Length - j - 1][k].pos, timeStacker),
                     vector17 = Vector2.Lerp(vector14, vector16, .5f), vector18 = Vector2.Lerp(vector16, vector15, .5f), vector19 = Vector2.Lerp(vector17, vector18, .5f);
-                vector17 = vector19 + Custom.DirVec(vector19, vector17) * num7 / 2f;
-                vector18 = vector19 + Custom.DirVec(vector19, vector18) * num7 / 2f;
+                vector17 = vector19 + Custom.DirVec(vector19, vector17) * (num7 * .5f);
+                vector18 = vector19 + Custom.DirVec(vector19, vector18) * (num7 * .5f);
                 vector7 = vector14;
                 num3 = 2f;
                 var lMesh = (sprites[LegSprite(j, k)] as TriangleMesh)!;
                 for (var l = 0; l < 12; l++)
                 {
                     var num8 = Mathf.InverseLerp(0f, 11f, l);
-                    var vector20 = num8 >= .5f ? Custom.Bezier((vector18 + vector17) / 2f, vector18 + Custom.DirVec(vector17, vector18) * 7f, vector15, vector15 + Custom.DirVec(vector15, vector14) * 14f, Mathf.InverseLerp(.5f, 1f, num8)) : Custom.Bezier(vector14, vector14 + Custom.DirVec(vector14, vector15) * 10f, (vector18 + vector17) / 2f, vector17 + Custom.DirVec(vector18, vector17) * 7f, Mathf.InverseLerp(0f, .5f, num8));
+                    var vector20 = num8 >= .5f ? Custom.Bezier((vector18 + vector17) * .5f, vector18 + Custom.DirVec(vector17, vector18) * 7f, vector15, vector15 + Custom.DirVec(vector15, vector14) * 14f, Mathf.InverseLerp(.5f, 1f, num8)) : Custom.Bezier(vector14, vector14 + Custom.DirVec(vector14, vector15) * 10f, (vector18 + vector17) * .5f, vector17 + Custom.DirVec(vector18, vector17) * 7f, Mathf.InverseLerp(0f, .5f, num8));
                     var num9 = (Mathf.Lerp(4f, .5f, Mathf.Pow(num8, .25f)) + Mathf.Sin(Mathf.Pow(num8, 2.5f) * Mathf.PI) * 1.5f) * LegsThickness;
                     var vector21 = Custom.PerpendicularVector(vector20, vector7);
-                    lMesh.MoveVertice(l * 4, (vector7 + vector20) / 2f - vector21 * (num9 + num3) * .5f - camPos);
-                    lMesh.MoveVertice(l * 4 + 1, (vector7 + vector20) / 2f + vector21 * (num9 + num3) * .5f - camPos);
+                    lMesh.MoveVertice(l * 4, (vector7 + vector20) * .5f - vector21 * ((num9 + num3) * .5f) - camPos);
+                    lMesh.MoveVertice(l * 4 + 1, (vector7 + vector20) * .5f + vector21 * ((num9 + num3) * .5f) - camPos);
                     lMesh.MoveVertice(l * 4 + 2, vector20 - vector21 * num9 - camPos);
                     lMesh.MoveVertice(l * 4 + 3, vector20 + vector21 * num9 - camPos);
                     vector7 = vector20;
@@ -419,7 +420,7 @@ public class DivingBeetleGraphics : GraphicsModule, IMuddableGraphics
         {
             var num11 = Mathf.Lerp(m == 0 ? 1f : -1f, num, Mathf.Pow(Math.Abs(num), 2f));
             var mand = Mandibles[m];
-            Vector2 vector23 = vector + vector4 * 4f + vector5 * num11 * -3f, vector24 = Vector2.Lerp(mand.lastPos, mand.pos, timeStacker), vector25 = Custom.InverseKinematic(vector23, vector24, 16f, 18f, num11);
+            Vector2 vector23 = vector + vector4 * 4f + vector5 * (num11 * -3f), vector24 = Vector2.Lerp(mand.lastPos, mand.pos, timeStacker), vector25 = Custom.InverseKinematic(vector23, vector24, 16f, 18f, num11);
             var s = sprites[MandibleSprite(m, 0)];
             s.SetPosition(vector23 - camPos);
             s.anchorY = 0f;
@@ -441,7 +442,7 @@ public class DivingBeetleGraphics : GraphicsModule, IMuddableGraphics
             {
                 tst.alpha = sp;
                 tst.isVisible = wing.isVisible = true;
-                var vector27 = Vector2.Lerp(vector, vector2, .2f) - vector5 * 6f * vector26.x;
+                var vector27 = Vector2.Lerp(vector, vector2, .2f) - vector5 * (6f * vector26.x);
                 tst.SetPosition(vector27 - camPos);
                 wing.SetPosition(vector27 - camPos);
                 tst.rotation = wing.rotation = Custom.VecToDeg(vector4);
@@ -459,17 +460,17 @@ public class DivingBeetleGraphics : GraphicsModule, IMuddableGraphics
             vector23 = vector;
             var ant = Antennae[m];
             vector25 = Vector2.Lerp(ant.lastPos, ant.pos, timeStacker);
-            var normalized2 = (Custom.DirVec(vector2, vector) + Custom.PerpendicularVector(vector2, vector) * num * .5f + Custom.PerpendicularVector(vector2, vector) * (m == 0 ? -1f : 1f) * (1f - Math.Abs(num)) * .35f).normalized;
+            var normalized2 = (Custom.DirVec(vector2, vector) + Custom.PerpendicularVector(vector2, vector) * (num * .5f) + Custom.PerpendicularVector(vector2, vector) * ((m == 0 ? -1f : 1f) * (1f - Math.Abs(num)) * .35f)).normalized;
             vector7 = vector;
             num3 = 3f;
             var anMesh = (sprites[AntennaSprite(m)] as TriangleMesh)!;
             for (var num13 = 0; num13 < 8; num13++)
             {
                 num11 = Mathf.InverseLerp(0f, 7f, num13);
-                Vector2 vector30 = Custom.Bezier(vector23, vector23 + normalized2 * 30f * AntennaeLength, vector25, vector25, num11), vector31 = Custom.PerpendicularVector(vector30, vector7);
+                Vector2 vector30 = Custom.Bezier(vector23, vector23 + normalized2 * (30f * AntennaeLength), vector25, vector25, num11), vector31 = Custom.PerpendicularVector(vector30, vector7);
                 var num14 = Mathf.Lerp(1f, .5f, num11);
-                anMesh.MoveVertice(num13 * 4, (vector7 + vector30) / 2f - vector31 * (num3 + num14) * .5f - camPos);
-                anMesh.MoveVertice(num13 * 4 + 1, (vector7 + vector30) / 2f + vector31 * (num3 + num14) * .5f - camPos);
+                anMesh.MoveVertice(num13 * 4, (vector7 + vector30) * .5f - vector31 * ((num3 + num14) * .5f) - camPos);
+                anMesh.MoveVertice(num13 * 4 + 1, (vector7 + vector30) * .5f + vector31 * ((num3 + num14) * .5f) - camPos);
                 anMesh.MoveVertice(num13 * 4 + 2, vector30 - vector31 * num14 - camPos);
                 anMesh.MoveVertice(num13 * 4 + 3, vector30 + vector31 * num14 - camPos);
                 vector7 = vector30;

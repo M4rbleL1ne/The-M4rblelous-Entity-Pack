@@ -31,7 +31,7 @@ sealed class M4RJawsCritob : Critob, ISandboxHandler
     public override void TileIsAllowed(AImap map, IntVector2 tilePos, ref bool? allow)
     {
         var prox = map.getTerrainProximity(tilePos);
-        if (prox < 2)
+        if (prox <= 1)
             allow = false;
         else if (map.room?.game?.GetArenaGameSession?.arenaSitting?.sandboxPlayMode is true or null)
         {
@@ -77,6 +77,15 @@ sealed class M4RJawsCritob : Critob, ISandboxHandler
         t.meatPoints = 15;
         t.bodySize = 7.5f;
         t.jumpAction = "Hiss";
+        t.canAutoAbstractPath = false;
+        t.isTooCloseToTerrain = (aimap, pos) =>
+        {
+            var prox = aimap.getTerrainProximity(pos);
+            if (prox <= 1)
+                return 1;
+            var aItile = aimap.getAItile(pos);
+            return (aItile.smoothedFloorAltitude > 2 && (aItile.smoothedFloorAltitude + aItile.floorAltitude) > Custom.LerpMap(prox, 2f, 6f, 6f, 4f) * 2f) ? 1 : 0;
+        };
         return t;
     }
 

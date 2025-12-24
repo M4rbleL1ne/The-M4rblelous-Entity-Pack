@@ -82,6 +82,8 @@ sealed class FatFireFlyCritob : Critob, ISandboxHandler
         t.waterRelationship = CreatureTemplate.WaterRelationship.AirAndSurface;
         t.BlizzardAdapted = true;
         t.BlizzardWanderer = true;
+        t.canAutoAbstractPath = false;
+        t.isTooCloseToTerrain = (aimap, pos) => aimap.getTerrainProximity(pos) <= 1 ? 1 : 0;
         return t;
     }
 

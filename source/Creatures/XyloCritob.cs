@@ -70,6 +70,7 @@ sealed class XyloCritob : Critob, ISandboxHandler
 		t.canSwim = false;
 		t.canFly = false;
         t.daddyCorruptionImmune = true;
+        t.isTooCloseToTerrain = (aimap, pos) => aimap.getTerrainProximity(pos) <= 3 ? 1 : 0;
         return t;
     }
 

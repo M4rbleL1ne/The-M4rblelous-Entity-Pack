@@ -77,6 +77,7 @@ sealed class MiniFlyingBigEelCritob : Critob
         t.canSwim = false;
         t.meatPoints = 6;
         t.shortcutColor = RainWorld.GoldRGB + new Color(.2f, .2f, .2f);
+        t.isTooCloseToTerrain = (aimap, pos) => aimap.getTerrainProximity(pos) <= 1 ? 1 : 0;
         return t;
     }
 

@@ -19,14 +19,14 @@ public class BouncingBall : Snail
             rm.AddObject(new SootMark(rm, vector, 50f, true));
             rm.AddObject(new Explosion(rm, this, vector, 5, 110f, 5f, 1.1f, 60f, .3f, this, .8f, 0f, .7f));
             for (var i = 0; i < 14; i++)
-                rm.AddObject(new Explosion.ExplosionSmoke(vector, Custom.RNV() * 5f * Random.value, 1f));
+                rm.AddObject(new Explosion.ExplosionSmoke(vector, Custom.RNV() * (5f * Random.value), 1f));
             rm.AddObject(new Explosion.ExplosionLight(vector, 160f, 1f, 3, clr));
             rm.AddObject(new ExplosionSpikes(rm, vector, 9, 4f, 5f, 5f, 90f, clr));
             rm.AddObject(new ShockWave(vector, 60f, .045f, 4));
             for (var j = 0; j < 20; j++)
             {
                 var vector2 = Custom.RNV();
-                rm.AddObject(new Spark(vector + vector2 * Random.value * 40f, vector2 * Mathf.Lerp(4f, 30f, Random.value), clr, null, 4, 18));
+                rm.AddObject(new Spark(vector + vector2 * (Random.value * 40f), vector2 * Mathf.Lerp(4f, 30f, Random.value), clr, null, 4, 18));
             }
             rm.ScreenMovement(vector, default, .7f);
             rm.PlaySound(SoundID.Bomb_Explode, mainBodyChunk);

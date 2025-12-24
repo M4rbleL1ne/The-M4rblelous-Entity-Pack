@@ -105,7 +105,7 @@ public class DivingBeetle : InsectoidCreature
             if (State.health > 0f && State.health < 1f && Random.value < .01f && poison < .1f)
                 State.health = Mathf.Min(1f, State.health + 1f / Mathf.Lerp(550f, 70f, State.health));
             if (!Consious && Random.value < .05f)
-                chs[1].vel += Custom.RNV() * Random.value * 3f;
+                chs[1].vel += Custom.RNV() * (Random.value * 3f);
             if (stun < 35 && grabbedBy.Count > 0 && grabbedBy[0].grabber is Creature c && c is not Vulture and not Leech)
             {
                 ++GrabbedCounter;
@@ -118,7 +118,7 @@ public class DivingBeetle : InsectoidCreature
                 else if (GrabbedCounter < 25)
                 {
                     for (var i = 0; i < chs.Length; i++)
-                        chs[i].pos += Custom.RNV() * Random.value * 6f + Custom.RNV() * Random.value * 6f;
+                        chs[i].pos += Custom.RNV() * (Random.value * 6f) + Custom.RNV() * (Random.value * 6f);
                 }
             }
             else
@@ -328,8 +328,8 @@ public class DivingBeetle : InsectoidCreature
             for (var k = 0; k < chs.Length; k++)
             {
                 var c = chs[k];
-                c.vel += Custom.RNV() * Random.value * 5f * StuckShake;
-                c.pos += Custom.RNV() * Random.value * 5f * StuckShake;
+                c.vel += Custom.RNV() * (Random.value * 5f * StuckShake);
+                c.pos += Custom.RNV() * (Random.value * 5f * StuckShake);
             }
         }
         if (SpecialMoveCounter > 0)
@@ -511,7 +511,7 @@ public class DivingBeetle : InsectoidCreature
                 fch.vel.y += 3.2f;
         }
         var num = Custom.LerpMap(CarryObjectMass, 0f, 4f, 1f, .2f, .7f) * Mathf.Lerp(1f, 1.5f, StuckShake);
-        fch.vel += vector * 4.5f * num;
+        fch.vel += vector * (4.5f * num);
         GoThroughFloors = moveTo.y < fch.pos.y - 5f;
     }
 
@@ -538,7 +538,7 @@ public class DivingBeetle : InsectoidCreature
         if (!flag || Submersion < .5f)
             return;
         for (var i = 0; i < 4; i++)
-            room.AddObject(new WaterDrip(Vector2.Lerp(bs[0].pos, otherCh.pos, Random.value), Custom.RNV() * Random.value * 14f, false));
+            room.AddObject(new WaterDrip(Vector2.Lerp(bs[0].pos, otherCh.pos, Random.value), Custom.RNV() * (Random.value * 14f), false));
         if ((safariControlled && inputWithDiagonals.HasValue && inputWithDiagonals.Value.pckp || !safariControlled) && AI?.DynamicRelationship(c.abstractCreature).type == CreatureTemplate.Relationship.Type.Eats)
         {
             if (Grab(otherObject, 0, otherChunk, Grasp.Shareability.CanNotShare, .5f, false, true))
@@ -575,7 +575,7 @@ public class DivingBeetle : InsectoidCreature
         creature.Violence(fch, Custom.DirVec(fch.pos, chunk.pos) * 8f, chunk, null, DamageType.Bite, flag2 ? 1.1f : .4f, flag ? 50f : 15f);
         fch.vel = Custom.DirVec(chunk.pos, fch.pos) * 8f;
         for (var j = 0; j < 5; j++)
-            room.AddObject(new WaterDrip(Vector2.Lerp(fch.pos, chunk.pos, Random.value), Custom.RNV() * Random.value * (flag2 ? 24f : 14f), false));
+            room.AddObject(new WaterDrip(Vector2.Lerp(fch.pos, chunk.pos, Random.value), Custom.RNV() * (Random.value * (flag2 ? 24f : 14f)), false));
         if (AI.DynamicRelationship(creature.abstractCreature).type == CreatureTemplate.Relationship.Type.Eats)
         {
             if (flag || flag2 || creature.dead)
@@ -611,7 +611,7 @@ public class DivingBeetle : InsectoidCreature
         for (var i = 0; i < chs.Length; i++)
         {
             var ch = chs[i];
-            ch.pos = newRoom.MiddleOfTile(pos) - vector * (-1.5f + i) * 15f;
+            ch.pos = newRoom.MiddleOfTile(pos) - vector * ((-1.5f + i) * 15f);
             ch.lastPos = newRoom.MiddleOfTile(pos);
             ch.vel = vector * 2f;
         }

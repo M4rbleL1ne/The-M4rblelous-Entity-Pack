@@ -43,7 +43,7 @@ public class MiniLeviathanGraphics : BigEelGraphics
         eyeScales = new float[numberOfEyes, 3];
         for (var n = 0; n < eyesDt.Length; n++)
         {
-            var eyeDn = eyesDt[n] = Custom.RNV() * Mathf.Pow(Random.value, .6f) * .15f;
+            var eyeDn = eyesDt[n] = Custom.RNV() * (Mathf.Pow(Random.value, .6f) * .15f);
             if (eyeDn.y > .7f)
                 eyeDn.y = Mathf.Lerp(eyeDn.y, .7f, .3f);
             eyeScales[n, 0] = Mathf.Lerp(.2f, 1f, Mathf.Pow(Random.value, Custom.LerpMap(eyeDn.y, -1f, .7f, 1.5f, .2f)));
@@ -145,8 +145,8 @@ public class MiniLeviathanGraphics : BigEelGraphics
             for (var k = 0; k < 2; k++)
             {
                 var num8 = k == 0 ? -.3f : .3f;
-                var vector11 = vector4 + vector5 * 65f * num6 + Custom.RNV() * num7 * 2f;
-                vector11 += vector6 * num8 * (Mathf.Lerp(30f, 6f + be.beakGap / 20f, t) + 10f * Mathf.Sin(Mathf.Pow(num5, 2f) * Mathf.PI));
+                var vector11 = vector4 + vector5 * (65f * num6) + Custom.RNV() * (num7 * 2f);
+                vector11 += vector6 * (num8 * (Mathf.Lerp(30f, 6f + be.beakGap * .05f, t) + 10f * Mathf.Sin(Mathf.Pow(num5, 2f) * Mathf.PI)));
                 var num11 = Custom.VecToDeg(vector5) + Mathf.Sin(num5 * Mathf.PI) * (num4 < .35f ? -20f : -10f) * num8 + Mathf.Lerp(-2f, 2f, Random.value) * num7;
                 for (var num12 = 0; num12 < 2; num12++)
                 {
@@ -154,8 +154,8 @@ public class MiniLeviathanGraphics : BigEelGraphics
                     s.SetPosition(vector11 - camPos);
                     s.rotation = num11;
                     var num13 = num4 >= .35f ? (num12 == 0 ? (43f * Math.Abs(Mathf.Cos(Mathf.InverseLerp(1f, .4f, num4) * Mathf.PI))) : (30f * Mathf.InverseLerp(1f, .4f, num4))) : (num12 == 0 ? Mathf.Lerp(15f, 43f, Mathf.InverseLerp(.35f, .15f, num4)) : (30f * Mathf.Pow(Mathf.InverseLerp(0f, .5f, num5), .2f)));
-                    Vector2 vector12 = vector4 + vector6 * num8 * num13 - vector5 * (num12 == 0 ? 22f : 30f),
-                        vector13 = vector11 + Custom.DegToVec(num11) * (num12 == 0 ? -12f : 10f) + Custom.PerpendicularVector(Custom.DegToVec(num11)) * 2.5f * num8,
+                    Vector2 vector12 = vector4 + vector6 * (num8 * num13) - vector5 * (num12 == 0 ? 22f : 30f),
+                        vector13 = vector11 + Custom.DegToVec(num11) * (num12 == 0 ? -12f : 10f) + Custom.PerpendicularVector(Custom.DegToVec(num11)) * (2.5f * num8),
                         vector14 = Custom.InverseKinematic(vector12, vector13, 35f, 25f, 0f - num8);
                     int num14;
                     for (num14 = 0; num14 < 2; num14++)

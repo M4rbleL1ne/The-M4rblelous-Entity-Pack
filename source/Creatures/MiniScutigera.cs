@@ -29,7 +29,7 @@ public class MiniScutigera(AbstractCreature abstractCreature, World world) : Cen
                     p.SaintStagger(680);
                 Stun(11);
                 for (var j = 0; j < cAr.Length; j++)
-                    cAr[j].vel += Custom.RNV() * Random.value * 6f;
+                    cAr[j].vel += Custom.RNV() * (Random.value * 6f);
             }
             var mbc = mainBodyChunk;
             if (mbc.submersion > .1f)

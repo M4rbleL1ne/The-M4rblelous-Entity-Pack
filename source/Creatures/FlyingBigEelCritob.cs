@@ -74,6 +74,7 @@ sealed class FlyingBigEelCritob : Critob
         t.waterRelationship = CreatureTemplate.WaterRelationship.AirOnly;
         t.canFly = true;
         t.canSwim = false;
+        t.isTooCloseToTerrain = (aimap, pos) => aimap.getTerrainProximity(pos) <= 4 ? 1 : 0;
         return t;
     }
 

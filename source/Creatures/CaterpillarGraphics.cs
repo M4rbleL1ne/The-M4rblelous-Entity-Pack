@@ -182,9 +182,9 @@ public class CaterpillarGraphics : GraphicsModule, IMuddableGraphics
             {
                 var legPart = leg[k];
                 legPart.Update();
-                var vector5 = pos + vector3 * (k == 0 ? -1f : 1f) * vector4.y * ch.rad;
+                var vector5 = pos + vector3 * ((k == 0 ? -1f : 1f) * vector4.y * ch.rad);
                 var lgt = LegLengths[j];
-                Vector2 vector6 = Vector3.Slerp(vector2 * Mathf.Lerp(Mathf.Lerp(-1f, 1f, num2), -1f, Math.Abs(num3 - .5f)), Vector3.Slerp(vector3 * (k == 0 ? -1f : 1f) * vector4.y, vector3 * vector4.x, Math.Abs(vector4.x)), Mathf.Lerp(.5f + .5f * Mathf.Sin(num2 * Mathf.PI), 0f, Math.Abs(num3 - .5f) * 2f)).normalized,
+                Vector2 vector6 = Vector3.Slerp(vector2 * Mathf.Lerp(Mathf.Lerp(-1f, 1f, num2), -1f, Math.Abs(num3 - .5f)), Vector3.Slerp(vector3 * ((k == 0 ? -1f : 1f) * vector4.y), vector3 * vector4.x, Math.Abs(vector4.x)), Mathf.Lerp(.5f + .5f * Mathf.Sin(num2 * Mathf.PI), 0f, Math.Abs(num3 - .5f) * 2f)).normalized,
                     vector7 = vector5 + vector6 * lgt;
                 legPart.ConnectToPoint(vector5, lgt, false, 0f, ch.vel, .1f, 0f);
                 if (Crit.Consious && !legPart.reachedSnapPosition)
@@ -217,7 +217,7 @@ public class CaterpillarGraphics : GraphicsModule, IMuddableGraphics
                     wh.vel += (vector8 + dir * lg - wh.pos) / 30f + dir;
                     wh.vel.y -= .3f;
                     if (Crit.Consious && !Crit.Moving)
-                        wh.pos += Custom.RNV() * .25f * (l == 0 ? 2f : .8f);
+                        wh.pos += Custom.RNV() * (.25f * (l == 0 ? 2f : .8f));
                 }
             }
         }
@@ -271,7 +271,7 @@ public class CaterpillarGraphics : GraphicsModule, IMuddableGraphics
             vector2 = RotatAtChunk(chs.Length - 1, timeStacker);
         }
         var vector3 = Custom.PerpendicularVector(vector) * (end == 0 ? -1f : 1f);
-        return (vector + (Vector2)Vector3.Slerp(vector3 * (side == 0 ? -1f : 1f) * vector2.y * (part == 0 ? .4f : 1.4f), vector3 * vector2.x * (part == 0 ? .25f : -.5f), Math.Abs(vector2.x))).normalized;
+        return (vector + (Vector2)Vector3.Slerp(vector3 * ((side == 0 ? -1f : 1f) * vector2.y * (part == 0 ? .4f : 1.4f)), vector3 * (vector2.x * (part == 0 ? .25f : -.5f)), Math.Abs(vector2.x))).normalized;
     }
 
     public override void InitiateSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
@@ -375,7 +375,7 @@ public class CaterpillarGraphics : GraphicsModule, IMuddableGraphics
                 dots.isVisible = true;
                 dots.scaleX = ch.rad * Mathf.Lerp(1f, Mathf.Lerp(1.5f, .9f, Math.Abs(normalized.x)), num6) * normalized.y * (1.8f * (1f / 14f));
                 dots.scaleY = ch.rad * (1.5f * (1f / 11f));
-                dots.SetPosition(vector3 + Custom.PerpendicularVector(normalized2) * normalized.x * ch.rad * 1.1f - camPos);
+                dots.SetPosition(vector3 + Custom.PerpendicularVector(normalized2) * (normalized.x * ch.rad * 1.1f) - camPos);
                 dots.rotation = Custom.VecToDeg((vector2 - vector4).normalized);
                 if (i == 0)
                     dots.color = !Crit.Consious ? BlackColor : (glowing ? Color.Lerp(GlowColor, Color.white, .33f * LightAlpha) : Color.Lerp(Custom.HSL2RGB(Hue, Saturation, .7f), BlackColor, Darkness * .2f + .5f));
@@ -398,7 +398,7 @@ public class CaterpillarGraphics : GraphicsModule, IMuddableGraphics
             for (var l = 0; l < leg.Length; l++)
             {
                 var legPart = leg[l];
-                Vector2 vector7 = vector3 - vector5 * (l == 0 ? -1f : 1f) * normalized.y * ch.rad,
+                Vector2 vector7 = vector3 - vector5 * ((l == 0 ? -1f : 1f) * normalized.y * ch.rad),
                     vector8 = Vector2.Lerp(legPart.lastPos, legPart.pos, timeStacker);
                 var f = Mathf.Lerp(-1f, 1f, Mathf.Clamp(num - BodyDir * .4f, 0f, 1f)) * Mathf.Lerp(l == 0 ? 1f : -1f, 0f - normalized.x, Math.Abs(normalized.x));
                 f = Mathf.Pow(Math.Abs(f), .2f) * Mathf.Sign(f);
@@ -456,7 +456,7 @@ public class CaterpillarGraphics : GraphicsModule, IMuddableGraphics
                         whisker.color = col;
                     for (var num14 = 0; num14 < 4; num14++)
                     {
-                        Vector2 vector13 = Custom.Bezier(vector10, vector10 + vector11 * Vector2.Distance(vector10, vector12) * .7f, vector12, vector12, num14 / 3f),
+                        Vector2 vector13 = Custom.Bezier(vector10, vector10 + vector11 * (Vector2.Distance(vector10, vector12) * .7f), vector12, vector12, num14 / 3f),
                             normalized3 = (vector13 - vector2).normalized,
                             vector14 = Custom.PerpendicularVector(normalized3);
                         var num15 = Vector2.Distance(vector13, vector2) / (num14 == 0 ? 1f : 5f);

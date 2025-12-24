@@ -59,7 +59,7 @@ public static class CentipedeHooks
             s_MatchCallOrCallvirt_HealthState_get_ClampedHealth,
             s_MatchMul,
             s_MatchCall_Mathf_Lerp,
-            s_MatchCall_Vector2_op_Multiply,
+            s_MatchMul,
             s_MatchLdarg_0,
             s_MatchCallOrCallvirt_Centipede_get_Red))
         {

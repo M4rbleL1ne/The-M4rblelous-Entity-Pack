@@ -192,7 +192,7 @@ public class Hoverfly : InsectoidCreature, Weapon.INotifyOfFlyingWeapons
                     flag2 = false;
             }
             else if (firstChunk.ContactPoint.x != 0 || firstChunk.ContactPoint.y != 0)
-                firstChunk.vel -= firstChunk.ContactPoint.ToVector2() * 8f * FlyingPower * Stamina * Random.value;
+                firstChunk.vel -= firstChunk.ContactPoint.ToVector2() * (8f * FlyingPower * Stamina * Random.value);
             FlyingPower = Mathf.Lerp(FlyingPower, flag2 ? 1f : 0f, .1f);
         }
         else
@@ -265,7 +265,7 @@ public class Hoverfly : InsectoidCreature, Weapon.INotifyOfFlyingWeapons
                     a = Mathf.Pow(Mathf.Min(a, 1f), 3f);
                     if (WantToSitDownAtDestination && AI.pathFinder.GetDestination.room == room.abstractRoom.index && Custom.DistLess(room.MiddleOfTile(AI.pathFinder.GetDestination.Tile), firstChunk.pos, 200f) && AI.VisualContact(room.MiddleOfTile(AI.pathFinder.GetDestination.Tile), 0f))
                         a *= Mathf.Lerp(.2f, 1f, Mathf.InverseLerp(0f, 300f, Vector2.Distance(room.MiddleOfTile(AI.pathFinder.GetDestination.Tile), firstChunk.pos)));
-                    firstChunk.vel += Vector2.ClampMagnitude(vector3 - firstChunk.pos, 40f) / 40f * 1.1f * a * FlyingPower * Stamina;
+                    firstChunk.vel += Vector2.ClampMagnitude(vector3 - firstChunk.pos, 40f) * (.0275f * a * FlyingPower * Stamina);
                 }
             }
             else
@@ -286,7 +286,7 @@ public class Hoverfly : InsectoidCreature, Weapon.INotifyOfFlyingWeapons
         }
         else if (AI.SwooshToPos.HasValue)
         {
-            firstChunk.vel += Vector2.ClampMagnitude(AI.SwooshToPos.Value - firstChunk.pos, 20f) / 20f * 1.8f * FlyingPower * Stamina;
+            firstChunk.vel += Vector2.ClampMagnitude(AI.SwooshToPos.Value - firstChunk.pos, 20f) * (.09f * FlyingPower * Stamina);
             Flying = true;
         }
     }
@@ -373,7 +373,7 @@ public class Hoverfly : InsectoidCreature, Weapon.INotifyOfFlyingWeapons
         }
         b /= num;
         var value = Random.value;
-        firstChunk.vel += Vector2.Lerp(dir, b, .5f).normalized * 9f * value;
+        firstChunk.vel += Vector2.Lerp(dir, b, .5f).normalized * (9f * value);
         FlyingPower = .5f;
         room.PlaySound(SoundID.Fly_Wing_Flap, firstChunk, false, 1.25f, 1f + IVars.SoundPitchBonus);
     }
@@ -452,7 +452,7 @@ public class Hoverfly : InsectoidCreature, Weapon.INotifyOfFlyingWeapons
     {
         base.SpitOutOfShortCut(pos, newRoom, spitOutAllSticks);
         var vector = newRoom.ShorcutEntranceHoleDirection(pos).ToVector2();
-        firstChunk.pos = newRoom.MiddleOfTile(pos) - vector * -1.5f * 15f;
+        firstChunk.pos = newRoom.MiddleOfTile(pos) - vector * (-22.5f);
         firstChunk.lastPos = newRoom.MiddleOfTile(pos);
         firstChunk.vel = vector * 8f;
         graphicsModule?.Reset();

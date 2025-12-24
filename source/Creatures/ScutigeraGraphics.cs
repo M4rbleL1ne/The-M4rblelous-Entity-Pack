@@ -63,7 +63,7 @@ public class ScutigeraGraphics : CentipedeGraphics
                         var vector2 = Custom.PerpendicularVector(vector1);
                         var vector3 = RotatAtChunk(num15, timeStacker);
                         var vector4 = WingPos(k, num15, vector1, vector2, vector3, timeStacker);
-                        var vector5 = ChunkDrawPos(num15, timeStacker) + chs[num15].rad * (k != 0 ? 1f : -1f) * vector2 * vector3.y;
+                        var vector5 = ChunkDrawPos(num15, timeStacker) + vector2 * (chs[num15].rad * (k != 0 ? 1f : -1f) * vector3.y);
                         cSpr.MoveVertice(1, vector4 + vector1 * 2f - camPos);
                         cSpr.MoveVertice(0, vector4 - vector1 * 2f - camPos);
                         cSpr.MoveVertice(2, vector5 + vector1 * 2f - camPos);

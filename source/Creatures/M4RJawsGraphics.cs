@@ -233,7 +233,7 @@ public class M4RJawsGraphics : GraphicsModule, IMuddableGraphics
 		var head = Ow.Head;
 		var neckTip = Ow.Neck.Tip;
         var headPos = Vector2.Lerp(head.lastPos, head.pos, timeStacker);
-        return headPos + Custom.PerpendicularVector(Custom.DirVec(Vector2.Lerp(neckTip.lastPos, neckTip.pos, timeStacker), headPos)) * Math.Sign(flip) * 10f * (1f - Math.Abs(flip));
+        return headPos + Custom.PerpendicularVector(Custom.DirVec(Vector2.Lerp(neckTip.lastPos, neckTip.pos, timeStacker), headPos)) * (Math.Sign(flip) * 10f * (1f - Math.Abs(flip)));
     }
 
     public override void Reset()
@@ -302,7 +302,7 @@ public class M4RJawsGraphics : GraphicsModule, IMuddableGraphics
             rt -= 360f;
         else if (rt < -180f)
             rt += 360f;
-        var neckRt = Custom.PerpendicularVector(neckDir) * Mathf.Pow(Mathf.Abs(Mathf.Cos(Mathf.PI * rt / 180f)), .5f) * (Math.Abs(rt) > 90f ? -1f : 1f);
+        var neckRt = Custom.PerpendicularVector(neckDir) * (Mathf.Pow(Mathf.Abs(Mathf.Cos(Mathf.PI * rt / 180f)), .5f) * (Math.Abs(rt) > 90f ? -1f : 1f));
         var bodyDir = Custom.DirVec(b1.pos, b0.pos);
         ConnectNeckTube(bodyDir, b0.pos, head.pos, neckDir, neckRt);
         var tube = Tube;
@@ -352,7 +352,7 @@ public class M4RJawsGraphics : GraphicsModule, IMuddableGraphics
         {
             t = ref tube[i];
             ref var tp1 = ref tube[i + 1];
-            var pastChAff = Custom.DirVec(t.Pos, tp1.Pos) * (Vector2.Distance(t.Pos, tp1.Pos) - 5f) * .5f;
+            var pastChAff = Custom.DirVec(t.Pos, tp1.Pos) * ((Vector2.Distance(t.Pos, tp1.Pos) - 5f) * .5f);
             t.Pos += pastChAff;
             t.Vel += pastChAff;
             tp1.Pos -= pastChAff;
@@ -479,10 +479,10 @@ public class M4RJawsGraphics : GraphicsModule, IMuddableGraphics
 			var perp = Custom.PerpendicularVector(relativeDir);
 			var connDist = Vector2.Distance(tchPos, connPos) * .2f;
 			var sradTemp = tch.stretchedRad;
-            neck.MoveVertice(l * 4, connPos - perp * (sradTemp + strchRad) * .5f * NeckFatness + relativeDir * connDist * (l == 0 ? 0f : 1f) - camPos);
-            neck.MoveVertice(l * 4 + 1, connPos + perp * (sradTemp + strchRad) * .5f * NeckFatness + relativeDir * connDist * (l == 0 ? 0f : 1f) - camPos);
-            neck.MoveVertice(l * 4 + 2, tchPos - perp * sradTemp * NeckFatness - relativeDir * connDist * (l == tchs.Length - 1 ? 0f : 1f) - camPos);
-			neck.MoveVertice(l * 4 + 3, tchPos + perp * sradTemp * NeckFatness - relativeDir * connDist * (l == tchs.Length - 1 ? 0f : 1f) - camPos);
+            neck.MoveVertice(l * 4, connPos - perp * ((sradTemp + strchRad) * .5f * NeckFatness) + relativeDir * (connDist * (l == 0 ? 0f : 1f)) - camPos);
+            neck.MoveVertice(l * 4 + 1, connPos + perp * ((sradTemp + strchRad) * .5f * NeckFatness) + relativeDir * (connDist * (l == 0 ? 0f : 1f)) - camPos);
+            neck.MoveVertice(l * 4 + 2, tchPos - perp * (sradTemp * NeckFatness) - relativeDir * (connDist * (l == tchs.Length - 1 ? 0f : 1f)) - camPos);
+			neck.MoveVertice(l * 4 + 3, tchPos + perp * (sradTemp * NeckFatness) - relativeDir * (connDist * (l == tchs.Length - 1 ? 0f : 1f)) - camPos);
 			strchRad = tch.stretchedRad;
 			connPos = tchPos;
 		}
@@ -497,8 +497,8 @@ public class M4RJawsGraphics : GraphicsModule, IMuddableGraphics
             var segPerp = Custom.PerpendicularVector(segDir);
             var segDist = Vector2.Distance(segPos, headPos) * .2f;
             var wdth = l % 3 == 0 ? 3f : 2f;
-            mesh.MoveVertice(l * 4, headPos - segPerp * (wdth + pastWdth) * .5f + segDir * segDist - camPos);
-            mesh.MoveVertice(l * 4 + 1, headPos + segPerp * (wdth + pastWdth) * .5f + segDir * segDist - camPos);
+            mesh.MoveVertice(l * 4, headPos - segPerp * ((wdth + pastWdth) * .5f) + segDir * segDist - camPos);
+            mesh.MoveVertice(l * 4 + 1, headPos + segPerp * ((wdth + pastWdth) * .5f) + segDir * segDist - camPos);
             mesh.MoveVertice(l * 4 + 2, segPos - segPerp * wdth - segDir * segDist - camPos);
             mesh.MoveVertice(l * 4 + 3, segPos + segPerp * wdth - segDir * segDist - camPos);
             pastWdth = wdth;

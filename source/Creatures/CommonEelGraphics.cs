@@ -81,11 +81,11 @@ public class CommonEelGraphics : LizardGraphics
             var vector = BodyPosition(0, timeStacker);
             Vector2 normalized = (a - vector).normalized, vector2 = Custom.PerpendicularVector(normalized);
             var num7 = Vector2.Distance(vector, a);
-            mesh.MoveVertice(0, vector + normalized * 1.725f * num7 - vector2 * 5f - camPos);
-            mesh.MoveVertice(1, vector + normalized * 1.725f * num7 + vector2 * 5f - camPos);
+            mesh.MoveVertice(0, vector + normalized * (1.725f * num7) - vector2 * 5f - camPos);
+            mesh.MoveVertice(1, vector + normalized * (1.725f * num7) + vector2 * 5f - camPos);
             var num6 = (BodyChunkDisplayRad(1) + BodyChunkDisplayRad(0)) / 2f;
-            mesh.MoveVertice(2, vector - vector2 * 1.025f * num6 - camPos);
-            mesh.MoveVertice(3, vector + vector2 * 1.025f * num6 - camPos);
+            mesh.MoveVertice(2, vector - vector2 * (1.025f * num6) - camPos);
+            mesh.MoveVertice(3, vector + vector2 * (1.025f * num6) - camPos);
             end = SpriteBodyCirclesEnd;
             var mbc = eel.mainBodyChunk;
             var tail = (sprites[SpriteTail] as TriangleMesh)!;

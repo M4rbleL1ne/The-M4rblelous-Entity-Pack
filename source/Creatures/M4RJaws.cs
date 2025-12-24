@@ -512,7 +512,7 @@ public class M4RJaws : Creature
                 for (var i = 0; i < legs.Length; i++)
                     runModeSum += legs[i].CurrentRunMode;
                 var yAf = g * rm.gravity * Mathf.Pow(groundAff, .5f) * Mathf.InverseLerp(1f, .5f, WeightDownToStandOnAllLegs * (1f - runModeSum / legs.Length));
-                var mvDir = MoveDir * Math.Max(ForwardPower, pw * .5f) * 2.6f;
+                var mvDir = MoveDir * (Math.Max(ForwardPower, pw * .5f) * 2.6f);
                 for (var n = 0; n < chs.Length; n++)
                 {
                     var ch = chs[n];
@@ -520,7 +520,7 @@ public class M4RJaws : Creature
                     ch.vel.y += yAf;
                     ch.vel += mvDir;
                 }
-                head.vel += MoveDir * ForwardPower * 1.5f;
+                head.vel += MoveDir * (ForwardPower * 1.5f);
                 WeightedPush(1, 2, new(MoveDir.x, 0f), Custom.LerpMap(Vector2.Dot(Custom.DirVec(b0.pos, b1.pos), Vector2.up), 0f, 1f, 0f, 1f));
                 WeightedPush(1, 2, Vector2.up, Custom.LerpMap(Vector2.Dot(Custom.DirVec(b0.pos, b1.pos), Vector2.up), -1f, 1f, 8f, 0f) * groundAff);
                 if (!safariControlled && EnterRoomHalf != RoomHalf(rm))
@@ -734,14 +734,14 @@ public class M4RJaws : Creature
         {
             var tipPos = Custom.DirVec(head.pos, tipCh.pos);
             var dst = Vector2.Distance(head.pos, tipCh.pos);
-            head.pos -= (6f - dst) * tipPos * (1f - num);
-            head.vel -= (6f - dst) * tipPos * (1f - num);
-            tipCh.pos += (6f - dst) * tipPos * num;
-            tipCh.vel += (6f - dst) * tipPos * num;
-            head.vel += Custom.DirVec(prelastCh.pos, head.pos) * 6f * (1f - num);
-            head.vel += Custom.DirVec(tipCh.pos, head.pos) * 6f * (1f - num);
-            tipCh.vel -= Custom.DirVec(prelastCh.pos, head.pos) * 6f * num;
-            prelastCh.vel -= Custom.DirVec(prelastCh.pos, head.pos) * 6f * num;
+            head.pos -= tipPos * ((6f - dst) * (1f - num));
+            head.vel -= tipPos * ((6f - dst) * (1f - num));
+            tipCh.pos += tipPos * ((6f - dst) * num);
+            tipCh.vel += tipPos * ((6f - dst) * num);
+            head.vel += Custom.DirVec(prelastCh.pos, head.pos) * (6f * (1f - num));
+            head.vel += Custom.DirVec(tipCh.pos, head.pos) * (6f * (1f - num));
+            tipCh.vel -= Custom.DirVec(prelastCh.pos, head.pos) * (6f * num);
+            prelastCh.vel -= Custom.DirVec(prelastCh.pos, head.pos) * (6f * num);
         }
         if (!Consious)
         {
@@ -759,7 +759,7 @@ public class M4RJaws : Creature
         Neck.retractFac = Mathf.Lerp(.5f, .8f, runMean);
         mvPs = Vector2.Lerp(mvPs, b0.pos + mvDir * 200f, Mathf.Pow(runMean, 6f));
         if (Blinded)
-            mvPs = b0.pos + Custom.RNV() * Random.value * 400f;
+            mvPs = b0.pos + Custom.RNV() * (Random.value * 400f);
         if ((Custom.DistLess(mvPs, b0.pos, 220f) && !room.VisualContact(mvPs, head.pos)) || runMean > .5f)
         {
             List<IntVector2> path = [];
@@ -770,19 +770,19 @@ public class M4RJaws : Creature
         var headDir = Custom.DirVec(head.pos, mvPs);
         if (grasps[0]?.grabbedChunk is not BodyChunk gch)
         {
-            tipCh.vel += headDir * num * 1.2f;
-            prelastCh.vel -= headDir * .5f * num;
-            head.vel += headDir * 6f * (1f - num);
+            tipCh.vel += headDir * (num * 1.2f);
+            prelastCh.vel -= headDir * (.5f * num);
+            head.vel += headDir * (6f * (1f - num));
         }
         else
         {
-            tipCh.vel += headDir * 2f * num;
-            prelastCh.vel -= headDir * 2f * num;
+            tipCh.vel += headDir * (2f * num);
+            prelastCh.vel -= headDir * (2f * num);
             gch.vel += headDir / gch.mass;
         }
         if (Custom.DistLess(head.pos, mvPs, 80f * Mathf.InverseLerp(1f, .5f, JawOpen)))
         {
-            var velRmv = headDir * Mathf.InverseLerp(80f, 20f, Vector2.Distance(head.pos, mvPs)) * 8f * num;
+            var velRmv = headDir * (Mathf.InverseLerp(80f, 20f, Vector2.Distance(head.pos, mvPs)) * 8f * num);
             for (var j = 0; j < tChs.Length; j++)
                 tChs[j].vel -= velRmv;
         }
@@ -824,7 +824,7 @@ public class M4RJaws : Creature
             var vel = (20f - dist) * weightDir * (1f - weightedMass1);
             grabbedChunk.pos -= vel;
             grabbedChunk.vel -= vel;
-            vel = (20f - dist) * weightDir * weightedMass1;
+            vel = weightDir * ((20f - dist) * weightedMass1);
             tipCh.pos += vel;
             tipCh.vel += vel;
         }
@@ -843,10 +843,10 @@ public class M4RJaws : Creature
             }
             var dir = Custom.DirVec(grabbedChunk.pos, b0.pos);
             var dist = Vector2.Distance(grabbedChunk.pos, b0.pos);
-            var vel = (num4 - dist) * dir * (1f - weightedMass2);
+            var vel = dir * ((num4 - dist) * (1f - weightedMass2));
             grabbedChunk.pos -= vel;
             grabbedChunk.vel -= vel;
-            vel = (num4 - dist) * dir * weightedMass2;
+            vel = dir * ((num4 - dist) * weightedMass2);
             b0.pos += vel;
             b0.vel += vel;
         }
@@ -954,7 +954,7 @@ public class M4RJaws : Creature
         for (var i = 0; i < chs.Length; i++)
         {
             var ch = chs[i];
-            ch.pos = newRoom.MiddleOfTile(pos) - holeDir * (-1.5f + i) * 15f;
+            ch.pos = newRoom.MiddleOfTile(pos) - holeDir * ((-1.5f + i) * 15f);
             ch.lastPos = newRoom.MiddleOfTile(pos);
             ch.vel = holeDir * 8f;
         }

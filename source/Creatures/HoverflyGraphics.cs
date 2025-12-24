@@ -283,17 +283,17 @@ public class HoverflyGraphics : GraphicsModule, ILookingAtCreatures, IMuddableGr
 					w.pos += w.vel;
 					w.vel *= .8f;
 					var t = Mathf.InverseLerp(.5f, 1f, wk[l]) * f.FlyingPower;
-					w.vel -= (l == 0 ? .6f : .3f) * vector * num2 * Mathf.Lerp(1f, l == 0 ? 0f : -5.5f, t);
-					w.vel += .2f * vector2 * (k == 0 ? -1f : 1f) * Math.Abs(ZRotation.y) * num2 * Mathf.Lerp(1f, 6f, t);
-					w.vel += .2f * vector2 * ZRotation.x * num2 * Mathf.Lerp(1f, 6f, t);
+					w.vel -= vector * ((l == 0 ? .6f : .3f) * num2 * Mathf.Lerp(1f, l == 0 ? 0f : -5.5f, t));
+					w.vel += vector2 * ((k == 0 ? -.2f : .2f) * Math.Abs(ZRotation.y) * num2 * Mathf.Lerp(1f, 6f, t));
+					w.vel += vector2 * (.2f * ZRotation.x * num2 * Mathf.Lerp(1f, 6f, t));
 					if (!flag)
 						w.vel.y -= .3f;
 					if (wk[l] < .5f)
 					{
 						var num3 = Mathf.InverseLerp(.5f, 0f, wk[l]);
 						var b = f.firstChunk.pos - vector * (l == 0 ? 20f : 15f);
-						b += -2f * vector2 * (k == 0 ? -1f : 1f) * Math.Abs(ZRotation.y);
-						b += 5f * vector2 * ZRotation.x;
+						b += vector2 * ((k == 0 ? 2f : -2f) * Math.Abs(ZRotation.y));
+						b += vector2 * (5f * ZRotation.x);
 						w.vel *= 1f - num3;
 						w.pos = Vector2.Lerp(w.pos, b, num3);
 					}
@@ -335,11 +335,11 @@ public class HoverflyGraphics : GraphicsModule, ILookingAtCreatures, IMuddableGr
 	{
 		Vector2 vector = Custom.DirVec(Fly.firstChunk.lastPos, Fly.firstChunk.pos), vector2 = Custom.PerpendicularVector(vector);
 		var w = Wings[side][wing];
-        w.vel *= 0f;
+		w.vel = default;
 		w.pos = Fly.firstChunk.pos - vector * 5f;
 		w.pos += (wing == 0 ? -3f : 10f) * vector;
-		w.pos += 17f * vector2 * (side == 0 ? -1f : 1f) * Math.Abs(ZRotation.y);
-		w.pos += 17f * vector2 * ZRotation.x;
+		w.pos += vector2 * ((side == 0 ? -17f : 17f) * Math.Abs(ZRotation.y));
+		w.pos += vector2 * (17f * ZRotation.x);
 		w.ConnectToPoint(Fly.firstChunk.pos - vector * 5f, wing == 0 ? 23f : 17f, true, 0f, Fly.firstChunk.vel, 0f, 0f);
 		w.PushOutOfTerrain(Fly.room, Fly.firstChunk.pos);
 	}
@@ -351,7 +351,7 @@ public class HoverflyGraphics : GraphicsModule, ILookingAtCreatures, IMuddableGr
 		for (var i = 0; i < array.Length; i++)
 		{
 			var obj = array[i];
-			obj.vel *= 0f;
+			obj.vel = default;
 			obj.pos = Fly?.firstChunk.pos ?? default;
 			obj.lastPos = obj.pos;
 		}

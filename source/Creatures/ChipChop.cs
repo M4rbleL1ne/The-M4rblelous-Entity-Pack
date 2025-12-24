@@ -793,10 +793,10 @@ public class ChipChop : InsectoidCreature
 			num4 = 0f;
         if (g0.grabbed.TotalMass > TotalMass / 2f)
             num4 = gbc.mass / (gbc.mass + fc.mass) * .5f;
-		var vec = (num2 - num) * vector * num4 * num3;
+		var vec = vector * (num4 * num3 * (num2 - num));
         fc.pos -= vec;
         fc.vel -= vec;
-		vec = (num2 - num) * vector * (1f - num4) * num3;
+		vec = vector * ((1f - num4) * num3 * (num2 - num));
         gbc.pos += vec;
         gbc.vel += vec;
     }
@@ -812,7 +812,7 @@ public class ChipChop : InsectoidCreature
     public virtual void Move(MovementConnection con)
 	{
 		var dest = room.MiddleOfTile(con.DestTile);
-		firstChunk.vel += (Custom.DirVec(firstChunk.pos, dest) + Custom.DegToVec(Random.value * 360f) * .75f * Mathf.Lerp(.8f, 1.2f, IVars.Size / 1.5f)) * (1f + Excitement * .5f + SpeedEffectDuration / 2400f);
+		firstChunk.vel += (Custom.DirVec(firstChunk.pos, dest) + Custom.DegToVec(Random.value * 360f) * (.75f * Mathf.Lerp(.8f, 1.2f, IVars.Size / 1.5f))) * (1f + Excitement * .5f + SpeedEffectDuration / 2400f);
 	}
 
     public virtual bool VisualContact(Vector2 pos)

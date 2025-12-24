@@ -150,13 +150,13 @@ public class HazerMomGraphics : GraphicsModule
         {
             if (Random.value < .1f)
             {
-                var pos = Squid.mainBodyChunk.pos + Custom.RNV() * Random.value * 600f;
+                var pos = Squid.mainBodyChunk.pos + Custom.RNV() * (Random.value * 600f);
                 if (!Squid.room.GetTile(pos).Solid)
                     LookPos = pos;
             }
             else
             {
-                var pos2 = LookPos + Custom.RNV() * Random.value * 100f;
+                var pos2 = LookPos + Custom.RNV() * (Random.value * 100f);
                 if (!Squid.room.GetTile(pos2).Solid)
                     LookPos = pos2;
             }
@@ -170,7 +170,7 @@ public class HazerMomGraphics : GraphicsModule
         {
             SmallEyeMovements *= .94f;
             if (Random.value < 1f / 3f)
-                SmallEyeMovements = Custom.RNV() * Random.value * Mathf.Min(Vector2.Distance(Squid.mainBodyChunk.pos, LookPos) * .5f, 120f);
+                SmallEyeMovements = Custom.RNV() * (Random.value * Mathf.Min(Vector2.Distance(Squid.mainBodyChunk.pos, LookPos) * .5f, 120f));
             if (LookAtObj is not null)
                 LookDir = Vector2.Lerp(LookDir, Vector2.ClampMagnitude((LookPos + SmallEyeMovements - Squid.ChunkInOrder0.pos) / 60f, 1f), .3f);
             --Blink;
@@ -195,7 +195,7 @@ public class HazerMomGraphics : GraphicsModule
                 tentsij[1] = tentsij[0];
                 tentsij[0] += tentsij[2];
                 tentsij[2] *= 1f - .5f * num2;
-                tentsij[2] += (Vector2)Vector3.Slerp(vector, vector2, Mathf.Pow(num2, 1f - .7f * Squid.Swim)) * (2.5f + Squid.Swim) * Mathf.Pow(1f - num2, 1.5f);
+                tentsij[2] += (Vector2)Vector3.Slerp(vector, vector2, Mathf.Pow(num2, 1f - .7f * Squid.Swim)) * ((2.5f + Squid.Swim) * Mathf.Pow(1f - num2, 1.5f));
                 if (j > 1 && Squid.room.GetTile(tentsij[0]).Solid)
                 {
                     var cd = ScratchTerrainCollisionData.Set(tentsij[0], tentsij[1], tentsij[2], 1f, default, true);
@@ -347,7 +347,7 @@ public class HazerMomGraphics : GraphicsModule
         sprites[EyeHighLightSprite].y = vector5.y + 2f * num - camPos.y;
         sprites[EyeHighLightSprite].alpha = .5f * Mathf.InverseLerp(.5f, 1f, num) * (1f - DeadColor);
         var num2 = Mathf.Lerp(1.2f, 2.25f, Custom.SCurve(Mathf.Lerp(LastPupSize, PupSize, timeStacker), .75f)) * Mathf.Pow(num, .75f);
-        vector5 += vector4 * (3.5f - num2) * num;
+        vector5 += vector4 * ((3.5f - num2) * num);
         sprites[PupilSprite].x = vector5.x - camPos.x;
         sprites[PupilSprite].y = vector5.y - camPos.y;
         if (!Squid.dead && rCam.room.PointSubmerged(vector5 + new Vector2(0f, 5f)))
@@ -441,13 +441,13 @@ public class HazerMomGraphics : GraphicsModule
                     num11 = 2.5f + 3f * Mathf.Pow(Mathf.Clamp01(Mathf.Sin(Mathf.InverseLerp(0f, 5f, m) * Mathf.PI)), 2f);
                 if (m == 0)
                 {
-                    tentSpr.MoveVertice(m * 4, vector - vector10 * (num9 + num11) * .5f - camPos);
-                    tentSpr.MoveVertice(m * 4 + 1, vector + vector10 * (num9 + num11) * .5f - camPos);
+                    tentSpr.MoveVertice(m * 4, vector - vector10 * ((num9 + num11) * .5f) - camPos);
+                    tentSpr.MoveVertice(m * 4 + 1, vector + vector10 * ((num9 + num11) * .5f) - camPos);
                 }
                 else
                 {
-                    tentSpr.MoveVertice(m * 4, vector - vector10 * (num9 + num11) * .5f + normalized2 * num10 - camPos);
-                    tentSpr.MoveVertice(m * 4 + 1, vector + vector10 * (num9 + num11) * .5f + normalized2 * num10 - camPos);
+                    tentSpr.MoveVertice(m * 4, vector - vector10 * ((num9 + num11) * .5f) + normalized2 * num10 - camPos);
+                    tentSpr.MoveVertice(m * 4 + 1, vector + vector10 * ((num9 + num11) * .5f) + normalized2 * num10 - camPos);
                 }
                 tentSpr.MoveVertice(m * 4 + 2, vector9 - vector10 * num11 - normalized2 * num10 - camPos);
                 if (m < tentsl.Length - 1)

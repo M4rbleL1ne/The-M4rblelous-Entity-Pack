@@ -290,7 +290,7 @@ public class DivingBeetleAI : ArtificialIntelligence, IUseARelationshipTracker, 
         if (Bug.graphicsModule is DivingBeetleGraphics g)
         {
             for (var i = 0; i < 2; i++)
-                g.Antennae[i].pos += Custom.DirVec(bs[0].pos, noise.pos) * Random.value * 20f;
+                g.Antennae[i].pos += Custom.DirVec(bs[0].pos, noise.pos) * (Random.value * 20f);
         }
         NoiseRectionDelay = Random.Range(0, 30);
     }

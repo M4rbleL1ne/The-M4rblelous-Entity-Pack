@@ -67,6 +67,7 @@ sealed class MiniLeviathanCritob : Critob, ISandboxHandler
         t.meatPoints = 6;
         t.shortcutColor = MiniLeviathan.LeviColor;
         t.abstractedLaziness = 10;
+        t.isTooCloseToTerrain = (aimap, pos) => aimap.getTerrainProximity(pos) <= 1 ? 1 : 0;
         return t;
     }
 

@@ -230,7 +230,7 @@ public class HazerMom : Creature
         {
             Swim = Mathf.Min(1f, Swim + 1f / 30f);
             SwimCycle += Swim / 18f;
-            SwimDir = (SwimDir + Custom.RNV() * Random.value * .1f).normalized;
+            SwimDir = (SwimDir + Custom.RNV() * (Random.value * .1f)).normalized;
             if (room.readyForAI)
             {
                 Vector2 vector = default;
@@ -242,9 +242,9 @@ public class HazerMom : Creature
                     {
                         var dir = Custom.eightDirections[k];
                         if (terrainProximity < 3 && room.aimap.getTerrainProximity(tilePosition + dir * j) > terrainProximity)
-                            vector += dir.ToVector2() * Random.value / j;
+                            vector += dir.ToVector2() * (Random.value / j);
                         else if (!room.GetTile(tilePosition + dir * j).AnyWater)
-                            vector -= dir.ToVector2() * .1f * Random.value / j;
+                            vector -= dir.ToVector2() * (.1f * Random.value / j);
                     }
                 }
                 SwimDir = (SwimDir + Vector2.ClampMagnitude(vector, 1f) * Random.value).normalized;
@@ -298,7 +298,7 @@ public class HazerMom : Creature
         for (var i = 0; i < chs.Length; i++)
         {
             var ch = chs[i];
-            ch.pos = newRoom.MiddleOfTile(pos) - vector * (-1.5f + i) * 15f;
+            ch.pos = newRoom.MiddleOfTile(pos) - vector * ((-1.5f + i) * 15f);
             ch.lastPos = newRoom.MiddleOfTile(pos);
             ch.vel = vector * 8f;
         }

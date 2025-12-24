@@ -145,7 +145,7 @@ public class ChipChopGraphics : GraphicsModule, IMuddableGraphics
                 var flag2 = i % 2 == j == LegsPosition;
                 vector2 = Custom.DegToVec(Custom.VecToDeg(vector2) + (Mathf.Lerp(30f, 140f, i * 1f / 3f) + (i == 3 ? 20f : 0f) + 15f * (flag2 ? -1f : 1f) * Mathf.InverseLerp(.5f, 5f, magnitude)) * (-1 + 2 * j));
                 var num = i == 0 ? LimbLength : (.95f * LimbLength);
-                var vector3 = fc.pos + vector2 * num * .85f + fc.vel.normalized * num * .4f * Mathf.InverseLerp(.5f, 5f, magnitude);
+                var vector3 = fc.pos + vector2 * (num * .85f) + fc.vel.normalized * (num * .4f * Mathf.InverseLerp(.5f, 5f, magnitude));
                 if (i == 0 && !Bug.dead && !Bug.Idle)
                     legP.pos += Custom.DegToVec(Random.value * 360f) * Random.value;
                 var flag3 = false;
@@ -156,12 +156,12 @@ public class ChipChopGraphics : GraphicsModule, IMuddableGraphics
                     {
                         flag3 = true;
                         legP.mode = Limb.Mode.Dangle;
-                        legP.vel += Custom.DegToVec(Random.value * 360f) * Random.value * 3f;
+                        legP.vel += Custom.DegToVec(Random.value * 360f) * (Random.value * 3f);
                     }
                     else if (i == 0 && Bug.AttachedChunk is BodyChunk b)
                     {
                         flag3 = true;
-                        legP.absoluteHuntPos = b.pos + vector * (-1 + 2 * j) * b.rad * .5f;
+                        legP.absoluteHuntPos = b.pos + vector * ((-1 + 2 * j) * b.rad * .5f);
                         legP.pos = legP.absoluteHuntPos;
                     }
                 }
@@ -182,7 +182,7 @@ public class ChipChopGraphics : GraphicsModule, IMuddableGraphics
                 }
                 else
                 {
-                    legP.vel += Custom.RotateAroundOrigo(DeathLegPositions[i][j], Custom.AimFromOneVectorToAnother(-BodyDir, BodyDir)) * .65f + Custom.DegToVec(Random.value * 360f) * Bug.DeathSpasms * 5f + vector2 * .7f;
+                    legP.vel += Custom.RotateAroundOrigo(DeathLegPositions[i][j], Custom.AimFromOneVectorToAnother(-BodyDir, BodyDir)) * .65f + Custom.DegToVec(Random.value * 360f) * (Bug.DeathSpasms * 5f) + vector2 * .7f;
                     legP.vel.y -= .8f;
                     LimbGoalDistances[i][j] = 0f;
                 }
@@ -267,9 +267,9 @@ public class ChipChopGraphics : GraphicsModule, IMuddableGraphics
             for (var m = 0; m < lb.Length; m++)
             {
                 var legP = lb[m];
-                Vector2 vector4 = vector + (vector2 * (7f - (l + 1) * .5f) + vector3 * (3f + (l + 1) * .5f) * (-1 + 2 * m)) * iVars.Size,
+                Vector2 vector4 = vector + (vector2 * (7f - (l + 1) * .5f) + vector3 * ((3f + (l + 1) * .5f) * (-1 + 2 * m))) * iVars.Size,
                     a = Vector2.Lerp(legP.lastPos, legP.pos, timeStacker);
-                a = Vector2.Lerp(a, vector4 + vector2 * LimbLength * .1f, Mathf.Sin(Mathf.InverseLerp(0f, lgd[m], Vector2.Distance(a, legP.absoluteHuntPos)) * Mathf.PI) * .4f);
+                a = Vector2.Lerp(a, vector4 + vector2 * (LimbLength * .1f), Mathf.Sin(Mathf.InverseLerp(0f, lgd[m], Vector2.Distance(a, legP.absoluteHuntPos)) * Mathf.PI) * .4f);
                 float fl = (l == 0 ? 1f : .95f) * LimbLength,
                     num = fl * (l == 0 ? .6f : .5f),
                     num2 = fl * (l == 0 ? .4f : .5f),

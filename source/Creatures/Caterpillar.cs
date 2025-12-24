@@ -95,11 +95,11 @@ public class Caterpillar : InsectoidCreature, IProvideWarmth
 				{
 					var num3 = chl.mass / (chl.mass + chlp1.mass);
 					var vector = Custom.DirVec(chl.pos, con.AConnect);
-					chl.vel += vector * (totalLength - num2) * num3;
-					chl.pos += vector * (totalLength - num2) * num3;
+					chl.vel += vector * ((totalLength - num2) * num3);
+					chl.pos += vector * ((totalLength - num2) * num3);
 					vector = Custom.DirVec(chlp1.pos, con.BConnect);
-                    chlp1.vel += vector * (totalLength - num2) * (1f - num3);
-                    chlp1.pos += vector * (totalLength - num2) * (1f - num3);
+                    chlp1.vel += vector * ((totalLength - num2) * (1f - num3));
+                    chlp1.pos += vector * ((totalLength - num2) * (1f - num3));
 				}
 			}
 			for (var num5 = cons.Length - 2; num5 >= 0; num5--)
@@ -114,11 +114,11 @@ public class Caterpillar : InsectoidCreature, IProvideWarmth
 				{
 					var num7 = ch5.mass / (ch5.mass + ch5p1.mass);
 					var vector2 = Custom.DirVec(ch5.pos, con.AConnect);
-                    ch5.vel += vector2 * (totalLength2 - num6) * num7;
-                    ch5.pos += vector2 * (totalLength2 - num6) * num7;
+                    ch5.vel += vector2 * ((totalLength2 - num6) * num7);
+                    ch5.pos += vector2 * ((totalLength2 - num6) * num7);
 					vector2 = Custom.DirVec(ch5p1.pos, con.BConnect);
-                    ch5p1.vel += vector2 * (totalLength2 - num6) * (1f - num7);
-                    ch5p1.pos += vector2 * (totalLength2 - num6) * (1f - num7);
+                    ch5p1.vel += vector2 * ((totalLength2 - num6) * (1f - num7));
+                    ch5p1.pos += vector2 * ((totalLength2 - num6) * (1f - num7));
 				}
 			}
 			for (var m = 0; m < chs.Length - 2; m++)
@@ -160,7 +160,7 @@ public class Caterpillar : InsectoidCreature, IProvideWarmth
 				for (var num10 = 0; num10 < chs.Length; num10++)
 				{
 					if (Random.value > State.health * 2f)
-						chs[num10].vel += Custom.RNV() * Mathf.Pow(Random.value, Custom.LerpMap(State.health, .75f, 0f, 3f, .1f, 2f)) * 4f * Mathf.InverseLerp(.75f, 0f, State.health);
+						chs[num10].vel += Custom.RNV() * (Mathf.Pow(Random.value, Custom.LerpMap(State.health, .75f, 0f, 3f, .1f, 2f)) * 4f * Mathf.InverseLerp(.75f, 0f, State.health));
 				}
 			}
 		}
@@ -208,7 +208,7 @@ public class Caterpillar : InsectoidCreature, IProvideWarmth
 			for (var i = 0; i < chs.Length; i++)
 			{
 				var chi = chs[i];
-				chi.vel += Custom.DirVec(movementConnection.StartTile.ToVector2(), movementConnection.DestTile.ToVector2()) * .05f + Custom.RNV() * Random.value * 4f;
+				chi.vel += Custom.DirVec(movementConnection.StartTile.ToVector2(), movementConnection.DestTile.ToVector2()) * .05f + Custom.RNV() * (Random.value * 4f);
                 chi.vel.y += Mathf.Clamp(room.WaterLevelDisplacement(chi.pos), -5f, 5f) * .05f;
             }
 		}
@@ -368,18 +368,18 @@ public class Caterpillar : InsectoidCreature, IProvideWarmth
             if (Moving)
             {
                 if (AccessibleTile(Room.StaticGetTilePosition(bodyChunks[i - 1].pos)))
-                    ch.vel += Custom.DirVec(ch.pos, bodyChunks[i - 1].pos) * 1.5f * Mathf.Lerp(.5f, 1.5f, State.ClampedHealth) * 1.25f * ex;
-                ch.vel -= Custom.DirVec(ch.pos, bodyChunks[i + 1].pos) * .8f * Mathf.Lerp(0.7f, 1.3f, State.ClampedHealth) * ex;
+                    ch.vel += Custom.DirVec(ch.pos, bodyChunks[i - 1].pos) * (1.5f * Mathf.Lerp(.5f, 1.5f, State.ClampedHealth) * 1.25f * ex);
+                ch.vel -= Custom.DirVec(ch.pos, bodyChunks[i + 1].pos) * (.8f * Mathf.Lerp(.7f, 1.3f, State.ClampedHealth) * ex);
                 continue;
             }
-            var vector = ((ch.pos - bodyChunks[i - 1].pos).normalized + (bodyChunks[i + 1].pos - ch.pos).normalized) / 2f;
+            var vector = ((ch.pos - bodyChunks[i - 1].pos).normalized + (bodyChunks[i + 1].pos - ch.pos).normalized) * .5f;
             if (Math.Abs(vector.x) > .5f)
                 ch.vel.y -= (ch.pos.y - (room.MiddleOfTile(ch.pos).y + VerticalSitSurface(ch.pos) * (10f - ch.rad))) * Mathf.Lerp(.01f, .6f, Mathf.Pow(State.ClampedHealth, 1.2f));
             if (Math.Abs(vector.y) > .5f)
                 ch.vel.x -= (ch.pos.x - (room.MiddleOfTile(ch.pos).x + HorizontalSitSurface(ch.pos) * (10f - ch.rad))) * Mathf.Lerp(.01f, .6f, Mathf.Pow(State.ClampedHealth, 1.2f));
         }
 		if (num > 0 && !Custom.DistLess(bodyChunks[0].pos, MoveToPos, 10f))
-            bodyChunks[0].vel += Custom.DirVec(bodyChunks[0].pos, MoveToPos) * Custom.LerpMap(num, 0f, bodyChunks.Length, 6f, 3f) * Mathf.Lerp(.7f, 1.3f, State.health) * ex;
+            bodyChunks[0].vel += Custom.DirVec(bodyChunks[0].pos, MoveToPos) * (Custom.LerpMap(num, 0f, bodyChunks.Length, 6f, 3f) * Mathf.Lerp(.7f, 1.3f, State.health) * ex);
     }
 
     public virtual int VerticalSitSurface(Vector2 pos)
@@ -459,10 +459,10 @@ public class Caterpillar : InsectoidCreature, IProvideWarmth
 		var vector = Custom.DirVec(fch.pos, grabbedCh.pos);
 		float rad = grabbedCh.rad,
 			num3 = grabbedCh.mass / (grabbedCh.mass + fch.mass);
-		fch.pos -= (rad - num) * vector * num3 * .95f;
-		fch.vel -= (rad - num) * vector * num3 * .95f;
-		grabbedCh.pos += (rad - num) * vector * (1f - num3) * .95f;
-        grabbedCh.vel += (rad - num) * vector * (1f - num3) * .95f;
+		fch.pos -= vector * ((rad - num) * num3 * .95f);
+		fch.vel -= vector * ((rad - num) * num3 * .95f);
+		grabbedCh.pos += vector * ((rad - num) * (1f - num3) * .95f);
+        grabbedCh.vel += vector * ((rad - num) * (1f - num3) * .95f);
 	}
 
 	public override void Collide(PhysicalObject otherObject, int myChunk, int otherChunk)
@@ -508,7 +508,7 @@ public class Caterpillar : InsectoidCreature, IProvideWarmth
 		for (var i = 0; i < chs.Length; i++)
 		{
 			var chi = chs[i];
-            chi.pos = newRoom.MiddleOfTile(pos) + Custom.RNV() * Random.value * 2f;
+            chi.pos = newRoom.MiddleOfTile(pos) + Custom.RNV() * (Random.value * 2f);
             chi.lastPos = newRoom.MiddleOfTile(pos);
             chi.vel = vector;
 		}
