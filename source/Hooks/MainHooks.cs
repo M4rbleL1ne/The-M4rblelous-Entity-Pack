@@ -68,6 +68,8 @@ public static class MainHooks
                     MultiplayerUnlocks.CreatureUnlockList.Remove(SandboxUnlockID.SilverLizard);
                 if (MultiplayerUnlocks.CreatureUnlockList.Contains(SandboxUnlockID.SurfaceSwimmer))
                     MultiplayerUnlocks.CreatureUnlockList.Remove(SandboxUnlockID.SurfaceSwimmer);
+                if (MultiplayerUnlocks.CreatureUnlockList.Contains(SandboxUnlockID.MamaBug))
+                    MultiplayerUnlocks.CreatureUnlockList.Remove(SandboxUnlockID.MamaBug);
                 if (MultiplayerUnlocks.CreatureUnlockList.Contains(SandboxUnlockID.ThornBug))
                     MultiplayerUnlocks.CreatureUnlockList.Remove(SandboxUnlockID.ThornBug);
                 if (MultiplayerUnlocks.CreatureUnlockList.Contains(SandboxUnlockID.SeedBat))

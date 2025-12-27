@@ -48,6 +48,61 @@ public static class EggBugHooks
     {
         if (self is SurfaceSwimmer)
             return;
+        if (self is M4RMamaBug)
+        {
+            self.dropEggs = false;
+            if (self.graphicsModule is M4RMamaBugGraphics grs)
+            {
+                for (var l = 0; l < 4; l++)
+                {
+                    for (var m = 0; m < 5; m++)
+                    {
+                        var eggGr = grs.eggs[l, m];
+                        if (Random.value >= .5f)
+                        {
+                            var abstractEgg = new EggBugEgg.AbstractBugEgg(self.room.world, null, self.abstractPhysicalObject.pos, self.room.game.GetNewID(), self.hue);
+                            self.room.abstractRoom.AddEntity(abstractEgg);
+                            abstractEgg.RealizeInRoom();
+                            if (abstractEgg.realizedObject is EggBugEgg egg)
+                            {
+                                egg.firstChunk.HardSetPosition(grs.EggAttachPos(l, m, 1f));
+                                egg.firstChunk.vel = eggGr.vel + Custom.DegToVec(180f * Mathf.Pow(Random.value, 3f) * (Random.value < .5f ? -1f : 1f)) * (16f * Mathf.Pow(Random.value, .3f));
+                                egg.setRotation = Custom.RNV();
+                                egg.swell = 0f;
+                                egg.rotVel = Mathf.Lerp(-20f, 20f, Random.value);
+                                egg.liquid = 1f;
+                            }
+                        }
+                        else
+                            self.room.AddObject(new EggBugEgg.LiquidDrip(eggGr.pos, eggGr.vel * 3f, Color.Lerp(grs.eggColors[1], grs.blackColor, .4f)));
+                    }
+                }
+            }
+            else
+            {
+                var b1 = self.bodyChunks[1];
+                for (var n = 0; n < 20; n++)
+                {
+                    if (Random.value >= .5f)
+                    {
+                        var newPos = b1.pos + Custom.RNV() * (4f * Random.value);
+                        var abstractEgg = new EggBugEgg.AbstractBugEgg(self.room.world, null, self.abstractPhysicalObject.pos, self.room.game.GetNewID(), self.hue);
+                        self.room.abstractRoom.AddEntity(abstractEgg);
+                        abstractEgg.RealizeInRoom();
+                        if (abstractEgg.realizedObject is EggBugEgg egg)
+                        {
+                            egg.firstChunk.HardSetPosition(newPos);
+                            egg.firstChunk.vel = b1.vel + Custom.DegToVec(180f * Mathf.Pow(Random.value, 3f) * (Random.value < .5f ? -1f : 1f)) * (16f * Mathf.Pow(Random.value, .3f));
+                            egg.setRotation = Custom.RNV();
+                            egg.swell = 0f;
+                            egg.rotVel = Mathf.Lerp(-20f, 20f, Random.value);
+                        }
+                    }
+                }
+            }
+            self.room.PlaySound(SoundID.Egg_Bug_Drop_Eggs, self.mainBodyChunk, false, 1.05f, .95f);
+            return;
+        }
         orig(self);
     }
 
@@ -141,6 +196,69 @@ public static class EggBugHooks
                 }
             }
         }
+    }
+
+    internal static Vector2 On_EggBugGraphics_EggAttachPos(On.EggBugGraphics.orig_EggAttachPos orig, EggBugGraphics self, int s, int egg, float timeStacker)
+    {
+        if (self is M4RMamaBugGraphics m)
+            return m.EggAttachPos(s, egg, timeStacker);
+        return orig(self, s, egg, timeStacker);
+    }
+
+    internal static int On_EggBugGraphics_FrontEggSprite(On.EggBugGraphics.orig_FrontEggSprite orig, EggBugGraphics self, int s, int e, int part)
+    {
+        if (self is M4RMamaBugGraphics)
+            return M4RMamaBugGraphics.FrontEggSprite(s, e, part);
+        return orig(self, s, e, part);
+    }
+
+    internal static int On_EggBugGraphics_LegSprite(On.EggBugGraphics.orig_LegSprite orig, EggBugGraphics self, int leg, int side, int part)
+    {
+        if (self is M4RMamaBugGraphics)
+            return M4RMamaBugGraphics.LegSprite(leg, side, part);
+        return orig(self, leg, side, part);
+    }
+
+    internal static int On_EggBugGraphics_EyeSprite(On.EggBugGraphics.orig_EyeSprite orig, EggBugGraphics self, int eye)
+    {
+        if (self is M4RMamaBugGraphics)
+            return M4RMamaBugGraphics.EyeSprite(eye);
+        return orig(self, eye);
+    }
+
+    internal static int On_EggBugGraphics_AntennaSprite(On.EggBugGraphics.orig_AntennaSprite orig, EggBugGraphics self, int side)
+    {
+        if (self is M4RMamaBugGraphics)
+            return M4RMamaBugGraphics.AntennaSprite(side);
+        return orig(self, side);
+    }
+
+    internal static int On_EggBugGraphics_BackEggSprite(On.EggBugGraphics.orig_BackEggSprite orig, EggBugGraphics self, int s, int e, int part)
+    {
+        if (self is M4RMamaBugGraphics)
+            return M4RMamaBugGraphics.BackEggSprite(s, e, part);
+        return orig(self, s, e, part);
+    }
+
+    internal static int On_EggBugGraphics_get_TotalSprites(Func<EggBugGraphics, int> orig, EggBugGraphics self)
+    {
+        if (self is M4RMamaBugGraphics)
+            return M4RMamaBugGraphics.TOTAL_SPRITES;
+        return orig(self);
+    }
+
+    internal static int On_EggBugGraphics_get_MeshSprite(Func<EggBugGraphics, int> orig, EggBugGraphics self)
+    {
+        if (self is M4RMamaBugGraphics)
+            return M4RMamaBugGraphics.MESH_SPRITE;
+        return orig(self);
+    }
+
+    internal static int On_EggBugGraphics_get_HeadSprite(Func<EggBugGraphics, int> orig, EggBugGraphics self)
+    {
+        if (self is M4RMamaBugGraphics)
+            return M4RMamaBugGraphics.HEAD_SPRITE;
+        return orig(self);
     }
 
     internal static bool CanMove(Vector2 moveTo, Room rm)

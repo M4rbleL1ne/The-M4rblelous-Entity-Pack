@@ -52,7 +52,7 @@ public static class PlayerHooks
     {
         if (obj is ThornyStrawberry or BlobPiece or BouncingMelon or LittleBalloon or TintedBeetle or Physalis or LimeMushroom or GummyAnther or MarineEye or SmallPuffBall or DendriticNeuron or MiniFruit or XyloWorm or FumeFruit or Durian or DarkGrub)
             return Player.ObjectGrabability.OneHand;
-        if (obj is RubberBlossom or MiniFruitSpawner)
+        if (obj is RubberBlossom or MiniFruitSpawner || (obj is M4RMamaBug m && !m.dead))
             return Player.ObjectGrabability.CantGrab;
         if (obj is StarLemon)
             return Player.ObjectGrabability.TwoHands;
@@ -172,9 +172,7 @@ public static class PlayerHooks
 
     internal static bool On_Player_IsCreatureLegalToHoldWithoutStun(On.Player.orig_IsCreatureLegalToHoldWithoutStun orig, Player self, Creature grabCheck)
     {
-        if (grabCheck is TintedBeetle or SurfaceSwimmer or BouncingBall)
-            return true;
-        return orig(self, grabCheck);
+        return (grabCheck is TintedBeetle or SurfaceSwimmer or BouncingBall) || (grabCheck is not M4RMamaBug && orig(self, grabCheck));
     }
 
     internal static void On_Player_MaulingUpdate(On.Player.orig_MaulingUpdate orig, Player self, int graspIndex)

@@ -21,7 +21,7 @@ using Watcher;
 
 namespace LBMergedMods;
 
-[BepInPlugin("lb-fgf-m4r-ik.modpack", "LB Merged Mods", "10.0.7"), BepInDependency("io.github.dual.fisobs"), BepInDependency("com.rainworldgame.lizardcustomizer.plugin", BepInDependency.DependencyFlags.SoftDependency), BepInDependency("slime-cubed.devconsole", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInPlugin("lb-fgf-m4r-ik.modpack", "LB Merged Mods", "10.0.8"), BepInDependency("io.github.dual.fisobs"), BepInDependency("com.rainworldgame.lizardcustomizer.plugin", BepInDependency.DependencyFlags.SoftDependency), BepInDependency("slime-cubed.devconsole", BepInDependency.DependencyFlags.SoftDependency)]
 public sealed class LBMergedModsPlugin : BaseUnityPlugin
 {
     public static AssetBundle? Bundle;
@@ -412,6 +412,15 @@ public sealed class LBMergedModsPlugin : BaseUnityPlugin
         new Hook(typeof(Lizard).GetMethod("get_Swimmer", ALL_FLAGS), On_Lizard_get_Swimmer);
         IL.GraffitiCloud.Update += IL_GraffitiCloud_Update;
         On.FlyGraphics.MuddableSprite += On_FlyGraphics_MuddableSprite;
+        On.EggBugGraphics.EggAttachPos += On_EggBugGraphics_EggAttachPos;
+        On.EggBugGraphics.BackEggSprite += On_EggBugGraphics_BackEggSprite;
+        On.EggBugGraphics.AntennaSprite += On_EggBugGraphics_AntennaSprite;
+        On.EggBugGraphics.EyeSprite += On_EggBugGraphics_EyeSprite;
+        On.EggBugGraphics.LegSprite += On_EggBugGraphics_LegSprite;
+        On.EggBugGraphics.FrontEggSprite += On_EggBugGraphics_FrontEggSprite;
+        new Hook(typeof(EggBugGraphics).GetMethod("get_TotalSprites", ALL_FLAGS), On_EggBugGraphics_get_TotalSprites);
+        new Hook(typeof(EggBugGraphics).GetMethod("get_MeshSprite", ALL_FLAGS), On_EggBugGraphics_get_MeshSprite);
+        new Hook(typeof(EggBugGraphics).GetMethod("get_HeadSprite", ALL_FLAGS), On_EggBugGraphics_get_HeadSprite);
         Content.Register(new WaterBlobCritob(),
                         new BouncingBallCritob(),
                         new HazerMomCritob(),
@@ -430,6 +439,7 @@ public sealed class LBMergedModsPlugin : BaseUnityPlugin
                         new M4RJawsCritob(),
                         new DivingBeetleCritob(),
                         new SurfaceSwimmerCritob(),
+                        new M4RMamaBugCritob(),
                         new ThornBugCritob(),
                         new TintedBeetleCritob(),
                         new MiniScutigeraCritob(),

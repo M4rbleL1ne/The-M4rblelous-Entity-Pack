@@ -104,7 +104,8 @@ public static class CreatureTemplateType
         XyloWorm = new(nameof(XyloWorm), true),
         SparkEye = new(nameof(SparkEye), true),
         ScavengerSentinel = new(nameof(ScavengerSentinel), true),
-        AlphaOrange = new(nameof(AlphaOrange), true);
+        AlphaOrange = new(nameof(AlphaOrange), true),
+        MamaBug = new(nameof(MamaBug), true);
 
     static CreatureTemplateType()
     {
@@ -141,7 +142,8 @@ public static class CreatureTemplateType
             XyloWorm,
             SparkEye,
             ScavengerSentinel,
-            AlphaOrange];
+            AlphaOrange,
+            MamaBug];
     }
 
     public static void UnregisterValues()
@@ -316,6 +318,11 @@ public static class CreatureTemplateType
             AlphaOrange.Unregister();
             AlphaOrange = null!;
         }
+        if (MamaBug is not null)
+        {
+            MamaBug.Unregister();
+            MamaBug = null!;
+        }
     }
 }
 
@@ -371,7 +378,8 @@ public static class SandboxUnlockID
         DarkGrub = new(nameof(DarkGrub), true),
         SparkEye = new(nameof(SparkEye), true),
         ScavengerSentinel = new(nameof(ScavengerSentinel), true),
-        AlphaOrange = new(nameof(AlphaOrange), true);
+        AlphaOrange = new(nameof(AlphaOrange), true),
+        MamaBug = new(nameof(MamaBug), true);
 
     static SandboxUnlockID()
     {
@@ -424,7 +432,8 @@ public static class SandboxUnlockID
             DarkGrub,
             SparkEye,
             ScavengerSentinel,
-            AlphaOrange];
+            AlphaOrange,
+            MamaBug];
     }
 
     public static void UnregisterValues()
@@ -678,6 +687,11 @@ public static class SandboxUnlockID
         {
             AlphaOrange.Unregister();
             AlphaOrange = null!;
+        }
+        if (MamaBug is not null)
+        {
+            MamaBug.Unregister();
+            MamaBug = null!;
         }
     }
 }

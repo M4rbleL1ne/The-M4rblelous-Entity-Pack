@@ -43,12 +43,12 @@ public class SurfaceSwimmerGraphics : EggBugGraphics, IMuddableGraphics
                     {
                         ant.MoveVertice(n * 4, vector7 - vector15 * num5 - camPos);
                         ant.MoveVertice(n * 4 + 1, vector7 + vector15 * num5 - camPos);
-                        ant.MoveVertice(n * 4 + 2, (vector13 + vector7) / 2f - vector15 * num5 - camPos);
-                        ant.MoveVertice(n * 4 + 3, (vector13 + vector7) / 2f + vector15 * num5 - camPos);
+                        ant.MoveVertice(n * 4 + 2, (vector13 + vector7) * .5f - vector15 * num5 - camPos);
+                        ant.MoveVertice(n * 4 + 3, (vector13 + vector7) * .5f + vector15 * num5 - camPos);
                     }
                     else
                     {
-                        var num7 = Vector2.Distance(vector13, vector7) / (n == 0 ? 1f : 5f);
+                        var num7 = Vector2.Distance(vector13, vector7) * (n == 0 ? 1f : .2f);
                         ant.MoveVertice(n * 4, vector7 - vector15 * num5 + normalized * num7 - camPos);
                         ant.MoveVertice(n * 4 + 1, vector7 + vector15 * num5 + normalized * num7 - camPos);
                         if (n < lgt - 1)
