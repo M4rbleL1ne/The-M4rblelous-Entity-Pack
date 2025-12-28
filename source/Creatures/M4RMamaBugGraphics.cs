@@ -90,11 +90,11 @@ public class M4RMamaBugGraphics : EggBugGraphics, IMuddableGraphics
 
     public static float EggSpacing(int egg) => egg switch
     {
-        4 => 6f,
-        3 => 11f,
-        2 => 16f,
-        1 => 19f,
-        _ => 21f
+        4 => 7f,
+        3 => 12f,
+        2 => 17f,
+        1 => 20f,
+        _ => 22f
     };
 
     public new Vector2 EggAttachPos(int side, int egg, float timeStacker)
@@ -108,7 +108,7 @@ public class M4RMamaBugGraphics : EggBugGraphics, IMuddableGraphics
         var eggAngleX = Custom.DegToVec(Custom.VecToDeg(Vector3.Slerp(lastZRotat, zRotat, timeStacker)) + EggAngle(side)).x;
         if (ShowEggs)
             eggAngleX *= Mathf.Lerp(1.5f, 1f, Math.Abs(Mathf.Lerp(lastFlip, flip, timeStacker)));
-        return bodyRelCenter + bodyDir * Mathf.Lerp(8f, -2f, t) + Custom.PerpendicularVector(bodyDir) * (eggAngleX * EggSpacing(egg) * (.45f + .55f * t));
+        return bodyRelCenter + bodyDir * Mathf.Lerp(8f, -2f, t) + Custom.PerpendicularVector(bodyDir) * (eggAngleX * EggSpacing(egg) * (.45f + .55f * t - (side is 0 or 3 ? .05f : .15f)));
     }
 
     public override void Update()
