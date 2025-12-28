@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
-using Random = UnityEngine.Random;
-using CoralBrain;
-using RWCustom;
-using UnityEngine;
-using System.Runtime.InteropServices;
-using System;
+﻿using CoralBrain;
 using MoreSlugcats;
+using RWCustom;
+using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace LBMergedMods.Items;
-//CHK
+
 public class DendriticNeuron : PhysicalObject, IDrawable, IPlayerEdible, IOwnProjectedCircles, IOwnMycelia
 {
     public sealed class MovementMode(string value, bool register = false) : ExtEnum<MovementMode>(value, register)
@@ -458,7 +458,22 @@ public class DendriticNeuron : PhysicalObject, IDrawable, IPlayerEdible, IOwnPro
     public virtual void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
     {
         var num = Mycelia.Length;
-        sLeaser.sprites[num].color = sLeaser.sprites[num + 1].color = Color.white;
+        var sprs = sLeaser.sprites;
+        Color color;
+        bool flag;
+        if (!(room?.roomSettings is RoomSettings rms && (rms.Palette == 24 || rms.fadePalette?.palette == 24)))
+        {
+            flag = MyColor.x < .5f;
+            color = Custom.HSL2RGB(flag ? Custom.LerpMap(MyColor.x, 0f, .5f, 4f / 9f, 2f / 3f) : Custom.LerpMap(MyColor.x, .5f, 1f, 2f / 3f, .99722224f), 1f, .5f + .5f * MyColor.y);
+            sprs[num + 3].color = sprs[num + 2].color = Custom.HSL2RGB(flag ? Custom.LerpMap(MyColor.x, 0f, .5f, 4f / 9f, 2f / 3f) : Custom.LerpMap(MyColor.x, .5f, 1f, 2f / 3f, .99722224f), 1f - MyColor.y, Mathf.Lerp(.8f + .2f * Mathf.InverseLerp(.4f, .1f, MyColor.x), .35f, Mathf.Pow(MyColor.y, 2f)));
+        }
+        else
+        {
+            flag = MyColor.x <= .5f;
+            color = Custom.HSL2RGB(flag ? 2f / 3f : Custom.LerpMap(MyColor.x, .5f, 1f, 2f / 3f, .99722224f), 1f, Mathf.Lerp(.1f, .5f, MyColor.y));
+            sprs[num + 3].color = sprs[num + 2].color = Custom.HSL2RGB(flag ? 2f / 3f : Custom.LerpMap(MyColor.x, .5f, 1f, 2f / 3f, .99722224f), 1f, Mathf.Lerp(.75f, .9f, MyColor.y));
+        }
+        sprs[num + 1].color = sprs[num].color = color;
     }
 
     public virtual Room HostingCircleFromRoom() => room;

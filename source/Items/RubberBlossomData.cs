@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Text;
 
 namespace LBMergedMods.Items;
-//CHK
+
 public class RubberBlossomData : PlacedObject.ConsumableObjectData
 {
     public float Red, Green, Blue, MaxUpwardVel = 20f;

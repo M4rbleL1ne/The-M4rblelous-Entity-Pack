@@ -3,7 +3,7 @@ using Random = UnityEngine.Random;
 using System;
 
 namespace LBMergedMods.Items;
-//CHK
+
 public class RubberBlossom : PhysicalObject, IDrawable
 {
     public const float BASESIZE = .5f;

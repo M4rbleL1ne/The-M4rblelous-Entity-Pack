@@ -5,7 +5,7 @@ using System;
 using Random = UnityEngine.Random;
 
 namespace LBMergedMods.Items;
-//CHK
+
 public class MiniFruit : PlayerCarryableItem, IDrawable, IPlayerEdible, IHaveAStalkState, IHaveAStalk
 {
     public class Stalk : UpdatableAndDeletable, IDrawable

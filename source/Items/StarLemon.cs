@@ -198,13 +198,33 @@ public class StarLemon : PlayerCarryableItem, IDrawable, IPlayerEdible, IHaveASt
                 sLeaser.CleanSpritesAndRemove();
         }
 
-        public virtual void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette) => sLeaser.sprites[0].color = palette.blackColor;
+        public virtual void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
+        {
+            var mesh = (TriangleMesh)sLeaser.sprites[0];
+            mesh.color = palette.blackColor;
+            var segsL = Segs.Length;
+            var vertL = mesh.verticeColors.Length;
+            for (var i = 0; i < segsL; i++)
+            {
+                var i4 = i * 4;
+                if (i4 + 1 < vertL)
+                {
+                    mesh.verticeColors[i4] = Color.Lerp(palette.blackColor, YellowCol, .2f * (i * 2f / vertL));
+                    mesh.verticeColors[i4 + 1] = Color.Lerp(palette.blackColor, YellowCol, .4f * (i * 2f / vertL));
+                    if (i4 + 3 < vertL)
+                    {
+                        mesh.verticeColors[i4 + 2] = Color.Lerp(palette.blackColor, YellowCol, .2f * ((i * 2f + 1f) / vertL));
+                        mesh.verticeColors[i4 + 3] = Color.Lerp(palette.blackColor, YellowCol, .4f * ((i * 2f + 1f) / vertL));
+                    }
+                }
+            }
+        }
 
-        public virtual void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContainer)
+        public virtual void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer? newContainer)
         {
             var spr = sLeaser.sprites[0];
             spr.RemoveFromContainer();
-            newContainer.AddChild(spr);
+            (newContainer ?? rCam.ReturnFContainer("Background")).AddChild(spr);
         }
     }
 

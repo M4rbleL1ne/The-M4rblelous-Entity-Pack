@@ -2,7 +2,7 @@
 using UnityEngine;
 
 namespace LBMergedMods.Items;
-//CHK
+
 public class MiniFruitSpawner : PhysicalObject
 {
     public Vector2 RootPos;

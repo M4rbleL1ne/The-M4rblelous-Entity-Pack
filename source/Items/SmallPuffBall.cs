@@ -5,7 +5,7 @@ using System;
 using Random = UnityEngine.Random;
 
 namespace LBMergedMods.Items;
-//CHK
+
 public class SmallPuffBall : Rock
 {
     public Color SporeColor;
@@ -258,8 +258,8 @@ public class SmallPuffBall : Rock
     {
         color = Color.Lerp(Color.Lerp(new(.9f, 1f, .8f), palette.texture.GetPixel(11, 4), .5f), palette.blackColor, palette.darkness / 2f);
         var sprs = sLeaser.sprites;
-        for (var i = 0; i < 2; i++)
-            sprs[i].color = color;
+        sprs[0].color = color;
+        sprs[1].color = Color.white;
         SporeColor = Color.Lerp(color, new(.02f, .1f, .08f), .85f);
         var clr = Color.Lerp(Color.Lerp(new(.8f, 1f, .5f), palette.texture.GetPixel(11, 4), .2f), palette.blackColor, .5f + palette.darkness / 5f);
         var dotl = Dots.Length;

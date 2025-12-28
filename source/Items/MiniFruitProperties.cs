@@ -2,7 +2,7 @@
 using UnityEngine;
 
 namespace LBMergedMods.Items;
-//CHK
+
 [StructLayout(LayoutKind.Sequential)]
 public sealed class MiniFruitProperties
 {

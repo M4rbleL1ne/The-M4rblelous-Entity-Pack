@@ -1,7 +1,7 @@
 ﻿using MoreSlugcats;
 
 namespace LBMergedMods.Items;
-//CHK
+
 public static class StalkUtils
 {
     public static bool StalkActive(this BubbleGrass self) => self.growPos.HasValue;

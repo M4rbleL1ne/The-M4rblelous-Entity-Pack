@@ -171,7 +171,7 @@ public class FatFireFlyGraphics : VultureGraphics
         sprites[FrontShieldSprite(1)].isVisible = false;
     }
 
-    public override void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContainer)
+    public override void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer? newContainer)
     {
         base.AddToContainer(sLeaser, rCam, newContainer);
         newContainer = rCam.ReturnFContainer("GrabShaders");

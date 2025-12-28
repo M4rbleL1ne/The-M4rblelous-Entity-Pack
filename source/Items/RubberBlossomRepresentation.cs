@@ -2,7 +2,7 @@
 using UnityEngine;
 
 namespace LBMergedMods.Items;
-//CHK
+
 public class RubberBlossomRepresentation : ConsumableRepresentation
 {
     public class RubberBlossomControlPanel : ConsumableControlPanel, IDevUISignals

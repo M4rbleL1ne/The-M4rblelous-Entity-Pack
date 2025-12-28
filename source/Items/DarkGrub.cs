@@ -5,7 +5,7 @@ using System;
 using Random = UnityEngine.Random;
 
 namespace LBMergedMods.Items;
-//CHK
+
 public class DarkGrub : PlayerCarryableItem, IDrawable, IPlayerEdible, IHaveAStalkState, IHaveAStalk
 {
     public const float BASESIZE = 1f;

@@ -26,9 +26,9 @@ public class CommonEelGraphics : LizardGraphics
         }
     }
 
-    public override void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner)
+    public override void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer? newContainer)
     {
-        base.AddToContainer(sLeaser, rCam, newContatiner);
+        base.AddToContainer(sLeaser, rCam, newContainer);
         if (debugVisualization)
             return;
         var sprites = sLeaser.sprites;

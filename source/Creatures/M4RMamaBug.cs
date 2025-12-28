@@ -39,4 +39,11 @@ public class M4RMamaBug : EggBug
                 bs[i].vel *= .9f;
         }
     }
+
+    public override void Violence(BodyChunk source, Vector2? directionAndMomentum, BodyChunk hitChunk, Appendage.Pos hitAppendage, DamageType type, float damage, float stunBonus)
+    {
+        if (type == DamageType.Explosion)
+            damage *= 2.5f;
+        base.Violence(source, directionAndMomentum, hitChunk, hitAppendage, type, damage, stunBonus);
+    }
 }

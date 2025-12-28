@@ -535,7 +535,6 @@ public class HoverflyGraphics : GraphicsModule, ILookingAtCreatures, IMuddableGr
 
 	public override void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer? newContainer)
 	{
-		sLeaser.RemoveAllSpritesFromContainer();
 		newContainer ??= rCam.ReturnFContainer("Midground");
         var sprs = sLeaser.sprites;
         for (var i = 0; i < sprs.Length; i++)

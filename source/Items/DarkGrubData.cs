@@ -3,7 +3,7 @@ using System.Text;
 using RWCustom;
 
 namespace LBMergedMods.Items;
-//CHK
+
 public class DarkGrubData(PlacedObject owner) : PlacedObject.ConsumableObjectData(owner)
 {
     public IntVector2 RootDir = new(-1, 0);

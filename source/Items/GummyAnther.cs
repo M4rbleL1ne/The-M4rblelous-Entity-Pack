@@ -4,7 +4,7 @@ using Random = UnityEngine.Random;
 using System;
 
 namespace LBMergedMods.Items;
-//CHK
+
 public class GummyAnther : PlayerCarryableItem, IDrawable, IPlayerEdible, IHaveAStalkState, IHaveAStalk
 {
     public class Stalk : UpdatableAndDeletable, IDrawable
@@ -118,18 +118,29 @@ public class GummyAnther : PlayerCarryableItem, IDrawable, IPlayerEdible, IHaveA
                 s0.MoveVertice(i * 4 + 1, vector + vector3 * .8f + normalized * num - camPos);
                 s0.MoveVertice(i * 4 + 2, vector2 - vector3 * .8f - normalized * num - camPos);
                 s0.MoveVertice(i * 4 + 3, vector2 + vector3 * .8f - normalized * num - camPos);
-                if (i > Segments.Length - Segments.Length * .3f)
+                if (i > segs.Length - segs.Length * .3f)
                     s0.verticeColors[i * 4] = s0.verticeColors[i * 4 + 1] = s0.verticeColors[i * 4 + 2] = s0.verticeColors[i * 4 + 3] = Color.Lerp(AntherCol, rCam.currentPalette.blackColor, rCam.currentPalette.darkness * .4f);
                 vector = vector2;
             }
         }
 
-        public virtual void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette) => ((TriangleMesh)sLeaser.sprites[0]).color = palette.blackColor;
+        public virtual void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
+        {
+            var s0 = (TriangleMesh)sLeaser.sprites[0];
+            s0.color = palette.blackColor;
+            var segsL = Segments.Length;
+            for (var i = 0; i < segsL; i++)
+            {
+                if (i > segsL - segsL * .3f)
+                    s0.verticeColors[i * 4] = s0.verticeColors[i * 4 + 1] = s0.verticeColors[i * 4 + 2] = s0.verticeColors[i * 4 + 3] = Color.Lerp(AntherCol, palette.blackColor, palette.darkness * .4f);
+            }
+        }
 
         public virtual void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer? newContatiner)
         {
-            sLeaser.sprites[0].RemoveFromContainer();
-            rCam.ReturnFContainer("Background").AddChild(sLeaser.sprites[0]);
+            var s0 = sLeaser.sprites[0];
+            s0.RemoveFromContainer();
+            rCam.ReturnFContainer("Background").AddChild(s0);
         }
     }
 

@@ -3,7 +3,7 @@ using UnityEngine;
 using RWCustom;
 
 namespace LBMergedMods.Items;
-//CHK
+
 public class MiniFruitSpawnerRepresentation : ConsumableRepresentation
 {
     public class MiniFruitSpawnerControlPanel : ConsumableControlPanel //, IDevUISignals // removal intended

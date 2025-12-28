@@ -3,7 +3,7 @@ using RWCustom;
 using MoreSlugcats;
 
 namespace LBMergedMods.Items;
-//CHK
+
 public class Physalis : PlayerCarryableItem, IPlayerEdible, IDrawable, IHaveAStalkState, IHaveAStalk
 {
     public class Stem : UpdatableAndDeletable, IDrawable

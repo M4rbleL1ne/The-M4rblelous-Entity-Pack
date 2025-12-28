@@ -3,7 +3,7 @@ using System.Text;
 using UnityEngine;
 
 namespace LBMergedMods.Items;
-//CHK
+
 public class MiniFruitSpawnerData(PlacedObject owner) : PlacedObject.ConsumableObjectData(owner)
 {
     public Vector2 HandlePos = new(0f, 100f), RootHandlePos = new(-50f, 50f);

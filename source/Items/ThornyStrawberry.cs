@@ -5,7 +5,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace LBMergedMods.Items;
-//CHK
+
 public class ThornyStrawberry : Weapon, IPlayerEdible, IHaveAStalkState, IHaveAStalk
 {
     public class Stalk : UpdatableAndDeletable, IDrawable
@@ -186,11 +186,11 @@ public class ThornyStrawberry : Weapon, IPlayerEdible, IHaveAStalkState, IHaveAS
 
         public virtual void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette) => sLeaser.sprites[0].color = palette.blackColor;
 
-        public virtual void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContainer)
+        public virtual void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer? newContainer)
         {
             var spr = sLeaser.sprites[0];
             spr.RemoveFromContainer();
-            newContainer.AddChild(spr);
+            (newContainer ?? rCam.ReturnFContainer("Background")).AddChild(spr);
         }
     }
 
@@ -384,7 +384,7 @@ public class ThornyStrawberry : Weapon, IPlayerEdible, IHaveAStalkState, IHaveAS
         Color2 = Color.Lerp(YellowCol, palette.blackColor, Darkness);
     }
 
-    public override void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContainer)
+    public override void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer? newContainer)
     {
         var sprs = sLeaser.sprites;
         newContainer ??= rCam.ReturnFContainer("Items");

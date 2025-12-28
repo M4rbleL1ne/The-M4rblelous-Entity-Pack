@@ -3,7 +3,7 @@ using UnityEngine;
 using RWCustom;
 
 namespace LBMergedMods.Items;
-//CHK
+
 public class DarkGrubRepresentation : ConsumableRepresentation
 {
     public class DarkGrubControlPanel : ConsumableControlPanel, IDevUISignals

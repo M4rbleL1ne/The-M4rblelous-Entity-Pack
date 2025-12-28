@@ -5,7 +5,7 @@ using UnityEngine;
 using RWCustom;
 
 namespace LBMergedMods.Items;
-//CHK
+
 public class ScoreTokenRepresentation : ResizeableObjectRepresentation
 {
     public class IDController : PositionedDevUINode, IDevUISignals

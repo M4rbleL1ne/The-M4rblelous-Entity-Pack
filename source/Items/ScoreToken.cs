@@ -6,7 +6,7 @@ using LBMergedMods.Hooks;
 using System;
 
 namespace LBMergedMods.Items;
-//CHK
+
 public class ScoreToken : UpdatableAndDeletable, IDrawable
 {
     public class TokenStalk : UpdatableAndDeletable, IDrawable

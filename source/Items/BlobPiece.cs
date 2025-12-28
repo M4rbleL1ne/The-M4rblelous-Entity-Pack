@@ -4,7 +4,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace LBMergedMods.Items;
-//CHK
+
 public class BlobPiece : PlayerCarryableItem, IPlayerEdible, IDrawable
 {
     public class AbstractBlobPiece(World world, PhysicalObject? obj, WorldCoordinate pos, EntityID ID, float color) : AbstractPhysicalObject(world, Enums.AbstractObjectType.BlobPiece, obj, pos, ID)
@@ -146,10 +146,11 @@ public class BlobPiece : PlayerCarryableItem, IPlayerEdible, IDrawable
         }
     }
 
-    public virtual void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer? newContatiner)
+    public virtual void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer? newContainer)
     {
-        sLeaser.sprites[0].RemoveFromContainer();
-        rCam.ReturnFContainer("GrabShaders").AddChild(sLeaser.sprites[0]);
+        var spr = sLeaser.sprites[0];
+        spr.RemoveFromContainer();
+        rCam.ReturnFContainer("GrabShaders").AddChild(spr);
     }
 
     public virtual void BitByPlayer(Creature.Grasp grasp, bool eu)

@@ -66,7 +66,7 @@ public class NoodleEaterGraphics : LizardGraphics
         });
     }
 
-    public override void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContainer)
+    public override void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer? newContainer)
     {
         base.AddToContainer(sLeaser, rCam, newContainer);
         if (!debugVisualization && PupilSprite >= 0 && PupilSprite < sLeaser.sprites.Length)
@@ -74,7 +74,7 @@ public class NoodleEaterGraphics : LizardGraphics
             if (sLeaser.sprites[PupilSprite] is FSprite spr)
             {
                 spr.RemoveFromContainer();
-                newContainer.AddChild(spr);
+                (newContainer ?? rCam.ReturnFContainer("Midground")).AddChild(spr);
             }
         }
     }

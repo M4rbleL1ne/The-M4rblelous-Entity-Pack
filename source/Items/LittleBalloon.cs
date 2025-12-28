@@ -6,7 +6,7 @@ using System;
 using Random = UnityEngine.Random;
 
 namespace LBMergedMods.Items;
-//CHK
+
 public class LittleBalloon : Rock, IPlayerEdible, IHaveAStalkState, IHaveAStalk
 {
     public class Stalk : UpdatableAndDeletable, IDrawable
@@ -145,12 +145,23 @@ public class LittleBalloon : Rock, IPlayerEdible, IHaveAStalkState, IHaveAStalk
             }
         }
 
-        public virtual void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette) => ((TriangleMesh)sLeaser.sprites[0]).color = palette.blackColor;
+        public virtual void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
+        {
+            var segmentsL = Segments.Length;
+            var s0 = (TriangleMesh)sLeaser.sprites[0];
+            s0.color = palette.blackColor;
+            for (var i = 0; i < segmentsL; i++)
+            {
+                if (i > segmentsL - segmentsL * .3f)
+                    s0.verticeColors[i * 4] = s0.verticeColors[i * 4 + 1] = s0.verticeColors[i * 4 + 2] = s0.verticeColors[i * 4 + 3] = Color.Lerp(BalloonColor, palette.blackColor, .7f - ColorAdd);
+            }
+        }
 
         public virtual void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer? newContatiner)
         {
-            sLeaser.sprites[0].RemoveFromContainer();
-            rCam.ReturnFContainer("Items").AddChild(sLeaser.sprites[0]);
+            var s0 = sLeaser.sprites[0];
+            s0.RemoveFromContainer();
+            rCam.ReturnFContainer("Items").AddChild(s0);
         }
     }
 

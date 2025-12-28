@@ -6,7 +6,7 @@ using System.Text;
 using UnityEngine;
 
 namespace LBMergedMods.Items;
-//CHK
+
 public class ScoreTokenData(PlacedObject owner) : PlacedObject.ResizableObjectData(owner)
 {
     public static bool DataChanged;

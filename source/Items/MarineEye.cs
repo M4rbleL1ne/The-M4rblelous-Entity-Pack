@@ -5,7 +5,7 @@ using System;
 using Random = UnityEngine.Random;
 
 namespace LBMergedMods.Items;
-//CHK
+
 public class MarineEye : PlayerCarryableItem, IDrawable, IPlayerEdible, IHaveAStalkState, IHaveAStalk
 {
     public class Stalk : UpdatableAndDeletable, IDrawable
@@ -385,7 +385,7 @@ public class MarineEye : PlayerCarryableItem, IDrawable, IPlayerEdible, IHaveASt
         color = Color.Lerp(BlueCol, palette.blackColor, Darkness * .5f);
     }
 
-    public virtual void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContainer)
+    public virtual void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer? newContainer)
     {
         newContainer ??= rCam.ReturnFContainer("Items");
         var sprs = sLeaser.sprites;

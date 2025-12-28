@@ -48,9 +48,9 @@ public class ScavengerSentinelGraphics(ScavengerSentinel ow) : ScavengerGraphics
         return default;
     }
 
-    public override void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner)
+    public override void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer? newContainer)
     {
-        base.AddToContainer(sLeaser, rCam, newContatiner);
+        base.AddToContainer(sLeaser, rCam, newContainer);
         if (!ModManager.DLCShared)
             maskGfx?.AddToContainer(sLeaser, rCam, null);
     }
