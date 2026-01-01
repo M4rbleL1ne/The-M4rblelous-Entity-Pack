@@ -28,7 +28,7 @@ public class M4RTailFly : Hoverfly, IClimbableVine
     {
         var state = Random.state;
         Random.InitState(abstractPhysicalObject.ID.RandomSeed);
-        IVars = new(Random.value * .2f, -.1f - .15f * Random.value, Random.value, Random.value * .15f, -.4f + Random.value * .1f, 1, Color.Lerp(new(248f / 255f, 210f / 255f, 0f), new(248f / 255f, 245f / 255f, 0f), Random.value));
+        IVars = new(Random.value * .2f, -.1f - .15f * Random.value, Random.value, .1f + Random.value * .15f, -.3f + Random.value * .1f, 1, Color.Lerp(new(248f / 255f, 210f / 255f, 0f), new(248f / 255f, 245f / 255f, 0f), Random.value));
         Random.state = state;
     }
 
