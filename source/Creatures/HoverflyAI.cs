@@ -73,14 +73,8 @@ public class HoverflyAI : ArtificialIntelligence, IUseARelationshipTracker, IAIN
         base.NewRoom(room);
     }
 
-    public override void Update()
+    public virtual void ScanForFood(AbstractCreature ow)
     {
-        FocusCreature = null;
-        base.Update();
-        if (creature is not AbstractCreature ow)
-            return;
-        if (Fly.LickedByPlayer is Player p)
-            tracker.SeeCreature(p.abstractCreature);
         if (HoverflyData.TryGetValue(ow, out var data1) && data1.CanEat && ow.Room is AbstractRoom arm && arm.entities is List<AbstractWorldEntity> l && arm.realizedRoom is Room ro)
         {
             for (var i = 0; i < l.Count; i++)
@@ -89,6 +83,19 @@ public class HoverflyAI : ArtificialIntelligence, IUseARelationshipTracker, IAIN
                     FoodTracker.AddItem(this.CreateTrackerRepresentationForItem(obj));
             }
         }
+    }
+
+    public virtual bool CanHunt(PhysicalObject obj) => obj is DangleFruit;
+
+    public override void Update()
+    {
+        FocusCreature = null;
+        base.Update();
+        if (creature is not AbstractCreature ow)
+            return;
+        if (Fly.LickedByPlayer is Player p)
+            tracker.SeeCreature(p.abstractCreature);
+        ScanForFood(ow);
         var aIModule = utilityComparer.HighestUtilityModule();
         CurrentUtility = utilityComparer.HighestUtility();
         if (aIModule is not null)
@@ -151,14 +158,14 @@ public class HoverflyAI : ArtificialIntelligence, IUseARelationshipTracker, IAIN
             FocusCreature = null;
             FocusItem = FoodTracker.MostAttractiveItem;
             ow.abstractAI.SetDestination(FocusItem!.BestGuessForPosition());
-            if (Fly.room is Room rm && FocusItem.GetVisualContact && FocusItem.RepresentedItem.realizedObject is DangleFruit d && d.abstractPhysicalObject.SameRippleLayer(ow) && HoverflyData.TryGetValue(ow, out var data) && (rm.GetTile(d.firstChunk.pos with { y = d.firstChunk.pos.y - 20f })?.Solid is true && data.CanEat || data.CanEatRoot) && d.grabbedBy?.Count == 0 && Custom.DistLess(d.firstChunk.pos, Fly.firstChunk.pos, Fly.firstChunk.rad * 7.5f) && Custom.InsideRect(FocusItem.BestGuessForPosition().Tile, new(-30, -30, rm.TileWidth + 30, rm.TileHeight + 30)))
+            if (Fly.room is Room rm && FocusItem.GetVisualContact && FocusItem.RepresentedItem.realizedObject is PhysicalObject obj && CanHunt(obj) && obj.abstractPhysicalObject.SameRippleLayer(ow) && HoverflyData.TryGetValue(ow, out var data) && (rm.GetTile(obj.firstChunk.pos with { y = obj.firstChunk.pos.y - 20f })?.Solid is true && data.CanEat || data.CanEatRoot) && obj.grabbedBy?.Count == 0 && Custom.DistLess(obj.firstChunk.pos, Fly.firstChunk.pos, Fly.firstChunk.rad * 9f) && Custom.InsideRect(FocusItem.BestGuessForPosition().Tile, new(-30, -30, rm.TileWidth + 30, rm.TileHeight + 30)))
             {
                 if (HuntAttackCounter < 50)
                 {
                     ++HuntAttackCounter;
-                    SwooshToPos = d.firstChunk.pos;
+                    SwooshToPos = obj.firstChunk.pos;
                     if (Custom.DistLess(Fly.firstChunk.pos, SwooshToPos.Value, Fly.firstChunk.rad * 1.5f))
-                        Fly.TryToGrabPrey(d);
+                        Fly.TryToGrabPrey(obj);
                 }
                 else if (Random.value < .1f)
                 {

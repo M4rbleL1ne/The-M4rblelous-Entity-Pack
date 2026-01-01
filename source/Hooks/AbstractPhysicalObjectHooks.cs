@@ -146,13 +146,14 @@ public static class AbstractPhysicalObjectHooks
                  var tp = self.creatureTemplate.type;
                  var hv = tp == CreatureTemplateType.Hoverfly;
                  var chch = tp == CreatureTemplateType.ChipChop;
-                 if (hv || chch || tp == CreatureTemplateType.TintedBeetle)
+                 var tl = tp == CreatureTemplateType.Tailfly;
+                 var tb = tp == CreatureTemplateType.TintedBeetle;
+                 if (hv || chch || tb || tl)
                  {
-                     var obj = hv ? AbstractPhysicalObject.AbstractObjectType.DangleFruit : AbstractPhysicalObject.AbstractObjectType.FirecrackerPlant;
                      var stuckObjs = self.stuckObjects;
                      for (var i = 0; i < stuckObjs.Count; i++)
                      {
-                         if (stuckObjs[i] is AbstractPhysicalObject.CreatureGripStick st && st.A == self && (chch || st.B?.type == obj))
+                         if (stuckObjs[i] is AbstractPhysicalObject.CreatureGripStick st && st.A == self && (chch || (st.B is AbstractPhysicalObject objB && ((hv && objB.type == AbstractPhysicalObject.AbstractObjectType.DangleFruit) || (tb && objB.type == AbstractPhysicalObject.AbstractObjectType.FirecrackerPlant) || (tl && (objB.type == AbstractPhysicalObject.AbstractObjectType.Mushroom || objB.type == AbstractPhysicalObject.AbstractObjectType.SlimeMold || objB.type == AbstractObjectType.LimeMushroom))))))
                              flag = true;
                      }
                  }
@@ -206,7 +207,7 @@ public static class AbstractPhysicalObjectHooks
             Seed.Add(self, new() { IsSeed = self.Room is AbstractRoom rm && rm.SeedBatRooms() });
         else if (tp == CreatureTemplate.Type.TubeWorm && !Big.TryGetValue(self, out _))
             Big.Add(self, new());
-        else if (tp == CreatureTemplateType.Hoverfly && !HoverflyData.TryGetValue(self, out _))
+        else if ((tp == CreatureTemplateType.Hoverfly || tp == CreatureTemplateType.Tailfly) && !HoverflyData.TryGetValue(self, out _))
             HoverflyData.Add(self, new());
         else if ((tp == CreatureTemplate.Type.Hazer || tp == CreatureTemplateType.Xylo || tp == CreatureTemplate.Type.JetFish || tp == CreatureTemplateType.Denture || tp == CreatureTemplateType.Glowpillar || tp == CreatureTemplateType.FatFireFly || tp == CreatureTemplateType.XyloWorm || tp == CreatureTemplate.Type.TentaclePlant) && !AbsProps.TryGetValue(self, out _))
             AbsProps.Add(self, new());
@@ -231,7 +232,7 @@ public static class AbstractPhysicalObjectHooks
     internal static void On_AbstractCreature_IsEnteringDen(On.AbstractCreature.orig_IsEnteringDen orig, AbstractCreature self, WorldCoordinate den)
     {
         var tp = self.creatureTemplate.type;
-        if ((tp == CreatureTemplateType.Hoverfly || tp == CreatureTemplateType.TintedBeetle) && self.stuckObjects is List<AbstractPhysicalObject.AbstractObjectStick> list)
+        if ((tp == CreatureTemplateType.Hoverfly || tp == CreatureTemplateType.Tailfly || tp == CreatureTemplateType.TintedBeetle) && self.stuckObjects is List<AbstractPhysicalObject.AbstractObjectStick> list)
         {
             for (var num = list.Count - 1; num >= 0; num--)
             {
@@ -320,7 +321,7 @@ public static class AbstractPhysicalObjectHooks
         {
             if (d.CanEatRootDelay > 0)
                 --d.CanEatRootDelay;
-            if (d.BiteWait > 0 && self.realizedCreature is Hoverfly f && f.grasps[0]?.grabbed is DangleFruit)
+            if (d.BiteWait > 0 && self.realizedCreature is Hoverfly f && f.grasps[0]?.grabbed is PhysicalObject obj && ((f is M4RTailFly && obj is LimeMushroom or Mushroom or SlimeMold) || (f is not M4RTailFly && obj is DangleFruit)))
                 --d.BiteWait;
         }
     }

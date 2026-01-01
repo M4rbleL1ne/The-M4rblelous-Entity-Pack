@@ -45,8 +45,20 @@ public class Hoverfly : InsectoidCreature, Weapon.INotifyOfFlyingWeapons
     {
         var state = Random.state;
         Random.InitState(abstractPhysicalObject.ID.RandomSeed);
-        IVars = new(Random.value / 5f, Random.value / 5f, Random.value, Random.value / 5f, Random.value / 5f, Random.Range(1, 4), abstractCreature.superSizeMe ? Color.Lerp(new(235f / 255f, 57f / 255f, 78f / 255f), new(104f / 255f, 3f / 255f, 7f / 255f), Random.value) : Color.Lerp(new(0f, 251f / 255f, 1f), new(0f, 1f, 55f / 255f), Random.value));
+        IVars = new(Random.value * .2f, Random.value * .2f, Random.value, Random.value * .2f, Random.value * .2f, Random.Range(1, 4), abstractCreature.superSizeMe ? Color.Lerp(new(235f / 255f, 57f / 255f, 78f / 255f), new(104f / 255f, 3f / 255f, 7f / 255f), Random.value) : Color.Lerp(new(0f, 251f / 255f, 1f), new(0f, 1f, 55f / 255f), Random.value));
         Random.state = state;
+    }
+
+    public override Vector2 DangerPos
+    {
+        get
+        {
+            var res = base.DangerPos;
+            res.y -= 13.5f;
+            if (graphicsModule is HoverflyGraphics grs)
+                res.x += grs.DangerPosXBonus;
+            return res;
+        }
     }
 
     public Hoverfly(AbstractCreature abstractCreature, World world) : base(abstractCreature, world)
@@ -105,8 +117,40 @@ public class Hoverfly : InsectoidCreature, Weapon.INotifyOfFlyingWeapons
             d.BiteWait = 1000;
     }
 
+    public virtual void SafariPickup()
+    {
+        if (inputWithDiagonals!.Value.pckp && grasps.Length > 0)
+        {
+            if (grasps[0]?.grabbed is null)
+            {
+                var physobs = room.physicalObjects;
+                for (var j = 0; j < physobs.Length; j++)
+                {
+                    var objs = physobs[j];
+                    for (var k = 0; k < objs.Count; k++)
+                    {
+                        if (objs[k] is DangleFruit f && f.abstractPhysicalObject.SameRippleLayer(abstractPhysicalObject) && Custom.DistLess(firstChunk.pos, f.firstChunk.pos, f.firstChunk.rad * 2f))
+                            TryToGrabPrey(f);
+                    }
+                }
+            }
+            else if (lastInputWithDiagonals.HasValue && !lastInputWithDiagonals.Value.pckp && grasps[0]?.grabbed is DangleFruit da)
+            {
+                --da.bites;
+                room.PlaySound(da.bites == 0 ? SoundID.Slugcat_Eat_Dangle_Fruit : SoundID.Slugcat_Bite_Dangle_Fruit, da.firstChunk, false, 1.25f, 1f);
+                if (da.bites < 1)
+                {
+                    grasps[0].Release();
+                    AI.FoodTracker.ForgetItem(da.abstractPhysicalObject);
+                    da.Destroy();
+                }
+            }
+        }
+    }
+
     public virtual void Act()
     {
+        var fc = firstChunk;
         if (DodgeDelay > 0)
             --DodgeDelay;
         AI.Update();
@@ -114,50 +158,24 @@ public class Hoverfly : InsectoidCreature, Weapon.INotifyOfFlyingWeapons
             Stamina = Mathf.Min(Stamina + 1f / 70f, 1f);
         MovementConnection movementConnection = default;
         if ((Flying || !AtSitDestination) && !AI.SwooshToPos.HasValue)
-            movementConnection = (AI.pathFinder as HoverflyPather)!.FollowPath(room.GetWorldCoordinate(firstChunk.pos), true);
+            movementConnection = (AI.pathFinder as HoverflyPather)!.FollowPath(room.GetWorldCoordinate(fc.pos), true);
         if (safariControlled && (movementConnection == default || !AllowableControlledAIOverride(movementConnection.type)))
         {
             movementConnection = default;
             if (inputWithDiagonals.HasValue)
             {
                 var type = MovementConnection.MovementType.Standard;
-                if (room.GetTile(firstChunk.pos).Terrain == Room.Tile.TerrainType.ShortcutEntrance)
+                if (room.GetTile(fc.pos).Terrain == Room.Tile.TerrainType.ShortcutEntrance)
                     type = MovementConnection.MovementType.ShortCut;
                 if (inputWithDiagonals.Value.x != 0 || inputWithDiagonals.Value.y != 0)
                 {
                     if (Flying)
-                        firstChunk.vel += new Vector2(inputWithDiagonals.Value.x, inputWithDiagonals.Value.y) * .5f;
-                    movementConnection = new(type, room.GetWorldCoordinate(firstChunk.pos), room.GetWorldCoordinate(firstChunk.pos + new Vector2(inputWithDiagonals.Value.x, inputWithDiagonals.Value.y) * 40f), 2);
+                        fc.vel += new Vector2(inputWithDiagonals.Value.x, inputWithDiagonals.Value.y) * .5f;
+                    movementConnection = new(type, room.GetWorldCoordinate(fc.pos), room.GetWorldCoordinate(fc.pos + new Vector2(inputWithDiagonals.Value.x, inputWithDiagonals.Value.y) * 40f), 2);
                 }
                 if (inputWithDiagonals.Value.thrw && (lastInputWithDiagonals is not Player.InputPackage p || !p.thrw))
                     ReleaseGrasp(0);
-                if (inputWithDiagonals.Value.pckp && grasps.Length > 0)
-                {
-                    if (grasps[0]?.grabbed is null)
-                    {
-                        var physobs = room.physicalObjects;
-                        for (var j = 0; j < physobs.Length; j++)
-                        {
-                            var objs = physobs[j];
-                            for (var k = 0; k < objs.Count; k++)
-                            {
-                                if (objs[k] is DangleFruit f && f.abstractPhysicalObject.SameRippleLayer(abstractPhysicalObject) && Custom.DistLess(firstChunk.pos, f.firstChunk.pos, f.firstChunk.rad * 2f))
-                                    TryToGrabPrey(f);
-                            }
-                        }
-                    }
-                    else if (lastInputWithDiagonals.HasValue && !lastInputWithDiagonals.Value.pckp && grasps[0]?.grabbed is DangleFruit da)
-                    {
-                        --da.bites;
-                        room.PlaySound(da.bites == 0 ? SoundID.Slugcat_Eat_Dangle_Fruit : SoundID.Slugcat_Bite_Dangle_Fruit, da.firstChunk, false, 1.25f, 1f);
-                        if (da.bites < 1)
-                        {
-                            grasps[0].Release();
-                            AI.FoodTracker.ForgetItem(da.abstractPhysicalObject);
-                            da.Destroy();
-                        }
-                    }
-                }
+                SafariPickup();
                 GoThroughFloors = inputWithDiagonals.Value.y < 0;
             }
         }
@@ -166,15 +184,15 @@ public class Hoverfly : InsectoidCreature, Weapon.INotifyOfFlyingWeapons
             SinCounter += 1f / Mathf.Lerp(45f, 85f, Random.value);
             if (SinCounter > 1f)
                 SinCounter -= 1f;
-            firstChunk.vel.y += Mathf.Sin(SinCounter * Mathf.PI * 2f) * .05f * FlyingPower * Stamina;
-            firstChunk.vel *= Mathf.Lerp(1f, .98f, FlyingPower * Stamina);
-            firstChunk.vel.y += .8f * FlyingPower * Stamina;
-            firstChunk.vel *= AI.Behavior == HoverflyAI.FlyBehavior.Idle || AI.Behavior == HoverflyAI.FlyBehavior.Hunt ? .7f : 1f;
+            fc.vel.y += Mathf.Sin(SinCounter * Mathf.PI * 2f) * .05f * FlyingPower * Stamina;
+            fc.vel *= Mathf.Lerp(1f, .98f, FlyingPower * Stamina);
+            fc.vel.y += .8f * FlyingPower * Stamina;
+            fc.vel *= AI.Behavior == HoverflyAI.FlyBehavior.Idle || AI.Behavior == HoverflyAI.FlyBehavior.Hunt ? .7f : 1f;
             var flag = false;
-            if (movementConnection == default || Climbable(movementConnection.DestTile) || Climbable(Room.StaticGetTilePosition(firstChunk.pos)))
+            if (movementConnection == default || Climbable(movementConnection.DestTile) || Climbable(Room.StaticGetTilePosition(fc.pos)))
             {
-                var aiTile = room.aimap.getAItile(firstChunk.pos);
-                if (aiTile.narrowSpace || room.aimap.getTerrainProximity(firstChunk.pos) == 1 && (movementConnection == default || room.aimap.getTerrainProximity(movementConnection.destinationCoord) == 1) || AtSitDestination)
+                var aiTile = room.aimap.getAItile(fc.pos);
+                if (aiTile.narrowSpace || room.aimap.getTerrainProximity(fc.pos) == 1 && (movementConnection == default || room.aimap.getTerrainProximity(movementConnection.destinationCoord) == 1) || AtSitDestination)
                     flag = true;
             }
             if (safariControlled && (!inputWithDiagonals.HasValue || !inputWithDiagonals.Value.pckp))
@@ -185,29 +203,29 @@ public class Hoverfly : InsectoidCreature, Weapon.INotifyOfFlyingWeapons
                 var tl = abstractCreature.pos.Tile + Custom.fourDirections[1];
                 if (room.GetTile(tl).Solid)
                 {
-                    firstChunk.vel += Custom.fourDirections[1].ToVector2() * 3f;
+                    fc.vel += Custom.fourDirections[1].ToVector2() * 3f;
                     Land();
                 }
                 else if (movementConnection != default && movementConnection.destinationCoord.y < abstractCreature.pos.y)
                     flag2 = false;
             }
-            else if (firstChunk.ContactPoint.x != 0 || firstChunk.ContactPoint.y != 0)
-                firstChunk.vel -= firstChunk.ContactPoint.ToVector2() * (8f * FlyingPower * Stamina * Random.value);
+            else if (fc.ContactPoint.x != 0 || fc.ContactPoint.y != 0)
+                fc.vel -= fc.ContactPoint.ToVector2() * (8f * FlyingPower * Stamina * Random.value);
             FlyingPower = Mathf.Lerp(FlyingPower, flag2 ? 1f : 0f, .1f);
         }
         else
         {
             FlyingPower = Mathf.Lerp(FlyingPower, 0f, .05f);
-            if (Climbable(Room.StaticGetTilePosition(firstChunk.pos)))
+            if (Climbable(Room.StaticGetTilePosition(fc.pos)))
             {
-                firstChunk.vel *= .8f;
-                firstChunk.vel.y += gravity;
+                fc.vel *= .8f;
+                fc.vel.y += gravity;
             }
             else
                 Flying = true;
         }
         if (AtSitDestination)
-            firstChunk.vel += Vector2.ClampMagnitude(BodySitPosOffset(room, AI.pathFinder.GetDestination.Tile) - firstChunk.pos, 10f) / 10f * .5f;
+            fc.vel += Vector2.ClampMagnitude(BodySitPosOffset(room, AI.pathFinder.GetDestination.Tile) - fc.pos, 10f) / 10f * .5f;
         if (movementConnection != default)
         {
             if (movementConnection.destinationCoord.x < movementConnection.startCoord.x)
@@ -261,11 +279,11 @@ public class Hoverfly : InsectoidCreature, Weapon.INotifyOfFlyingWeapons
                 vector3 /= num6;
                 if (room.aimap is AImap map)
                 {
-                    var a = map.getTerrainProximity(firstChunk.pos) / Mathf.Max(map.getTerrainProximity(firstChunk.pos + Custom.DirVec(firstChunk.pos, vector3) * Mathf.Clamp(firstChunk.vel.magnitude * 5f, 5f, 15f)), 1f);
+                    var a = map.getTerrainProximity(fc.pos) / Mathf.Max(map.getTerrainProximity(fc.pos + Custom.DirVec(fc.pos, vector3) * Mathf.Clamp(fc.vel.magnitude * 5f, 5f, 15f)), 1f);
                     a = Mathf.Pow(Mathf.Min(a, 1f), 3f);
-                    if (WantToSitDownAtDestination && AI.pathFinder.GetDestination.room == room.abstractRoom.index && Custom.DistLess(room.MiddleOfTile(AI.pathFinder.GetDestination.Tile), firstChunk.pos, 200f) && AI.VisualContact(room.MiddleOfTile(AI.pathFinder.GetDestination.Tile), 0f))
-                        a *= Mathf.Lerp(.2f, 1f, Mathf.InverseLerp(0f, 300f, Vector2.Distance(room.MiddleOfTile(AI.pathFinder.GetDestination.Tile), firstChunk.pos)));
-                    firstChunk.vel += Vector2.ClampMagnitude(vector3 - firstChunk.pos, 40f) * (.0275f * a * FlyingPower * Stamina);
+                    if (WantToSitDownAtDestination && AI.pathFinder.GetDestination.room == room.abstractRoom.index && Custom.DistLess(room.MiddleOfTile(AI.pathFinder.GetDestination.Tile), fc.pos, 200f) && AI.VisualContact(room.MiddleOfTile(AI.pathFinder.GetDestination.Tile), 0f))
+                        a *= Mathf.Lerp(.2f, 1f, Mathf.InverseLerp(0f, 300f, Vector2.Distance(room.MiddleOfTile(AI.pathFinder.GetDestination.Tile), fc.pos)));
+                    fc.vel += Vector2.ClampMagnitude(vector3 - fc.pos, 40f) * (.0275f * a * FlyingPower * Stamina);
                 }
             }
             else
@@ -276,17 +294,17 @@ public class Hoverfly : InsectoidCreature, Weapon.INotifyOfFlyingWeapons
                     TakeOff(Custom.DegToVec(Random.value * 360f));
                 if (Climbable(movementConnection.DestTile))
                 {
-                    firstChunk.vel += Custom.DirVec(firstChunk.pos, room.MiddleOfTile(movementConnection.destinationCoord)) * Mathf.Lerp(.4f, 1.8f, AI.stuckTracker.Utility());
+                    fc.vel += Custom.DirVec(fc.pos, room.MiddleOfTile(movementConnection.destinationCoord)) * Mathf.Lerp(.4f, 1.8f, AI.stuckTracker.Utility());
                     return;
                 }
                 ++WaitToFlyCounter;
                 if (WaitToFlyCounter > 30)
-                    TakeOff(Custom.DirVec(firstChunk.pos, room.MiddleOfTile(movementConnection.destinationCoord)));
+                    TakeOff(Custom.DirVec(fc.pos, room.MiddleOfTile(movementConnection.destinationCoord)));
             }
         }
         else if (AI.SwooshToPos.HasValue)
         {
-            firstChunk.vel += Vector2.ClampMagnitude(AI.SwooshToPos.Value - firstChunk.pos, 20f) * (.09f * FlyingPower * Stamina);
+            fc.vel += Vector2.ClampMagnitude(AI.SwooshToPos.Value - fc.pos, 20f) * (.09f * FlyingPower * Stamina);
             Flying = true;
         }
     }
@@ -298,18 +316,22 @@ public class Hoverfly : InsectoidCreature, Weapon.INotifyOfFlyingWeapons
             ReleaseGrasp(0);
             return;
         }
+        var fch = firstChunk;
         var dfch = d.firstChunk;
-        var num = Vector2.Distance(firstChunk.pos, dfch.pos);
-        if (num > 50f)
+        var dst = Vector2.Distance(fch.pos, dfch.pos);
+        if (dst > 50f)
         {
             ReleaseGrasp(0);
             return;
         }
-        var vector = Custom.DirVec(firstChunk.pos, dfch.pos);
-        var num2 = firstChunk.rad / 2f + dfch.rad;
-        dfch.pos += (num2 - num) * vector;
-        dfch.vel += (num2 - num) * vector;
-        dfch.HardSetPosition(firstChunk.pos with { y = firstChunk.pos.y - 10f });
+        var adjPos = Custom.DirVec(fch.pos, dfch.pos) * (dst - (fch.rad + dfch.rad));
+        var relativeMass = dfch.mass / (fch.mass + dfch.mass) * .2f * (1f - AI?.stuckTracker.Utility() ?? 0f);
+        fch.pos += adjPos * relativeMass;
+        fch.vel += adjPos * relativeMass;
+        dfch.pos -= adjPos * (1f - relativeMass);
+        dfch.vel -= adjPos * (1f - relativeMass);
+        dfch.MoveFromOutsideMyUpdate(evenUpdate, DangerPos);
+        PushOutOf(fch.pos, fch.rad, 0);
         if (HoverflyData.TryGetValue(abstractCreature, out var data) && data.BiteWait == 0)
         {
             --d.bites;
@@ -338,7 +360,7 @@ public class Hoverfly : InsectoidCreature, Weapon.INotifyOfFlyingWeapons
         return true;
     }
 
-    public virtual bool TryToGrabPrey(DangleFruit prey)
+    public virtual bool TryToGrabPrey(PhysicalObject prey)
     {
         var res = Grab(prey, 0, 0, Grasp.Shareability.CanOnlyShareWithNonExclusive, 1f, true, false);
         if (res)

@@ -54,6 +54,15 @@ public class HoverflyGraphics : GraphicsModule, ILookingAtCreatures, IMuddableGr
 	public bool PushWingUp;
 	public int ChirpCounter;
 
+    public virtual float DangerPosXBonus => CurrentHead switch
+    {
+        HeadState.FlyFastLeft => -4f,
+        HeadState.FlyLeft or HeadState.LookLeft => -2f,
+        HeadState.FlyFastRight => 4f,
+        HeadState.FlyRight or HeadState.LookRight => 2f,
+        _ => 0f
+    };
+
     public virtual Hoverfly.IndividualVariations IVars => Fly.IVars;
 
     public virtual string HeadSprite => CurrentHead switch
@@ -333,15 +342,16 @@ public class HoverflyGraphics : GraphicsModule, ILookingAtCreatures, IMuddableGr
 
 	public virtual void ResetWing(int side, int wing)
 	{
-		Vector2 vector = Custom.DirVec(Fly.firstChunk.lastPos, Fly.firstChunk.pos), vector2 = Custom.PerpendicularVector(vector);
+		var fc = Fly.firstChunk;
+		Vector2 vector = Custom.DirVec(fc.lastPos, fc.pos), vector2 = Custom.PerpendicularVector(vector);
 		var w = Wings[side][wing];
 		w.vel = default;
-		w.pos = Fly.firstChunk.pos - vector * 5f;
+		w.pos = fc.pos - vector * 5f;
 		w.pos += (wing == 0 ? -3f : 10f) * vector;
 		w.pos += vector2 * ((side == 0 ? -17f : 17f) * Math.Abs(ZRotation.y));
 		w.pos += vector2 * (17f * ZRotation.x);
-		w.ConnectToPoint(Fly.firstChunk.pos - vector * 5f, wing == 0 ? 23f : 17f, true, 0f, Fly.firstChunk.vel, 0f, 0f);
-		w.PushOutOfTerrain(Fly.room, Fly.firstChunk.pos);
+		w.ConnectToPoint(fc.pos - vector * 5f, wing == 0 ? 23f : 17f, true, 0f, fc.vel, 0f, 0f);
+		w.PushOutOfTerrain(Fly.room, fc.pos);
 	}
 
 	public override void Reset()
@@ -458,7 +468,8 @@ public class HoverflyGraphics : GraphicsModule, ILookingAtCreatures, IMuddableGr
                 break;
             case WingState.Crawl:
             case WingState.Dead:
-                var y = Custom.RotateAroundOrigo(Fly.firstChunk.pos - Fly.firstChunk.lastPos, Custom.AimFromOneVectorToAnother(Fly.firstChunk.lastPos, Fly.firstChunk.pos)).y;
+				var fc = Fly.firstChunk;
+                var y = Custom.RotateAroundOrigo(fc.pos - fc.lastPos, Custom.AimFromOneVectorToAnother(fc.lastPos, fc.pos)).y;
                 LastWingProgress = WingProgress;
                 WingProgress = Mathf.Clamp(Mathf.Lerp(WingProgress, DeathWingPosition - y * .1f, .3f), 0f, 1f);
                 break;
@@ -475,24 +486,27 @@ public class HoverflyGraphics : GraphicsModule, ILookingAtCreatures, IMuddableGr
         for (var i = 0; i < sprs.Length; i++)
         {
 			var spr = sprs[i];
-            spr.x = vector.x - camPos.x;
-            spr.y = vector.y - camPos.y;
-			if (i >= 6)
+			if (i < TOTAL_SPRITES) // for M4RNightFly
 			{
-				spr.x += i < 8 ? RightEyeXPos : LeftEyeXPos;
-				spr.y -= 2f - LookDir.y * 2f;
-				spr.element = Futile.atlasManager.GetElementWithName($"HoverflyEye{EyeVar}{(i is 7 or 9 ? 2 : 1)}1");
+				spr.x = vector.x - camPos.x;
+				spr.y = vector.y - camPos.y;
+				if (i >= 6)
+				{
+					spr.x += i < 8 ? RightEyeXPos : LeftEyeXPos;
+					spr.y -= 2f - LookDir.y * 2f;
+					spr.element = Futile.atlasManager.GetElementWithName($"HoverflyEye{EyeVar}{(i is 7 or 9 ? 2 : 1)}1");
+				}
+				else if (i == 0)
+				{
+					spr.SetElementByName(HeadSprite);
+					spr.scaleX = BaseScale * (CurrentHead < 0 ? -1f : 1f);
+				}
+				else if (i == 1)
+				{
+					spr.SetElementByName(HeadHighlightSprite);
+					spr.scaleX = BaseScale * (CurrentHead < 0 ? -1f : 1f);
+				}
 			}
-			else if (i == 0)
-			{
-                spr.SetElementByName(HeadSprite);
-				spr.scaleX = BaseScale * (CurrentHead < 0 ? -1f : 1f);
-            }
-            else if (i == 1)
-			{
-                spr.SetElementByName(HeadHighlightSprite);
-                spr.scaleX = BaseScale * (CurrentHead < 0 ? -1f : 1f);
-            }
         }
         sprs[2].x += 1f;
         sprs[3].x -= 1f;

@@ -105,7 +105,8 @@ public static class CreatureTemplateType
         SparkEye = new(nameof(SparkEye), true),
         ScavengerSentinel = new(nameof(ScavengerSentinel), true),
         AlphaOrange = new(nameof(AlphaOrange), true),
-        MamaBug = new(nameof(MamaBug), true);
+        MamaBug = new(nameof(MamaBug), true),
+        Tailfly = new(nameof(Tailfly), true);
 
     static CreatureTemplateType()
     {
@@ -143,7 +144,8 @@ public static class CreatureTemplateType
             SparkEye,
             ScavengerSentinel,
             AlphaOrange,
-            MamaBug];
+            MamaBug,
+            Tailfly];
     }
 
     public static void UnregisterValues()
@@ -323,6 +325,11 @@ public static class CreatureTemplateType
             MamaBug.Unregister();
             MamaBug = null!;
         }
+        if (Tailfly is not null)
+        {
+            Tailfly.Unregister();
+            Tailfly = null!;
+        }
     }
 }
 
@@ -379,7 +386,8 @@ public static class SandboxUnlockID
         SparkEye = new(nameof(SparkEye), true),
         ScavengerSentinel = new(nameof(ScavengerSentinel), true),
         AlphaOrange = new(nameof(AlphaOrange), true),
-        MamaBug = new(nameof(MamaBug), true);
+        MamaBug = new(nameof(MamaBug), true),
+        Tailfly = new(nameof(Tailfly), true);
 
     static SandboxUnlockID()
     {
@@ -433,7 +441,8 @@ public static class SandboxUnlockID
             SparkEye,
             ScavengerSentinel,
             AlphaOrange,
-            MamaBug];
+            MamaBug,
+            Tailfly];
     }
 
     public static void UnregisterValues()
@@ -692,6 +701,11 @@ public static class SandboxUnlockID
         {
             MamaBug.Unregister();
             MamaBug = null!;
+        }
+        if (Tailfly is not null)
+        {
+            Tailfly.Unregister();
+            Tailfly = null!;
         }
     }
 }

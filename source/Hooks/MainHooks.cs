@@ -136,6 +136,8 @@ public static class MainHooks
                     MultiplayerUnlocks.CreatureUnlockList.Remove(SandboxUnlockID.ScavengerSentinel);
                 if (MultiplayerUnlocks.CreatureUnlockList.Contains(SandboxUnlockID.AlphaOrange))
                     MultiplayerUnlocks.CreatureUnlockList.Remove(SandboxUnlockID.AlphaOrange);
+                if (MultiplayerUnlocks.CreatureUnlockList.Contains(SandboxUnlockID.Tailfly))
+                    MultiplayerUnlocks.CreatureUnlockList.Remove(SandboxUnlockID.Tailfly);
                 RoomEffectType.UnregisterValues();
                 SandboxUnlockID.UnregisterValues();
                 CreatureTemplateType.UnregisterValues();
