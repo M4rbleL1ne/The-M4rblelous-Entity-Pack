@@ -6,12 +6,25 @@ namespace LBMergedMods.Creatures;
 
 public class CommonEelGraphics : LizardGraphics
 {
+    public virtual Color EelBodyColor
+    {
+        get
+        {
+            var blk = palette.blackColor;
+            if (blackSalamander)
+                return blk;
+            return Color.Lerp(Color.Lerp(new(.9f, .9f, .95f), effectColor, .06f), blk, palette.darkness * .2f);
+        }
+    }
+
+
     public CommonEelGraphics(CommonEel ow) : base(ow)
     {
         iVars.tailColor = .001f;
         iVars.tailFatness = 1f;
         iVars.fatness = Math.Min(iVars.fatness, .65f) * 1.1f;
         overrideHeadGraphic = -1;
+        blackSalamander = !AbsProps.TryGetValue(ow.abstractCreature, out var props) || !props.Albino; 
     }
 
     public override void Update()
@@ -51,8 +64,12 @@ public class CommonEelGraphics : LizardGraphics
                 sprites[tl].isVisible = false;
                 sprites[tl + num8].isVisible = false;
             }
+            var bodyColor = EelBodyColor;
+            ColorBody(sLeaser, bodyColor);
             var ef = effectColor;
             ref readonly var palette = ref rCam.currentPalette;
+            if (!blackSalamander)
+                ef = Color.Lerp(ef, palette.blackColor, .25f);
             var shd = sprites[SpriteHeadStart];
             shd.element = Futile.atlasManager.GetElementWithName("NLG" + shd.element.name);
             shd.scaleX *= .49f;
@@ -73,9 +90,8 @@ public class CommonEelGraphics : LizardGraphics
             shd.scaleY *= .51f;
             shd.anchorY = .575f;
             shd.anchorX = .53f;
-            var blackColor = palette.blackColor;
             var darkness = palette.darkness * .075f;
-            shd.color = eel.dead ? blackColor : Color.Lerp(ef, blackColor, darkness);
+            shd.color = eel.dead ? bodyColor : Color.Lerp(ef, bodyColor, darkness);
             var mesh = (sprites[SpriteBodyMesh] as TriangleMesh)!;
             var a = Vector2.Lerp(Vector2.Lerp(drawPositions[0, 1], drawPositions[0, 0], timeStacker), Vector2.Lerp(head.lastPos, head.pos, timeStacker), .2f);
             var vector = BodyPosition(0, timeStacker);
@@ -107,21 +123,21 @@ public class CommonEelGraphics : LizardGraphics
                 for (var j = 0; j < vertCols.Length; j++)
                 {
                     if (j % 2 == 1)
-                        vertCols[j] = Color.Lerp(ef, blackColor, .6f + darkness);
+                        vertCols[j] = Color.Lerp(ef, bodyColor, .6f + darkness);
                     else
-                        vertCols[j] = blackColor;
+                        vertCols[j] = bodyColor;
                 }
                 if (1 < l)
                 {
-                    vertCols[1] = blackColor;
+                    vertCols[1] = bodyColor;
                     if (3 < l)
                     {
-                        vertCols[3] = Color.Lerp(ef, blackColor, .9f + darkness);
+                        vertCols[3] = Color.Lerp(ef, bodyColor, .9f + darkness);
                         if (5 < l)
                         {
-                            vertCols[5] = Color.Lerp(ef, blackColor, .8f + darkness);
+                            vertCols[5] = Color.Lerp(ef, bodyColor, .8f + darkness);
                             if (7 < l)
-                                vertCols[7] = Color.Lerp(ef, blackColor, .7f + darkness);
+                                vertCols[7] = Color.Lerp(ef, bodyColor, .7f + darkness);
                         }
                     }
                 }
@@ -131,21 +147,21 @@ public class CommonEelGraphics : LizardGraphics
                 for (var j = 0; j < vertCols.Length; j++)
                 {
                     if (j % 2 == 0)
-                        vertCols[j] = Color.Lerp(ef, blackColor, .6f + darkness);
+                        vertCols[j] = Color.Lerp(ef, bodyColor, .6f + darkness);
                     else
-                        vertCols[j] = blackColor;
+                        vertCols[j] = bodyColor;
                 }
                 if (0 < l)
                 {
-                    vertCols[0] = blackColor;
+                    vertCols[0] = bodyColor;
                     if (2 < l)
                     {
-                        vertCols[2] = Color.Lerp(ef, blackColor, .9f + darkness);
+                        vertCols[2] = Color.Lerp(ef, bodyColor, .9f + darkness);
                         if (4 < l)
                         {
-                            vertCols[4] = Color.Lerp(ef, blackColor, .8f + darkness);
+                            vertCols[4] = Color.Lerp(ef, bodyColor, .8f + darkness);
                             if (6 < l)
-                                vertCols[6] = Color.Lerp(ef, blackColor, .7f + darkness);
+                                vertCols[6] = Color.Lerp(ef, bodyColor, .7f + darkness);
                         }
                     }
                 }
@@ -159,10 +175,13 @@ public class CommonEelGraphics : LizardGraphics
         if (!debugVisualization && lizard is CommonEel eel)
         {
             var sprites = sLeaser.sprites;
+            var bodyColor = EelBodyColor;
+            ColorBody(sLeaser, bodyColor);
             var ef = effectColor;
-            var blackColor = palette.blackColor;
+            if (!blackSalamander)
+                ef = Color.Lerp(ef, palette.blackColor, .25f);
             var darkness = palette.darkness * .075f;
-            sprites[SpriteHeadStart + 4].color = eel.dead ? blackColor : Color.Lerp(ef, blackColor, darkness);
+            sprites[SpriteHeadStart + 4].color = eel.dead ? bodyColor : Color.Lerp(ef, bodyColor, darkness);
             var vertCols = (sprites[SpriteTail] as TriangleMesh)!.verticeColors;
             var l = vertCols.Length;
             if (Math.Sign(Mathf.Lerp(lastHeadDepthRotation, headDepthRotation, 1f)) == 1)
@@ -170,21 +189,21 @@ public class CommonEelGraphics : LizardGraphics
                 for (var j = 0; j < vertCols.Length; j++)
                 {
                     if (j % 2 == 1)
-                        vertCols[j] = Color.Lerp(ef, blackColor, .6f + darkness);
+                        vertCols[j] = Color.Lerp(ef, bodyColor, .6f + darkness);
                     else
-                        vertCols[j] = blackColor;
+                        vertCols[j] = bodyColor;
                 }
                 if (1 < l)
                 {
-                    vertCols[1] = blackColor;
+                    vertCols[1] = bodyColor;
                     if (3 < l)
                     {
-                        vertCols[3] = Color.Lerp(ef, blackColor, .9f + darkness);
+                        vertCols[3] = Color.Lerp(ef, bodyColor, .9f + darkness);
                         if (5 < l)
                         {
-                            vertCols[5] = Color.Lerp(ef, blackColor, .8f + darkness);
+                            vertCols[5] = Color.Lerp(ef, bodyColor, .8f + darkness);
                             if (7 < l)
-                                vertCols[7] = Color.Lerp(ef, blackColor, .7f + darkness);
+                                vertCols[7] = Color.Lerp(ef, bodyColor, .7f + darkness);
                         }
                     }
                 }
@@ -194,21 +213,21 @@ public class CommonEelGraphics : LizardGraphics
                 for (var j = 0; j < vertCols.Length; j++)
                 {
                     if (j % 2 == 0)
-                        vertCols[j] = Color.Lerp(ef, blackColor, .6f + darkness);
+                        vertCols[j] = Color.Lerp(ef, bodyColor, .6f + darkness);
                     else
-                        vertCols[j] = blackColor;
+                        vertCols[j] = bodyColor;
                 }
                 if (0 < l)
                 {
-                    vertCols[0] = blackColor;
+                    vertCols[0] = bodyColor;
                     if (2 < l)
                     {
-                        vertCols[2] = Color.Lerp(ef, blackColor, .9f + darkness);
+                        vertCols[2] = Color.Lerp(ef, bodyColor, .9f + darkness);
                         if (4 < l)
                         {
-                            vertCols[4] = Color.Lerp(ef, blackColor, .8f + darkness);
+                            vertCols[4] = Color.Lerp(ef, bodyColor, .8f + darkness);
                             if (6 < l)
-                                vertCols[6] = Color.Lerp(ef, blackColor, .7f + darkness);
+                                vertCols[6] = Color.Lerp(ef, bodyColor, .7f + darkness);
                         }
                     }
                 }

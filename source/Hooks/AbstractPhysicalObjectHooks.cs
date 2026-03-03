@@ -1,7 +1,6 @@
 ﻿global using static LBMergedMods.Hooks.AbstractPhysicalObjectHooks;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
-using MoreSlugcats;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -209,7 +208,7 @@ public static class AbstractPhysicalObjectHooks
             Big.Add(self, new());
         else if ((tp == CreatureTemplateType.Hoverfly || tp == CreatureTemplateType.Tailfly) && !HoverflyData.TryGetValue(self, out _))
             HoverflyData.Add(self, new());
-        else if ((tp == CreatureTemplate.Type.Hazer || tp == CreatureTemplateType.Xylo || tp == CreatureTemplate.Type.JetFish || tp == CreatureTemplateType.Denture || tp == CreatureTemplateType.Glowpillar || tp == CreatureTemplateType.FatFireFly || tp == CreatureTemplateType.XyloWorm || tp == CreatureTemplate.Type.TentaclePlant) && !AbsProps.TryGetValue(self, out _))
+        else if ((tp == CreatureTemplate.Type.Hazer || tp == CreatureTemplateType.Xylo || tp == CreatureTemplate.Type.JetFish || tp == CreatureTemplateType.Denture || tp == CreatureTemplateType.Glowpillar || tp == CreatureTemplateType.FatFireFly || tp == CreatureTemplateType.XyloWorm || tp == CreatureTemplate.Type.TentaclePlant || tp == CreatureTemplateType.CommonEel) && !AbsProps.TryGetValue(self, out _))
             AbsProps.Add(self, new());
         if (tp == CreatureTemplateType.Denture)
             self.remainInDenCounter = 0;

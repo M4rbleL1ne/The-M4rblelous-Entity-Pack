@@ -18,7 +18,10 @@ public class M4RMamaBug : EggBug
         b1.rad = 9.5f;
         bodyChunkConnections[0].distance *= 1.6f;
         gravity = .95f;
+        var state = Random.state;
+        Random.InitState(abstractCreature.ID.RandomSeed);
         hue = Mathf.Lerp(.55f, .65f, Custom.ClampedRandomVariation(.5f, .5f, 2f));
+        Random.state = state;
     }
 
     public override void InitiateGraphicsModule()

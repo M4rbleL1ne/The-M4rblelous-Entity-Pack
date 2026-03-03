@@ -54,6 +54,8 @@ public static class IconHooks
                 return new(138f / 255f, 245f / 255f, 0f);
             if (tp == CreatureTemplateType.Xylo)
                 return new(236f / 255f, 1f, .0f);
+            if (tp == CreatureTemplateType.CommonEel)
+                return Color.Lerp(Color.white, CommonEel.EelCol, .1f);
         }
         else if (dt == M4R_DATA_NUMBER3)
         {
@@ -63,6 +65,8 @@ public static class IconHooks
                 return new(138f / 255f, 245f / 255f, 0f);
             if (tp == CreatureTemplateType.FatFireFly)
                 return Color.Lerp(Color.white, Color.blue, .1f);
+            if (tp == CreatureTemplateType.CommonEel)
+                return Color.Lerp(Color.white, new(0f, 72f / 255f, 1f), .1f);
         }
         return orig(iconData);
     }
@@ -106,7 +110,7 @@ public static class IconHooks
     {
         var res = orig(creature);
         var tp = creature.creatureTemplate.type;
-        if (tp == CreatureTemplateType.FatFireFly)
+        if (tp == CreatureTemplateType.FatFireFly || tp == CreatureTemplateType.CommonEel)
         {
             if (creature.Albino())
                 res.intData = creature.superSizeMe ? M4R_DATA_NUMBER3 : M4R_DATA_NUMBER2;
@@ -116,7 +120,7 @@ public static class IconHooks
         else if ((tp == CreatureTemplate.Type.Fly && creature.IsSeed()) ||
             (tp == CreatureTemplate.Type.TentaclePlant && creature.RottenMode()) ||
             ((tp == CreatureTemplate.Type.Hazer || tp == CreatureTemplateType.Denture || tp == CreatureTemplateType.Glowpillar) && creature.Albino()) ||
-            ((tp == CreatureTemplateType.ThornBug || tp == CreatureTemplateType.CommonEel || tp == CreatureTemplateType.HazerMom || tp == CreatureTemplateType.TintedBeetle || tp == CreatureTemplateType.Xylo || tp == CreatureTemplateType.XyloWorm || tp == CreatureTemplateType.Hoverfly) && creature.superSizeMe))
+            ((tp == CreatureTemplateType.ThornBug || tp == CreatureTemplateType.HazerMom || tp == CreatureTemplateType.TintedBeetle || tp == CreatureTemplateType.Xylo || tp == CreatureTemplateType.XyloWorm || tp == CreatureTemplateType.Hoverfly) && creature.superSizeMe))
             res.intData = M4R_DATA_NUMBER;
         else if (tp == CreatureTemplateType.Xylo && creature.Albino())
             res.intData = M4R_DATA_NUMBER2;

@@ -985,6 +985,8 @@ public static class LizardHooks
             return self.HeadLightsUpFromNoise ? Color.Lerp(self.palette.blackColor, new(.5f, .5f, .5f), self.blackLizardLightUpHead) : self.SalamanderColor;
         if (self is HunterSeekerGraphics)
             return Color.Lerp(Color.white, self.whiteCamoColor, self.whiteCamoColorAmount);
+        if (self is CommonEelGraphics c)
+            return c.EelBodyColor;
         return orig(self);
     }
 
@@ -994,6 +996,8 @@ public static class LizardHooks
             return Color.Lerp(self.palette.blackColor, self.whiteCamoColor, self.whiteCamoColorAmount);
         if (self is MoleSalamanderGraphics)
             return self.HeadLightsUpFromNoise ? Color.Lerp(self.palette.blackColor, new(.5f, .5f, .5f), self.blackLizardLightUpHead) : self.SalamanderColor;
+        if (self is CommonEelGraphics c)
+            return c.EelBodyColor;
         return orig(self);
     }
 
@@ -1012,6 +1016,8 @@ public static class LizardHooks
             return self.SalamanderColor;
         if (self is HunterSeekerGraphics)
             return self.DynamicBodyColor(f);
+        if (self is CommonEelGraphics c)
+            return c.EelBodyColor;
         return orig(self, f);
     }
 
@@ -1023,8 +1029,8 @@ public static class LizardHooks
             return Color.Lerp(Color.white, self.whiteCamoColor, self.whiteCamoColorAmount);
         if (self is MoleSalamanderGraphics && !self.blackSalamander)
             return self.SalamanderColor;
-        if (self is CommonEelGraphics)
-            return self.palette.blackColor;
+        if (self is CommonEelGraphics c)
+            return c.EelBodyColor;
         return orig(self, f);
     }
 
@@ -1040,8 +1046,10 @@ public static class LizardHooks
 
     internal static Color On_LizardGraphics_HeadColor(On.LizardGraphics.orig_HeadColor orig, LizardGraphics self, float timeStacker)
     {
-        if (self is NoodleEaterGraphics or CommonEelGraphics)
+        if (self is NoodleEaterGraphics)
             return self.palette.blackColor;
+        if (self is CommonEelGraphics ce)
+            return ce.EelBodyColor;
         var color = orig(self, timeStacker);
         if (self.lizard.AI?.yellowAI is PolliwogCommunication c && c.PackLeader)
         {

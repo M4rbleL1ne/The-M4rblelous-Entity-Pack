@@ -3,6 +3,7 @@ using MonoMod.Cil;
 using System;
 using Mono.Cecil.Cil;
 using UnityEngine;
+using RWCustom;
 
 namespace LBMergedMods.Hooks;
 
@@ -51,6 +52,19 @@ public static class VultureGrubHooks
     internal static bool On_VultureGrub_RayTraceSky(On.VultureGrub.orig_RayTraceSky orig, VultureGrub self, Vector2 testDir)
     {
         var abRm = self.room.abstractRoom;
-        return abRm.AttractionForCreature(CreatureTemplateType.FlyingBigEel) != AbstractRoom.CreatureRoomAttraction.Forbidden && abRm.AttractionForCreature(CreatureTemplateType.MiniFlyingBigEel) != AbstractRoom.CreatureRoomAttraction.Forbidden && abRm.AttractionForCreature(CreatureTemplateType.FatFireFly) != AbstractRoom.CreatureRoomAttraction.Forbidden && orig(self, testDir);
+        if (abRm.skyExits >= 1 && (abRm.AttractionForCreature(CreatureTemplateType.FlyingBigEel) != AbstractRoom.CreatureRoomAttraction.Forbidden || abRm.AttractionForCreature(CreatureTemplateType.MiniFlyingBigEel) != AbstractRoom.CreatureRoomAttraction.Forbidden || abRm.AttractionForCreature(CreatureTemplateType.FatFireFly) != AbstractRoom.CreatureRoomAttraction.Forbidden))
+        {
+            var b1 = self.bodyChunks[1];
+            var corner = Custom.RectCollision(b1.pos, b1.pos + testDir * 100000f, self.room.RoomRect).GetCorner(FloatRect.CornerLabel.D);
+            if (SharedPhysics.RayTraceTilesForTerrainReturnFirstSolid(self.room, b1.pos, corner).HasValue)
+                return false;
+            if (corner.y >= self.room.PixelHeight - 5f)
+            {
+                self.skyPosition = self.room.GetTilePosition(corner);
+                return true;
+            }
+            return false;
+        }
+        return orig(self, testDir);
     }
 }
