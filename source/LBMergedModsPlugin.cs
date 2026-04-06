@@ -21,7 +21,7 @@ using Watcher;
 
 namespace LBMergedMods;
 
-[BepInPlugin("lb-fgf-m4r-ik.modpack", "LB Merged Mods", "10.0.9"), BepInDependency("io.github.dual.fisobs"), BepInDependency("com.rainworldgame.lizardcustomizer.plugin", BepInDependency.DependencyFlags.SoftDependency), BepInDependency("slime-cubed.devconsole", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInPlugin("lb-fgf-m4r-ik.modpack", "LB Merged Mods", "10.0.91"), BepInDependency("io.github.dual.fisobs"), BepInDependency("com.rainworldgame.lizardcustomizer.plugin", BepInDependency.DependencyFlags.SoftDependency), BepInDependency("slime-cubed.devconsole", BepInDependency.DependencyFlags.SoftDependency)]
 public sealed class LBMergedModsPlugin : BaseUnityPlugin
 {
     public static AssetBundle? Bundle;
@@ -74,7 +74,6 @@ public sealed class LBMergedModsPlugin : BaseUnityPlugin
         On.LizardCosmetics.WingScales.DrawSprites += On_WingScales_DrawSprites;
         IL.LizardCosmetics.TailGeckoScales.DrawSprites += IL_TailGeckoScales_DrawSprites;
         new Hook(typeof(LizardJumpModule).GetMethod("get_canChainJump", ALL_FLAGS), On_LizardJumpModule_get_canChainJump);
-        IL.Lizard.Act += IL_Lizard_Act;
         On.JetFishAI.WantToEatObject += On_JetFishAI_WantToEatObject;
         On.PlayerSessionRecord.AddEat += On_PlayerSessionRecord_AddEat;
         new Hook(typeof(LizardGraphics).GetMethod("get_effectColor", ALL_FLAGS), On_LizardGraphics_get_effectColor);
@@ -139,7 +138,6 @@ public sealed class LBMergedModsPlugin : BaseUnityPlugin
         On.LizardAI.IdleSpotScore += On_LizardAI_IdleSpotScore;
         On.Lizard.SwimBehavior += On_Lizard_SwimBehavior;
         On.LizardPather.HeuristicForCell += On_LizardPather_HeuristicForCell;
-        IL.Lizard.EnterAnimation += IL_Lizard_EnterAnimation;
         IL.LizardGraphics.UpdateTailSegment += IL_LizardGraphics_UpdateTailSegment;
         IL.LizardGraphics.Update += IL_LizardGraphics_Update;
         IL.Menu.MultiplayerMenu.FindAllLevels += IL_MultiplayerMenu_FindAllLevels;
@@ -407,7 +405,6 @@ public sealed class LBMergedModsPlugin : BaseUnityPlugin
         On.LizardCosmetics.SpineSpikes.ApplyPalette += On_SpineSpikes_ApplyPalette;
         On.LizardCosmetics.TailFin.ApplyPalette += On_TailFin_ApplyPalette;
         On.LizardCosmetics.WingScales.ApplyPalette += On_WingScales_ApplyPalette;
-        On.Lizard.EnterAnimation += On_Lizard_EnterAnimation;
         IL.LizardCosmetics.Antennae.ctor += IL_Antennae_ctor;
         new Hook(typeof(Lizard).GetMethod("get_Swimmer", ALL_FLAGS), On_Lizard_get_Swimmer);
         IL.GraffitiCloud.Update += IL_GraffitiCloud_Update;

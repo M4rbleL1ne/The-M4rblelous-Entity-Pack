@@ -1,6 +1,7 @@
 using Noise;
 using RWCustom;
 using UnityEngine;
+using Watcher;
 
 namespace LBMergedMods.Creatures;
 
@@ -36,6 +37,7 @@ public class ThornBugAI : ArtificialIntelligence, IUseARelationshipTracker, IAIN
         AddModule(new NoiseTracker(this, tracker));
         AddModule(new UtilityComparer(this));
         AddModule(new RelationshipTracker(this, tracker));
+        AddModule(new DiscomfortTracker(this, tracker, 0f));
         FloatTweener.FloatTween smoother = new FloatTweener.FloatTweenUpAndDown(new FloatTweener.FloatTweenBasic(FloatTweener.TweenType.Lerp, .5f), new FloatTweener.FloatTweenBasic(FloatTweener.TweenType.Tick, .005f));
         utilityComparer.AddComparedModule(threatTracker, smoother, 1f, 1.1f);
         utilityComparer.AddComparedModule(rainTracker, null, 1f, 1.1f);
@@ -176,6 +178,8 @@ public class ThornBugAI : ArtificialIntelligence, IUseARelationshipTracker, IAIN
         var sources = noiseTracker.sources;
         for (var i = 0; i < sources.Count; i++)
             num += Custom.LerpMap(Vector2.Distance(Bug.room.MiddleOfTile(coord), sources[i].pos), 40f, 400f, 100f, 0f);
+        if (discomfortTracker is DiscomfortTracker trk)
+            num -= 1000f * trk.DiscomfortOfTile(coord);
         return num;
     }
 
@@ -212,6 +216,13 @@ public class ThornBugAI : ArtificialIntelligence, IUseARelationshipTracker, IAIN
         var result = StaticRelationship(dRelation.trackerRep.representedCreature);
         if (result.type == CreatureTemplate.Relationship.Type.Afraid && !dRelation.state.alive)
             result.intensity = 0f;
+        if (ModManager.Watcher)
+        {
+            if (dRelation.trackerRep.representedCreature.creatureTemplate.type == WatcherEnums.CreatureTemplateType.Barnacle && dRelation.trackerRep.representedCreature.state.miscWatcherSaveFlags == 1)
+                return new(CreatureTemplate.Relationship.Type.Ignores, 0f);
+            if (dRelation.trackerRep.representedCreature.creatureTemplate.type == WatcherEnums.CreatureTemplateType.Frog && dRelation.trackerRep.representedCreature.state is FrogState { creatureAttachedTo: var creatureAttachedTo } frogState && (creatureAttachedTo == creature.ID || frogState.bloodBank))
+                return new(CreatureTemplate.Relationship.Type.Ignores, 0f);
+        }
         if (dRelation.trackerRep?.representedCreature?.realizedCreature is Creature c)
         {
             var grs = c.grasps;
@@ -231,7 +242,11 @@ public class ThornBugAI : ArtificialIntelligence, IUseARelationshipTracker, IAIN
         return result;
     }
 
-    public override PathCost TravelPreference(MovementConnection coord, PathCost cost) => new(cost.resistance + Custom.LerpMap(Mathf.Max(0f, threatTracker.ThreatOfTile(coord.destinationCoord, false) - threatTracker.ThreatOfTile(creature.pos, false)), 0f, 1.5f, 0f, 10000f, 5f), cost.legality);
+    public override PathCost TravelPreference(MovementConnection coord, PathCost cost)
+    {
+        cost = base.TravelPreference(coord, cost);
+        return new(cost.resistance + Custom.LerpMap(Mathf.Max(0f, threatTracker.ThreatOfTile(coord.destinationCoord, false) - threatTracker.ThreatOfTile(creature.pos, false)), 0f, 1.5f, 0f, 10000f, 5f), cost.legality);
+    }
 
     public override void CreatureSpotted(bool firstSpot, Tracker.CreatureRepresentation otherCreature)
     {

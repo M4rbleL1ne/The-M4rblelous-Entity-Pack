@@ -1,5 +1,6 @@
 using RWCustom;
 using UnityEngine;
+using Watcher;
 
 namespace LBMergedMods.Creatures;
 
@@ -44,7 +45,8 @@ public class CaterpillarAI : ArtificialIntelligence, IUseARelationshipTracker
 		AddModule(new UtilityComparer(this));
 		AddModule(new InjuryTracker(this, .6f));
 		AddModule(new StuckTracker(this, true, true));
-		utilityComparer.AddComparedModule(threatTracker, null, 1f, 1.1f);
+        AddModule(new DiscomfortTracker(this, tracker, 0f));
+        utilityComparer.AddComparedModule(threatTracker, null, 1f, 1.1f);
 		utilityComparer.AddComparedModule(preyTracker, null, .9f, 1.1f);
 		utilityComparer.AddComparedModule(rainTracker, null, 1f, 1.1f);
 		utilityComparer.AddComparedModule(injuryTracker, null, .7f, 1.1f);
@@ -215,7 +217,9 @@ public class CaterpillarAI : ArtificialIntelligence, IUseARelationshipTracker
 		num -= Custom.LerpMap(testPos.Tile.FloatDist(ForbiddenIdlePos.Tile), 0f, 10f, 1000f, 0f);
 		if (Crit.room.aimap.getAItile(testPos).fallRiskTile.y < 0)
 			num -= Custom.LerpMap(testPos.y, 10f, 30f, 1000f, 0f);
-		return num;
+        if (discomfortTracker is DiscomfortTracker trk)
+            num -= 1000f * trk.DiscomfortOfTile(testPos);
+        return num;
 	}
 
 	public virtual void AnnoyingCollision(AbstractCreature critter)
@@ -280,8 +284,10 @@ public class CaterpillarAI : ArtificialIntelligence, IUseARelationshipTracker
 
     public virtual CreatureTemplate.Relationship UpdateDynamicRelationship(RelationshipTracker.DynamicRelationship dRelation)
 	{
-		var result = StaticRelationship(dRelation.trackerRep.representedCreature);
-		if (result.type == CreatureTemplate.Relationship.Type.Ignores)
+        if (ModManager.Watcher && dRelation.trackerRep.representedCreature.creatureTemplate.type == WatcherEnums.CreatureTemplateType.Barnacle && dRelation.trackerRep.representedCreature.state.miscWatcherSaveFlags == 1)
+            return new(CreatureTemplate.Relationship.Type.Ignores, 0f);
+        var result = StaticRelationship(dRelation.trackerRep.representedCreature);
+        if (result.type == CreatureTemplate.Relationship.Type.Ignores)
 			return result;
 		if (dRelation.trackerRep.representedCreature.realizedCreature is Creature c)
 		{

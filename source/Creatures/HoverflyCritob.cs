@@ -5,6 +5,7 @@ using Fisobs.Sandbox;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Watcher;
 using Random = UnityEngine.Random;
 using static PathCost.Legality;
 
@@ -103,6 +104,13 @@ sealed class HoverflyCritob : Critob, ISandboxHandler
         hvf.Ignores(CreatureTemplate.Type.LanternMouse);
         hvf.IgnoredBy(CreatureTemplate.Type.Snail);
         hvf.Ignores(CreatureTemplate.Type.Snail);
+        if (ModManager.Watcher)
+        {
+            hvf.Ignores(WatcherEnums.CreatureTemplateType.Barnacle);
+            hvf.Ignores(WatcherEnums.CreatureTemplateType.Frog);
+            hvf.IgnoredBy(WatcherEnums.CreatureTemplateType.Barnacle);
+            hvf.IgnoredBy(WatcherEnums.CreatureTemplateType.Frog);
+        }
     }
 
     public override ArtificialIntelligence? CreateRealizedAI(AbstractCreature acrit) => new HoverflyAI(acrit, acrit.world);

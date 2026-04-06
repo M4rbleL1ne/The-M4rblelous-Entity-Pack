@@ -120,7 +120,7 @@ public class ChipChopGraphics : GraphicsModule, IMuddableGraphics
         {
             BodyDir -= Custom.DirVec(fc.pos, Bug.DragPos);
             BodyDir += fc.vel * .2f;
-            if (!Bug.Consious)
+            if (!Bug.Consious && (Bug.room is not Room rm || rm.world?.worldGhost is not GhostWorldPresence g || !g.CreaturesSleepInRoom(rm.abstractRoom)))
                 BodyDir += Custom.DegToVec(Random.value * 360f) * Bug.DeathSpasms;
             BodyDir.Normalize();
         }
@@ -182,7 +182,7 @@ public class ChipChopGraphics : GraphicsModule, IMuddableGraphics
                 }
                 else
                 {
-                    legP.vel += Custom.RotateAroundOrigo(DeathLegPositions[i][j], Custom.AimFromOneVectorToAnother(-BodyDir, BodyDir)) * .65f + Custom.DegToVec(Random.value * 360f) * (Bug.DeathSpasms * 5f) + vector2 * .7f;
+                    legP.vel += Custom.RotateAroundOrigo(DeathLegPositions[i][j], Custom.AimFromOneVectorToAnother(-BodyDir, BodyDir)) * .65f + Custom.DegToVec(Random.value * 360f) * (Bug.DeathSpasms * 5f * (Bug.room is Room rm && rm.world?.worldGhost is GhostWorldPresence gwp && !gwp.CreaturesSleepInRoom(rm.abstractRoom) ? 1f : 0f)) + vector2 * .7f;
                     legP.vel.y -= .8f;
                     LimbGoalDistances[i][j] = 0f;
                 }

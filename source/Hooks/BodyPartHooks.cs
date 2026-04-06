@@ -127,7 +127,7 @@ public static class BodyPartHooks
         if (room.terrain is not null && self.owner.owner.Buried)
             return;
         self.terrainContact = false;
-        if (room.terrain?.TrySnapToTerrain(self.pos, self.rad, out var snapPos) is true)
+        if (room.terrain?.TrySnapToTerrain(self.pos, self.rad, out var snapPos, self.lastPos) is true)
         {
             self.terrainContact = true;
             self.pos = snapPos;

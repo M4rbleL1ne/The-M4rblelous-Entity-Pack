@@ -197,26 +197,6 @@ public static class LizardHooks
         }
     }
 
-    internal static void IL_Lizard_Act(ILContext il)
-    {
-        var c = new ILCursor(il);
-        if (c.TryGotoNext(
-            s_MatchLdarg_0,
-            s_MatchCallOrCallvirt_Creature_get_abstractCreature,
-            s_MatchLdfld_AbstractCreature_creatureTemplate,
-            s_MatchLdfld_CreatureTemplate_type,
-            s_MatchLdsfld_CreatureTemplate_Type_CyanLizard,
-            s_MatchCall_Any,
-            s_MatchBrfalse_OutLabel))
-        {
-            c.Emit(OpCodes.Ldarg_0)
-             .Emit(OpCodes.Isinst, il.Import(typeof(HunterSeeker)))
-             .Emit(OpCodes.Brtrue, s_label);
-        }
-        else
-            LBMergedModsPlugin.s_logger.LogError("Couldn't ILHook Lizard.Act!");
-    }
-
     internal static void IL_Lizard_ActAnimation(ILContext il)
     {
         var c = new ILCursor(il);
@@ -248,41 +228,6 @@ public static class LizardHooks
         if (self.grabbedBy is List<Creature.Grasp> l && l.Count > 0 && l[0].grabber is FatFireFly c && c == target)
             return;
         orig(self, target);
-    }
-
-    internal static void IL_Lizard_EnterAnimation(ILContext il)
-    {
-        var c = new ILCursor(il);
-        var label = il.DefineLabel();
-        if (c.TryGotoNext(MoveType.After,
-            s_MatchLdarg_0,
-            s_MatchCallOrCallvirt_Creature_get_abstractCreature,
-            s_MatchLdfld_AbstractCreature_creatureTemplate,
-            s_MatchLdfld_CreatureTemplate_type,
-            s_MatchLdsfld_CreatureTemplate_Type_YellowLizard,
-            s_MatchCall_Any,
-            s_MatchBrfalse_Any))
-        {
-            label.Target = c.Next;
-            c.Index -= 7;
-            c.Emit(OpCodes.Ldarg_0)
-             .Emit(OpCodes.Isinst, il.Import(typeof(Polliwog)))
-             .Emit(OpCodes.Brtrue, label);
-        }
-        else
-            LBMergedModsPlugin.s_logger.LogError("Couldn't ILHook Lizard.EnterAnimation!");
-    }
-
-    internal static void On_Lizard_EnterAnimation(On.Lizard.orig_EnterAnimation orig, Lizard self, Lizard.Animation anim, bool forceAnimationChange)
-    {
-        if (self is AlphaOrange && (forceAnimationChange || (int)anim >= (int)self.animation) && self.animation != anim && anim == Lizard.Animation.PreyReSpotted && !self.safariControlled)
-        {
-            if (self.AI.yellowAI.pack?.PackLeader == self.abstractCreature)
-                self.voice.MakeSound(LizardVoice.Emotion.SpottedPreyFirstTime);
-            else
-                self.voice.MakeSound(LizardVoice.Emotion.ReSpottedPrey, Random.Range(.1f, .25f));
-        }
-        orig(self, anim, forceAnimationChange);
     }
 
     internal static bool On_Lizard_get_Swimmer(Func<Lizard, bool> orig, Lizard self) => self is Polliwog or MoleSalamander or CommonEel or WaterSpitter || orig(self);

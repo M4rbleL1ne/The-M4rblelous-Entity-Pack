@@ -35,6 +35,10 @@ public static class ScavengerHooks
         if (c.TryGotoNext(MoveType.After,
             s_MatchCall_ModManager_get_DLCShared)
          && c.TryGotoNext(MoveType.After,
+            s_MatchCall_ModManager_get_DLCShared)
+         && c.TryGotoNext(MoveType.After,
+            s_MatchCall_ModManager_get_DLCShared)
+         && c.TryGotoNext(MoveType.After,
             s_MatchCall_ModManager_get_DLCShared))
         {
             c.Emit(OpCodes.Ldarg_0)
@@ -43,17 +47,13 @@ public static class ScavengerHooks
         else
             LBMergedModsPlugin.s_logger.LogError("Couldn't ILHook ScavengerAbstractAI.InitGearUp! (part 2)");
         if (c.TryGotoNext(MoveType.After,
-            s_MatchCall_ModManager_get_DLCShared)
-         && c.TryGotoNext(MoveType.After,
-            s_MatchCall_ModManager_get_DLCShared)
-         && c.TryGotoNext(MoveType.After,
             s_MatchCall_ModManager_get_DLCShared))
         {
             c.Emit(OpCodes.Ldarg_0)
              .EmitDelegate((bool flag, ScavengerAbstractAI self) => flag || self.parent.creatureTemplate.type == CreatureTemplateType.ScavengerSentinel);
         }
         else
-            LBMergedModsPlugin.s_logger.LogError("Couldn't ILHook ScavengerAbstractAI.InitGearUp! (part 3)");
+            LBMergedModsPlugin.s_logger.LogError("Couldn't ILHook ScavengerAbstractAI.InitGearUp! (part 2)");
         var instrs = il.Instrs;
         var num = 0;
         for (var i = 0; i < instrs.Count - 1; i++)

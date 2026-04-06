@@ -1,7 +1,8 @@
 ﻿using RWCustom;
-using UnityEngine;
-using Random = UnityEngine.Random;
 using System;
+using UnityEngine;
+using static LBMergedMods.Items.Physalis;
+using Random = UnityEngine.Random;
 
 namespace LBMergedMods.Creatures;
 
@@ -131,7 +132,18 @@ public class XyloWorm : Creature, IPlayerEdible
         }
         else
             LoseAllGrasps();
-        var flag1 = grabbedBy.Count == 0;
+        Grasp? grasp = null;
+        var gbs = grabbedBy;
+        for (var i = 0; i < gbs.Count; i++)
+        {
+            var item = gbs[i];
+            if (item.grabber is not Watcher.Frog)
+            {
+                grasp = item;
+                break;
+            }
+        }
+        var flag1 = grasp is null;
         if (!flag1)
             LoseAllGrasps();
         CollideWithTerrain = flag1;
@@ -148,9 +160,9 @@ public class XyloWorm : Creature, IPlayerEdible
         }
         if (PlacedObj is PlacedObject pObj)
         {
-            if (grabbedBy.Count == 0 && Mathf.Abs(ch0.pos.x - pObj.pos.x) > 10f)
+            if (flag1 && Mathf.Abs(ch0.pos.x - pObj.pos.x) > 10f)
                 ch0.vel.x += (Mathf.Abs(ch0.pos.x - pObj.pos.x) - 10f) / (4f * (ch0.pos.x < pObj.pos.x ? 1f : -1f));
-            if (!Custom.DistLess(ch0.pos, pObj.pos, 50f) || grabbedBy.Count > 0)
+            if (!Custom.DistLess(ch0.pos, pObj.pos, 50f) || !flag1)
             {
                 if (room.game.session is StoryGameSession sess)
                 {
@@ -168,9 +180,9 @@ public class XyloWorm : Creature, IPlayerEdible
             ch0.vel += Custom.DirVec(ch0.pos, (Vector2)Futile.mousePosition + rm.game.cameras[0].pos) * 14f;
             Stun(12);
         }
-        if (grabbedBy.Count > 0)
+        if (!flag1)
         {
-            var dir = Custom.PerpendicularVector(Custom.DirVec(ch0.pos, grabbedBy[0].grabber.mainBodyChunk.pos));
+            var dir = Custom.PerpendicularVector(Custom.DirVec(ch0.pos, grasp!.grabber.mainBodyChunk.pos));
             WeightedPush(1, 2, dir with { y = Mathf.Abs(dir.y) }, 4f);
             Stun(10);
         }
@@ -185,7 +197,7 @@ public class XyloWorm : Creature, IPlayerEdible
         else
             Lungs = Mathf.Min(Lungs + .02f, 1f);
         var flag = false;
-        if (grabbedBy.Count > 0 && grabbedBy[0].grabber is Player p && p.swallowAndRegurgitateCounter > 50 && p.objectInStomach is null && p.input[0].pckp)
+        if (!flag1 && grasp!.grabber is Player p && p.swallowAndRegurgitateCounter > 50 && p.objectInStomach is null && p.input[0].pckp)
         {
             var num = -1;
             for (var j = 0; j < 2; j++)

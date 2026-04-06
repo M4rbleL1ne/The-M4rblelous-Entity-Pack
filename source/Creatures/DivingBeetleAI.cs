@@ -44,6 +44,7 @@ public class DivingBeetleAI : ArtificialIntelligence, IUseARelationshipTracker, 
         AddModule(new UtilityComparer(this));
         AddModule(new RelationshipTracker(this, tracker));
         AddModule(new InjuryTracker(this, .4f));
+        AddModule(new DiscomfortTracker(this, tracker, 0f));
         utilityComparer.AddComparedModule(threatTracker, null, 1f, 1.1f);
         var smoother = new FloatTweener.FloatTweenBasic(FloatTweener.TweenType.Tick, .01f);
         utilityComparer.AddComparedModule(preyTracker, smoother, 1f, 1.1f);
@@ -197,6 +198,8 @@ public class DivingBeetleAI : ArtificialIntelligence, IUseARelationshipTracker, 
         num -= Math.Max(aiTile.smoothedFloorAltitude, 16f) * 2f;
         if (!flag)
             num *= .1f;
+        if (discomfortTracker is DiscomfortTracker trk)
+            num -= 1000f * trk.DiscomfortOfTile(coord);
         return num;
     }
 

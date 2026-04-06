@@ -43,6 +43,7 @@ public class HoverflyAI : ArtificialIntelligence, IUseARelationshipTracker, IAIN
         stuckTracker.AddSubModule(new StuckTracker.GetUnstuckPosCalculator(stuckTracker));
         AddModule(new RelationshipTracker(this, tracker));
         AddModule(new UtilityComparer(this));
+        AddModule(new DiscomfortTracker(this, tracker, 0f));
         utilityComparer.AddComparedModule(threatTracker, null, 1f, 1.1f);
         utilityComparer.AddComparedModule(FoodTracker, null, 1f, 1.1f);
         utilityComparer.AddComparedModule(rainTracker, null, 1f, 1.1f);
@@ -52,7 +53,7 @@ public class HoverflyAI : ArtificialIntelligence, IUseARelationshipTracker, IAIN
 
     public override PathCost TravelPreference(MovementConnection coord, PathCost cost)
     {
-        var res = base.TravelPreference(coord, cost);
+        cost = base.TravelPreference(coord, cost);
         if (Fly?.room is Room rm && !Fly.safariControlled && rm.readyForAI is true)
         {
             if (coord.destinationCoord.TileDefined)
@@ -62,7 +63,7 @@ public class HoverflyAI : ArtificialIntelligence, IUseARelationshipTracker, IAIN
                     cost.resistance += 100f;
             }
         }
-        return res;
+        return cost;
     }
 
     public override void NewRoom(Room room)

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MoreSlugcats;
 using System;
+using Watcher;
 using Random = UnityEngine.Random;
 
 namespace LBMergedMods.Creatures;
@@ -46,6 +47,7 @@ public class TintedBeetleAI : ArtificialIntelligence, IUseARelationshipTracker, 
             tamingDifficlty = Mathf.Lerp(.6f, .65f, creature.personality.dominance),
             desiredCloseness = 4f
         });
+        AddModule(new DiscomfortTracker(this, tracker, 0f));
         FloatTweener.FloatTween smoother = new FloatTweener.FloatTweenUpAndDown(new FloatTweener.FloatTweenBasic(FloatTweener.TweenType.Lerp, .5f), new FloatTweener.FloatTweenBasic(FloatTweener.TweenType.Tick, .005f));
         utilityComparer.AddComparedModule(threatTracker, smoother, 1f, 1.1f);
         utilityComparer.AddComparedModule(rainTracker, null, 1f, 1.1f);
@@ -215,6 +217,8 @@ public class TintedBeetleAI : ArtificialIntelligence, IUseARelationshipTracker, 
         var sources = noiseTracker.sources;
         for (var i = 0; i < sources.Count; i++)
             num += Custom.LerpMap(Vector2.Distance(Bug.room.MiddleOfTile(coord), sources[i].pos), 40f, 400f, 100f, 0f);
+        if (discomfortTracker is DiscomfortTracker trk)
+            num -= 1000f * trk.DiscomfortOfTile(coord);
         return num;
     }
 
@@ -264,6 +268,13 @@ public class TintedBeetleAI : ArtificialIntelligence, IUseARelationshipTracker, 
             result.intensity = 1f;
             result.type = CreatureTemplate.Relationship.Type.Pack;
         }
+        if (ModManager.Watcher)
+        {
+            if (dRelation.trackerRep.representedCreature.creatureTemplate.type == WatcherEnums.CreatureTemplateType.Barnacle && dRelation.trackerRep.representedCreature.state.miscWatcherSaveFlags == 1)
+                return new(CreatureTemplate.Relationship.Type.Ignores, 0f);
+            if (dRelation.trackerRep.representedCreature.creatureTemplate.type == WatcherEnums.CreatureTemplateType.Frog && dRelation.trackerRep.representedCreature.state is FrogState { creatureAttachedTo: var creatureAttachedTo } frogState && (creatureAttachedTo == creature.ID || frogState.bloodBank))
+                return new(CreatureTemplate.Relationship.Type.Ignores, 0f);
+        }
         if (rep.realizedCreature is Creature c && c.abstractPhysicalObject.SameRippleLayer(creature))
         {
             var grs = c.grasps;
@@ -283,7 +294,11 @@ public class TintedBeetleAI : ArtificialIntelligence, IUseARelationshipTracker, 
         return result;
     }
 
-    public override PathCost TravelPreference(MovementConnection coord, PathCost cost) => new(cost.resistance + Custom.LerpMap(Mathf.Max(0f, threatTracker.ThreatOfTile(coord.destinationCoord, false) - threatTracker.ThreatOfTile(creature.pos, false)), 0f, 1.5f, 0f, 10000f, 5f), cost.legality);
+    public override PathCost TravelPreference(MovementConnection coord, PathCost cost)
+    {
+        cost = base.TravelPreference(coord, cost);
+        return new(cost.resistance + Custom.LerpMap(Mathf.Max(0f, threatTracker.ThreatOfTile(coord.destinationCoord, false) - threatTracker.ThreatOfTile(creature.pos, false)), 0f, 1.5f, 0f, 10000f, 5f), cost.legality);
+    }
 
     public override void CreatureSpotted(bool firstSpot, Tracker.CreatureRepresentation otherCreature)
     {

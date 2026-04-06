@@ -3,6 +3,7 @@ using RWCustom;
 using Smoke;
 using System;
 using UnityEngine;
+using Watcher;
 using Random = UnityEngine.Random;
 
 namespace LBMergedMods.Creatures;
@@ -149,7 +150,17 @@ public class HazerMom : Creature
             chs[0].vel += Custom.DirVec(chs[0].pos, (Vector2)Futile.mousePosition + rm.game.cameras[0].pos) * 14f;
             Stun(12);
         }
-        if (grabbedBy.Count > 0)
+        var grabbed = false;
+        var grabs = grabbedBy;
+        for (var i = 0; i < grabs.Count; i++)
+        {
+            if (grabs[i].grabber is not Frog)
+            {
+                grabbed = true;
+                break;
+            }
+        }
+        if (grabbed)
         {
             MoveCounter = -Math.Abs(MoveCounter);
             GoThroughFloors = true;
@@ -168,7 +179,17 @@ public class HazerMom : Creature
 
     public virtual void Act()
     {
-        if (grabbedBy.Count > 0)
+        var grabbed = false;
+        var grabs = grabbedBy;
+        for (var i = 0; i < grabs.Count; i++)
+        {
+            if (grabs[i].grabber is not Frog)
+            {
+                grabbed = true;
+                break;
+            }
+        }
+        if (grabbed)
             return;
         var chs = bodyChunks;
         if (safariControlled)
